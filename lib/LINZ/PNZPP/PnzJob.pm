@@ -269,6 +269,11 @@ sub save
 
     print $sf $jsondata;
     close($sf);
+    if( $self->{eta_time} > 0 )
+    {
+        my $mtime=$self->{eta_time};
+        utime  $mtime, $mtime, $savefile;
+    }
 }
 
 
@@ -384,6 +389,7 @@ sub update
     $self->lock();
     my $updated=0;
     my $server=$self->server;
+    
     eval
     {
         foreach my $job ($self->bernjobs())
@@ -396,6 +402,10 @@ sub update
                 if( $job->update($self->server) )
                 {
                     $updated=1;
+                    if( $job->waiting())
+                    {
+                        my $eta
+                    }
                     $self->save();
                 }
             };
