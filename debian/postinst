@@ -17,7 +17,6 @@ set -e
 # for details, see http://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
-rundir=/var/run/positionzpp
 datadir=/var/lib/positionzpp
 logdir=/var/log/positionzpp
 
@@ -27,19 +26,15 @@ case "$1" in
         adduser --system --ingroup bern_users positionzpp_server
         echo 'positionzpp_server' > /etc/positionzpp/user
         
-        mkdir -p $rundir
         mkdir -p $datadir/interface/input
         mkdir -p $datadir/interface/output
         mkdir -p $datadir/interface/refdata
         mkdir -p $logdir
 
-        chown -R :bern_users $rundir
         chown -R :bern_users $datadir
         chown -R :bern_users $logdir
-        chmod -R g+u $rundir
         chmod -R g+u $datadir
         chmod -R g+u $logdir
-        chmod -R g+s $rundir
         chmod -R g+s $datadir
         chmod -R g+s $logdir
 
