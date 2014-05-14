@@ -1,3 +1,21 @@
+linz-positionzpp-server (1.1.0-1) precise; urgency=low
+
+  * Updating version number
+  * Removing getFailureInfo that is added to BernUtil.pm
+  * Improving statistics logging
+  * Fixing stats output
+
+ -- Chris Crook <ccrook@linz.govt.nz>  Wed, 14 May 2014 15:06:11 +1200
+
+linz-positionzpp-server (1.0.2-1) UNRELEASED; urgency=low
+
+  * Updating version number
+  * Removing getFailureInfo that is added to BernUtil.pm
+  * Improving statistics logging
+  * Fixing stats output
+
+ -- Chris Crook <ccrook@linz.govt.nz>  Wed, 14 May 2014 15:04:26 +1200
+
 linz-positionzpp-server (1.0-1.1) stable; urgency=low
 
   * Fixed access for positionzpp status so that it doesn't create a logger
