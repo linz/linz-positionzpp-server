@@ -299,8 +299,8 @@ sub runBerneseProcessor
     if( $self->{status} eq 'fail' )
     {
         my $runsts=$self->{campaign}->{runstatus} || {};
-        $fail_pid= $runsts->{fail_pid} || '000';
-        $fail_message= $runsts->{fail_message} || $self->{status_description};
+        my $fail_pid= $runsts->{fail_pid} || '000';
+        my $fail_message= $runsts->{fail_message} || $self->{status_description};
         $logger->error("Bernese job $campid failed: PID $fail_pid: $fail_message");
     }
     elsif( $self->{status} eq 'wait' )

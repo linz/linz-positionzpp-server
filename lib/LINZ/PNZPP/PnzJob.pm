@@ -31,12 +31,14 @@ use Archive::Zip qw/:ERROR_CODES/;
 use File::Copy;
 use File::Path qw/make_path remove_tree/;
 use JSON::PP;
-use Log::Log4perl;
-use LINZ::PNZPP::BernJob;
-use LINZ::PNZPP::Template;
 use LINZ::GNSS::Time qw/seconds_datetime/;
+use Log::Log4perl;
 use LWP::Simple qw//;
 use Carp;
+
+require LINZ::PNZPP::BernJob;
+require LINZ::PNZPP::Template;
+require LINZ::PNZPP;
 
 
 our $InputDir;
@@ -608,6 +610,7 @@ sub sendResults
 
     chmod(0666,$rziptmp);
     move($rziptmp,$rzipfile) || croak("Cannot rename $rziptmp to $rzipfile\n");
+    LINZ::PNZPP::RunHook('postupdate',$rzipfile);
 
     return $complete;
 }

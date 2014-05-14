@@ -33,16 +33,16 @@ block it from restarting.
 
 package LINZ::PNZPP::PnzServer;
 
-use LINZ::PNZPP::PnzJob;
 use LINZ::GNSS::Time qw/seconds_datetime/;
 use LINZ::BERN::BernUtil;
 use File::Path qw/make_path remove_tree/;
 use File::Copy;
 use File::Copy::Recursive qw/dircopy/;
-
 use Log::Log4perl;
 use Carp;
 
+require LINZ::PNZPP;
+require LINZ::PNZPP::PnzJob;
 
 our $LockDir;
 our $StatusDir;
@@ -197,7 +197,7 @@ sub StatusString
 
     $text.= "\n$separator\n\nCurrently running server status\n\n";
     my $running=$statusdata->{running};
-    my $sep='';
+    $sep='';
     foreach my $s (sort {$a->{id} cmp $b->{id}} @$running)
     {
         $text .= $sep.$s->{info}."\n";
@@ -761,6 +761,8 @@ sub processJobs
         my $jobdir="$workdir/$jbf";
         next if ! -d $jobdir;
         next if ! -e "$jobdir/$statusfile";
+        # Ignore future dated jobs - they are on hold
+        next if -M "$jobdir/$statusfile" < 0.0;
         push(@jobdirs,$jobdir);
     }
     closedir($dir);
@@ -795,6 +797,8 @@ sub run
     my ($self)=@_;
     if( $self->lock())
     {
+        require LINZ::PNZPP;
+        LINZ::PNZPP::RunHook('prerun',$LINZ::PNZPP::PnzJob::InputDir);
         $self->loadNewJobs();
         $self->processJobs();
         $self->unlock();

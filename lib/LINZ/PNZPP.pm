@@ -28,6 +28,7 @@ use Carp;
 our $RefDataDir;
 our $AntennaListFile;
 our $ReceiverListFile;
+our $HookScript;
 
 =head2 PNZPP::LoadConfig($filename,$nologging)
 
@@ -68,9 +69,33 @@ sub LoadConfig
     $RefDataDir=$conf->filename("RefDataDir") || croak("RefDataDir not defined in configuration\n");
     $AntennaListFile=$conf->get("AntennaListFile");
     $ReceiverListFile=$conf->get("ReceiverListFile");
+    $HookScript=$conf->get("HookScript");
     LINZ::PNZPP::PnzServer::LoadConfig($conf);
     LINZ::PNZPP::PnzJob::LoadConfig($conf);
     LINZ::PNZPP::BernJob::LoadConfig($conf);
+}
+
+=head2 LINZ::PNZPP::RunHook($hookname,$parameter)
+
+Runs the PositioNZ-PP hook script.  Hookname must be one of prerun, postupdate, and 
+postrefdata. 
+
+=cut
+
+sub RunHook
+{
+    my($hookname,$parameter)=@_;
+    return if ! $HookScript;
+    if( ! -x $HookScript )
+    {
+        carp("Script $HookScript is not an executable file\n");
+        return;
+    }
+    if( $hookname !~ /^(prerun|postupdate|postrefdata)$/ )
+    {
+        croak("Invalid positionzpp hook \"$hookname\" called\n");
+    }
+    system($HookScript,$hookname,$parameter);
 }
 
 =head2 LINZ::PNZPP::Run($serverid)
@@ -115,6 +140,7 @@ sub UpdateReferenceData
             print $f $antjson;
             close($f);
             move($anttmp,$antfile) || die("Cannot update antennae list file $antfile\n");
+            RunHook('postrefdata',$antfile);
         }
         if( $ReceiverListFile )
         {
@@ -127,6 +153,7 @@ sub UpdateReferenceData
             print $f $recjson;
             close($f);
             move($rectmp,$recfile) || die("Cannot update receiver list file $recfile\n");
+            RunHook('postrefdata',$recfile);
         }
     };
     if( $@ )
