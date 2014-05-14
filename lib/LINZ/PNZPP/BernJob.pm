@@ -298,10 +298,10 @@ sub runBerneseProcessor
     }
     if( $self->{status} eq 'fail' )
     {
-        $self->{fail_pid}='000';
-        $self->{fail_message}=$self->{status_description};
-        $self->getFailureInfo($pcffile);
-        $logger->error("Bernese job $campid failed: PID ".$self->{fail_pid}.": ".$self->{fail_message});
+        my $runsts=$self->{campaign}->{runstatus} || {};
+        $fail_pid= $runsts->{fail_pid} || '000';
+        $fail_message= $runsts->{fail_message} || $self->{status_description};
+        $logger->error("Bernese job $campid failed: PID $fail_pid: $fail_message");
     }
     elsif( $self->{status} eq 'wait' )
     {
@@ -364,68 +364,6 @@ sub update
     $self->sendFailNotification() if $self->{status} eq 'fail';
     $server->deleteBerneseClientEnv();
     return 1;
-}
-
-=head2 $bernjob->getFailureInfo($pcffile)
-
-Attempt to find the information about script failure from the BPE log files
-Takes the name of the PCF file as a parameter.
-
-=cut
-
-
-sub getFailureInfo
-{
-    my($self,$pcffile)=@_;
-    my $bpedir=$self->{campaigndir}.'/BPE';
-    my @logs=();
-    opendir(my $bd,$bpedir) || return;
-    foreach my $f (readdir($bd))
-    {
-        next if $f !~ /_\d\d\d_\d\d\d\.LOG$/;
-        my $logfile=$bpedir.'/'.$f;
-        push(@logs,$logfile) if -f $logfile;
-    }
-    closedir($bd);
-    @logs = sort { -M $a <=> -M $b } @logs;
-    foreach my $lfile (@logs)
-    {
-        my $pid=$1 if $lfile=~ /_(\d\d\d)_\d\d\d\.LOG/;
-        my $prog='';
-        my $failure='';
-        if( open( my $lf, "<$lfile"))
-        {
-            while(my $line=<$lf>)
-            {
-                $prog=$1 if $line =~ /Call\s+to\s+(\w+)\s+failed\:/i;
-                if( $line =~ /^\s*\*\*\*\s.*?\:\s*(.*?)\s*$/ )
-                {
-                    $failure .= '/ '.$1;
-                    while( $line = <$lf> )
-                    {
-                        last if $line =~ /^\s*$/;
-                        $line=~ s/^\s*//;
-                        $line=~ s/\s*$//;
-                        $failure .= ' '.$line;
-                    }
-                    last if ! $line;
-                }
-            }
-        }
-        next if $failure != '';
-        my $script='';
-        eval
-        {
-            my $pcf=LINZ::BERN::PcfFile->new($pcffile);
-            my $failpid=$pcf->pid($pid);
-            $script=$failpid->{optdir}.':'.$failpid->{script};
-        };
-        $self->{fail_pid}=$pid;
-        $self->{fail_script}=$script;
-        $self->{fail_prog}=$prog;
-        $self->{fail_message}=substr($failure,2);
-        last;
-    }
 }
 
 =head2 $bernjob->compileReport()
