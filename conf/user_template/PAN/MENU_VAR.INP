@@ -1,0 +1,104 @@
+
+!
+! Predefined variables
+!
+! 2-digit year
+! ------------
+YEAR2     1  "$Y"
+  ## widget = comment
+
+MSG_YEAR2 1  "Two digit year of the current session"
+
+! Month
+! -----
+MONTH2     1  "$M"
+  ## widget = comment
+
+MSG_MONTH2 1  "Month of the current session"
+
+! Day of month
+! ------------
+DAY2     1  "$D"
+  ## widget = comment
+
+MSG_DAY2 1  "Day of month of the current session"
+
+! Job ID
+! ------
+JOB_ID     1  "$J"
+  ## widget = comment
+
+MSG_JOB_ID 1  "Job ID"
+
+! Ranges of $-Variables
+! ---------------------
+VAR_MINUS     1  "-1"
+  ## widget = spinbox; range = -999 0 1
+
+MSG_VAR_MINUS 1  "Minus range"
+
+VAR_PLUS     1  "1"
+  ## widget = spinbox; range = 0 999 1
+
+MSG_VAR_PLUS 1  "Plus range"
+
+! User-defined Variables
+! ----------------------
+USERVAR     1  "" ""
+  ## widget = uniline; numlines = 20; keepvariables = true
+
+MSG_USERVAR 1  "User-defined variables"
+
+! List of Environment Variables
+! -----------------------------
+ENVIR_LIST     5
+  "U"
+  "T"
+  "X"
+  "P"
+  "USER"
+  ## widget = uniline; numlines = 20
+
+MSG_ENVIR_LIST 1  "Environment variables"
+
+
+# BEGIN_PANEL NO_CONDITION #####################################################
+# MENU VARIABLES - MENU_VAR 1: Variables                                       #
+#                                                                              #
+# PREDEFINED VARIABLES                                                         #
+#   (translated in the menu)                                                   #
+#   Variable    Current value    Description                                   #
+#     $Y            > %% <       Two digit year of the current session         # YEAR2
+#     $M            > %% <       Month of the current session                  # MONTH2
+#     $D            > %% <       Day of month of the current session           # DAY2
+#     $J            > %% <       Job ID                                        # JOB_ID
+#                                                                              #
+# USER-DEFINED VARIABLES                           ENVIRONMENT VARIABLES       #
+#    (translated in the menu)                   (translated in main program)   #
+#  > Variable_(w/o_$) Value___________     <         > Variable        <       # USERVAR ENVIR_LIST
+#                                                                              #
+# END_PANEL ####################################################################
+
+
+# BEGIN_PANEL NO_CONDITION #####################################################
+# MENU_VAR 2: Ranges                                                           #
+#                                                                              #
+# RANGES OF PREDEFINED VARIABLES                                               #
+#   Minus range  > %% <       Plus range  > %% <                               # VAR_MINUS VAR_PLUS
+#                                                                              #
+# Without ranges         With ranges       Format       Description            #
+# (n=0,1,...9)                                                                 #
+# $+n          $-n          $+-            DDD          Day of Year (DOY)      #
+# $S+n         $S-n         $S+-           DDDS         DOY, Session Character #
+# $Y+n         $Y-n         $Y+-           YYYY         Year                   #
+# $W+n         $W-n         $W+-           WWWW         GPS Week               #
+# $M+n         $M-n         $M+-           YYMM         Year, Month            #
+# $JD+n        $JD-n        $JD+-          DDDDD        Modified Julian Date   #
+# $WD+n        $WD-n        $WD+-          WWWWD        GPS Week and Day       #
+# $YD+n        $YD-n        $YD+-          YYDDD        Year and DOY           #
+# $YSS+n       $YSS-n       $YSS+-         YYDDDS       Year, DOY, Sess. Char. #
+# $YMD_STR+n   $YMD_STR-n   $YMD_STR+-     YYYY MM DD   Year, Month, Day       #
+#                                                                              #
+# Syntax if n=10,...: $+(n), $S+(n), ..., $-(n), $S-(n), ...                   #
+#                                                                              #
+# END_PANEL ####################################################################

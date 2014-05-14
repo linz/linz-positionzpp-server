@@ -1,0 +1,33 @@
+
+LIST_OF_CPUS 5
+  "localhost" "echo '<COMMAND> <ARGV> >> <LOG> 2>&1' | sh &" "FAST" "2" "0" "0"
+  "local_sh" "<COMMAND> <ARGV> >> <LOG> 2>&1 &" "EXAMPLE" "0" "0" "0"
+  "local_csh" "<COMMAND> <ARGV> >>& <LOG> &" "EXAMPLE" "0" "0" "0"
+  "rsh_host1" "rsh -n host1 <COMMAND> <ARGV> >> <LOG> 2>&1 &" "EXAMPLE" "0" "0" "0"
+  "ssh_host1" "ssh -n host1 <COMMAND> <ARGV> >> <LOG> 2>&1 &" "EXAMPLE" "0" "0" "0"
+  ## widget = uniline
+
+MSG_LIST_OF_CPUS 1  "List of CPUs"
+
+SUSPEND_PCF 1  "" "" ""
+  ## widget = uniline
+
+MSG_SUSPEND_PCF 1  "List of suspended PCF"
+
+
+# BEGIN_PANEL NO_CONDITION #############################################################
+# BERNESE PROCESSING ENGINE 1: List of CPUs                                            #
+#                                                                                      #
+# LIST OF CPUS                                                                         #
+#> CPU_____ Command_to_call______________________________ Speed___ Maxj Jobs Wait <    # LIST_OF_CPUS
+#                                                                                      #
+# END_PANEL ############################################################################
+
+
+# BEGIN_PANEL NO_CONDITION #####################################################
+# BERNESE PROCESSING ENGINE 2: Suspend processes                               #
+#                                                                              #
+# LIST OF SUSPENDED PROCESS CONTROL FILES                                      #
+#   > PCF_name____________  if_file_(name)______  younger_than_n_seconds <     # SUSPEND_PCF
+#                                                                              #
+# END_PANEL ####################################################################

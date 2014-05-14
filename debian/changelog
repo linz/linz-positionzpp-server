@@ -1,0 +1,13 @@
+linz-positionzpp-server (1.0-1.1) stable; urgency=low
+
+  * Fixed access for positionzpp status so that it doesn't create a logger
+  * Fixed update_refdata to work
+
+ -- Chris Crook <ccrook@linz.govt.nz>  Thu, 01 May 2014 11:51:14 +1200
+
+linz-positionzpp-server (1.0-1) stable; urgency=low
+
+  * Initial release 
+
+ -- Chris Crook <ccrook@linz.govt.nz>  Thu, 01 May 2014 11:51:14 +1200
+

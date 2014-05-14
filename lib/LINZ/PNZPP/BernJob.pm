@@ -1,0 +1,662 @@
+
+package LINZ::PNZPP::BernJob;
+
+
+=head1 LINZ::PNZPP::BernJob
+
+Package to manage individual bernese jobs within a PositionzPP job.  
+
+=cut
+
+use strict;
+
+use Archive::Zip qw/:ERROR_CODES/;
+use Carp;
+use File::Find;
+use File::Path qw/make_path remove_tree/;
+use LINZ::BERN::BernUtil;
+use LINZ::BERN::PcfFile;
+use LINZ::GNSS::DataCenter;
+use LINZ::GNSS::Time qw/datetime_seconds seconds_datetime/;
+use JSON;
+use Net::SMTP;
+
+our @LockFiles = ('OUT/GETORB.LCK', 'OUT/GETREF.LCK');
+our $StatusFile= 'OUT/STATUS.LCK';
+our $SummaryJsonFile= 'OUT/SUMMARY.JSON';
+our $KeepBerneseCampaign=0;
+our $ArchiveBerneseSuccess='none';
+our $ArchiveBerneseFail='none';
+our $LogStatisticsDir;
+our $SuccessStatisticsFile;
+our $SuccessStatisticsHeader;
+our $SuccessStatisticsRow;
+our $FailStatisticsFile;
+our $FailStatisticsHeader;
+our $FailStatisticsRow;
+our $CompleteReportTemplate;
+our $WaitReportTemplate;
+our $FailedReportTemplate;
+our $ReportFiles=[];
+
+our $SmtpServer;
+our $NotificationEmailFrom='bern_server@linz.govt.nz';
+our $NotificationEmailTo='positionz@linz.govt.nz';
+our $NotificationEmailTitle='PositioNZ-PP job failure: [bernid]';
+our $NotificationEmailTemplate='|PositioNZ-PP job failed';
+
+=head2 LINZ::PNZPP::BernJob::LoadConfig
+
+Loads configuration information used by the Bernese processing module
+
+=cut
+
+sub LoadConfig
+{
+    my ($conf)=@_;
+    if( $conf->has("PcfLockFiles"))
+    {
+        @LockFiles=split(' ',$conf->get("PcfLockFiles"));
+    }
+    $SummaryJsonFile=$conf->get("PcfSummaryJasonFile",$SummaryJsonFile);
+    $StatusFile=$conf->get("PcfStatusFile",$StatusFile);
+    $ArchiveBerneseSuccess=$conf->get("ArchiveBerneseSuccess",$ArchiveBerneseSuccess);
+    $ArchiveBerneseFail=$conf->get("ArchiveBerneseFail",$ArchiveBerneseFail);
+    $KeepBerneseCampaign=$conf->get("KeepBerneseCampaign",$KeepBerneseCampaign);
+    $LogStatisticsDir=$conf->filename("LogStatisticsDir");
+    $SuccessStatisticsFile=$conf->filename("SuccessStatisticsFile");
+    $SuccessStatisticsHeader=$conf->get("SuccessStatisticsHeader");
+    $SuccessStatisticsRow=$conf->get("SuccessStatisticsRow");
+    $FailStatisticsFile=$conf->filename("FailStatisticsFile");
+    $FailStatisticsHeader=$conf->get("FailStatisticsHeader");
+    $FailStatisticsRow=$conf->get("FailStatisticsRow");
+    $CompleteReportTemplate=$conf->get("CompleteReportTemplate") || croak("Configuration does not define CompleteReportTemplate\n");
+    $WaitReportTemplate=$conf->get("WaitReportTemplate") || croak("Configuration does not define WaitReportTemplate\n");
+    $FailedReportTemplate=$conf->get("FailedReportTemplate") || croak("Configuration does not define FailedReportTemplate\n");
+
+    $SmtpServer=$conf->get("SmtpServer",'');
+    $NotificationEmailFrom=$conf->get("NotificationEmailFrom",$NotificationEmailFrom);
+    $NotificationEmailTo=$conf->get("NotificationEmailTo",$NotificationEmailTo);
+    $NotificationEmailTitle=$conf->get("NotificationEmailTitle",$NotificationEmailTitle);
+    $NotificationEmailTemplate=$conf->get("NotificationEmailTemplate",$NotificationEmailTemplate);
+    my $rfiles=$conf->get("ReportFiles");
+    if( ref($rfiles) eq 'HASH' && exists $rfiles->{reportfile} )
+    {
+        $ReportFiles=$rfiles->{reportfile};
+    }
+}
+
+sub _Logger
+{
+    my $logger=Log::Log4perl->get_logger('LINZ.PNZPP.BernJob');
+    return $logger;
+}
+
+=head2  $bernjob=LINZ::PNZPP::BernJob->new($jobid,$subjobid,$filename,$orbittype,$reftype)
+
+Creates a new Bernese processing job as part of a PostioNZ-PP job (LINZ::PNZPP::PnzJob).
+
+Parameters are:
+
+=over
+
+=item $jobid    The PositioNZ job id
+
+=item $subjobid The id of the processing job within the main PositioNZ job
+
+=item $filename The name of the RINEX file to be processed
+
+=item $orbittype The orbit type required, (eg FINAL, RAPID+)
+
+=item $reftype  The type of reference data required (eg DAILY, HOURLY+)
+
+=back
+
+=cut
+
+sub new
+{
+    my($class,$job,$subjobid,$filename,$orbittype,$reftype)=@_;
+
+    my $self= bless {
+        jobid=>$job->{id},
+        subjobid=>$subjobid,
+        campaignid=>$job->{id}.'_'.$subjobid,
+        email=>$job->{email},
+        filename=>$filename,
+        orbit_type=>$orbittype,
+        ref_rinex_type=>$reftype,
+        status=>'wait',
+        message=>'Not yet started.',
+        }, $class;
+    return $self;
+}
+
+# This is required to allow the JSON::encode function to run - otherwise it 
+# complains about blessed hashes.
+
+sub TO_JSON
+{
+    my($self)=@_;
+    return {%$self};
+}
+
+=head2 $bernjob=LINZ::PNZJOB::BernJob->reload($hash)
+
+Reblesses a persisted hash reference to this class
+
+=cut
+
+sub reload
+{
+    my($class,$hash)=@_;
+    return bless $hash,$class;
+}
+
+sub createCampaign
+{
+    my($self)=@_;
+    my $campid=$self->{campaignid};
+    eval
+    {
+        my $srcfile=$self->{jobdir}.'/'.$self->{filename};
+
+        # Codes that are not valid for user stations...
+        my $codes=LINZ::GNSS::DataCenter::AvailableStations();
+        my $campaign=LINZ::BERN::BernUtil::CreateCampaign(
+            $campid,
+            RinexFiles=>[$srcfile],
+            RenameRinex=>'U###',
+            RenameCodes=>$codes,
+            CrdFile=>'APR$S+0',
+            AbbFile=>'ABBREV',
+            StaFile=>'STATIONS',
+            AddNoneRadome=>1,
+            MakeSessionFile=>1,
+            SettingsFile=>1,
+            CanOverWrite=>1,
+        );
+        die "Cannot create Bernese job for RINEX file $srcfile\n" if ! $campaign;
+
+        # Add variables required by bernese software
+        my $vars=$campaign->{variables};
+        $vars->{V_USRMRK}=$campaign->{marks}->[0];
+        $vars->{V_ORBTYPE}=$self->{orbit_type};
+        $vars->{V_ERPTYPE}=$self->{orbit_type};
+
+        $self->{campaign}=$campaign;
+        $self->{campaigndir}=$campaign->{campaigndir};
+        $self->{status}='wait';
+    };
+    if( $@ )
+    {
+        _Logger()->error("Cannot create campaign $campid\n$@\n");
+        $self->{status}='fail';
+        $self->{message}=$@;
+    }
+}
+
+=head2 $locksok = $bernjob->checkBerneseLocks()
+
+Check whether the bernese processing lock files have expired.  These are 
+set when a download is not expected to be available until a later date.
+The file modification time of the lock file is set to when the lock expires.
+
+=cut
+
+sub checkBerneseLocks
+{
+    my($self)=@_;
+    my $campdir=$self->{campaigndir};
+    my $now=time();
+    foreach my $lf (@LockFiles)
+    {
+        my $lockfile="$campdir/$lf";
+        return 0 if -e $lockfile && (stat($lockfile))[9] > $now;
+    }
+    return 1;
+}
+
+=head2 $bernjob->runBerneseProcessor()
+
+This script runs the Bernese processing job and evaluates the final status of the job.
+This uses the LINZ::BERN::BernUtil::RunPcf function to run the PositioNZ-PP PCF file.
+
+The status is read from the status file (STATUS.LCK) generated by the PCF.  
+
+If the job is successfully completed then the results are read from the SUMMARY.JSON file also
+created by the PCF.
+
+=cut
+
+sub runBerneseProcessor
+{
+    my($self,$bernenv)=@_;
+
+    my $campid=$self->{campaignid};
+    my $logger=_Logger();
+    $logger->info("Running Bernese job  $campid");
+    $self->{start_time}=time();
+    my $pcffile=$bernenv->{PCF_FILE};
+    my $status=LINZ::BERN::BernUtil::RunPcf(
+        $self->{campaign},
+        $pcffile,
+        CLIENT_ENV=>$bernenv->{CLIENT_ENV},
+        CPU_FILE=>$bernenv->{CPU_FILE},
+    );
+    $self->{end_time}=time();
+    $self->{bernese_status}=$status;
+
+    # The status file is generated by the PNZSTART script.  The first line consists
+    # of a one word status followed optionally by additional information (typically the
+    # wait time, and the rest of the file is an optional status message.
+    #
+    # The status is one of FAIL, WAIT, SUCCESS
+
+    my $campdir=$self->{campaigndir};
+    my $stsfile="$campdir/$StatusFile";
+    open(my $sf,"<$stsfile") || croak("Cannot open PCF status file $StatusFile\n");
+    my $stsline=<$sf>;
+    if( $stsline =~ /^\s*(\w+)(?:\s+(.*?))\s*$/)
+    {
+        my($status,$stsvalue)=($1,$2);
+        $self->{status}='complete' if $status eq 'SUCCESS';
+        $self->{status}='fail' if $status eq 'FAIL';
+        $self->{status}='wait' if $status eq 'WAIT';
+        $self->{status_value} = $stsvalue;
+        $self->{status_description} = join('',<$sf>);
+        $self->{eta_time}=0;
+        if( $status eq 'WAIT' )
+        {
+            eval
+            {
+                my $eta=datetime_seconds($stsvalue);
+                $self->{eta_time}=$eta;
+            };
+        }
+    }
+    close($sf);
+
+    # If complete - then get the results
+
+    if( $self->{status} eq 'complete' )
+    {
+        eval
+        {
+            my $jsonfile="$campdir/$SummaryJsonFile";
+            open(my $jf, $jsonfile) || die "Cannot open summary JSON file $jsonfile\n";
+            my $jsondata=join('',<$jf>);
+            close($jf);
+            my $results=JSON->new->utf8->decode($jsondata);
+            $self->{results}=$results;
+        };
+        if( $@ )
+        {
+            $self->{status}='fail';
+            $self->{status_description}=$@;
+        }
+    }
+    if( $self->{status} eq 'fail' )
+    {
+        $self->{fail_pid}='000';
+        $self->{fail_message}=$self->{status_description};
+        $self->getFailureInfo($pcffile);
+        $logger->error("Bernese job $campid failed: PID ".$self->{fail_pid}.": ".$self->{fail_message});
+    }
+    elsif( $self->{status} eq 'wait' )
+    {
+        $logger->info("Bernese job $campid on hold till ".seconds_datetime($self->{eta_time},1));
+    }
+    else
+    {
+        $logger->info("Bernese job $campid completed");
+    }
+    return $self->{status};
+}
+
+sub complete
+{
+    return $_[0]->{status} eq 'complete';
+}
+
+sub waiting
+{
+    return $_[0]->{status} eq 'wait';
+}
+
+sub failed
+{
+    return $_[0]->{status} eq 'fail';
+}
+
+=head2 $updated=$bernjob->update($server)
+
+Updates the BernJob.  Returns 1 if the job status is updated, 0 otherwise.
+
+The parameter is the PnzServer that is managing the job, which supplies the Bernese
+client environment.
+
+Creates the Bernese campaign if it is not already defined, checks for lock/wait files
+that have not yet expired (eg waiting for orbit data), and runs the Bernese PCF if there
+are no current locks.
+
+=cut 
+
+sub update
+{
+    my ($self,$server)=@_;
+    return 0 if $self->{status} ne 'wait';
+
+    # Note that creating the bernese environment also sets the variables
+    # in %ENV.
+    my $bernenv=$server->berneseClientEnv();
+    my $created=0;
+    if( ! $self->{campaign} )
+    {
+        $self->createCampaign();
+        $created=1;
+    }
+    return 0 if ! $self->{campaign};
+    return $created if ! $self->checkBerneseLocks();
+    $self->runBerneseProcessor($bernenv);
+    $self->compileReport();
+    $self->writeStats() if $self->{status} ne 'wait';
+    $self->sendFailNotification() if $self->{status} eq 'fail';
+    $server->deleteBerneseClientEnv();
+    return 1;
+}
+
+=head2 $bernjob->getFailureInfo($pcffile)
+
+Attempt to find the information about script failure from the BPE log files
+Takes the name of the PCF file as a parameter.
+
+=cut
+
+
+sub getFailureInfo
+{
+    my($self,$pcffile)=@_;
+    my $bpedir=$self->{campaigndir}.'/BPE';
+    my @logs=();
+    opendir(my $bd,$bpedir) || return;
+    foreach my $f (readdir($bd))
+    {
+        next if $f !~ /_\d\d\d_\d\d\d\.LOG$/;
+        my $logfile=$bpedir.'/'.$f;
+        push(@logs,$logfile) if -f $logfile;
+    }
+    closedir($bd);
+    @logs = sort { -M $a <=> -M $b } @logs;
+    foreach my $lfile (@logs)
+    {
+        my $pid=$1 if $lfile=~ /_(\d\d\d)_\d\d\d\.LOG/;
+        my $prog='';
+        my $failure='';
+        if( open( my $lf, "<$lfile"))
+        {
+            while(my $line=<$lf>)
+            {
+                $prog=$1 if $line =~ /Call\s+to\s+(\w+)\s+failed\:/i;
+                if( $line =~ /^\s*\*\*\*\s.*?\:\s*(.*?)\s*$/ )
+                {
+                    $failure .= '/ '.$1;
+                    while( $line = <$lf> )
+                    {
+                        last if $line =~ /^\s*$/;
+                        $line=~ s/^\s*//;
+                        $line=~ s/\s*$//;
+                        $failure .= ' '.$line;
+                    }
+                    last if ! $line;
+                }
+            }
+        }
+        next if $failure != '';
+        my $script='';
+        eval
+        {
+            my $pcf=LINZ::BERN::PcfFile->new($pcffile);
+            my $failpid=$pcf->pid($pid);
+            $script=$failpid->{optdir}.':'.$failpid->{script};
+        };
+        $self->{fail_pid}=$pid;
+        $self->{fail_script}=$script;
+        $self->{fail_prog}=$prog;
+        $self->{fail_message}=substr($failure,2);
+        last;
+    }
+}
+
+=head2 $bernjob->compileReport()
+
+Generates a user readable report detailing the current status of the job
+
+=cut
+
+sub compileReport()
+{
+    my ($self)=@_;
+    my $template=$WaitReportTemplate;
+    $template=$CompleteReportTemplate if $self->complete;
+    $template=$FailedReportTemplate if $self->failed;
+    my $ftemplate=LINZ::PNZPP::Template->new($template);
+    $self->{report}= LINZ::PNZPP::Template->new($template)->expand(%$self);
+    $self->{report_files}=[];
+
+    if( ! $self->waiting() )
+    {
+        my $files=[];
+        my $mark=$self->{campaign}->{marks}->[0];
+        my $session=$self->{campaign}->{SES_INFO};
+        my $bernid=$self->{campaignid};
+        my $jobid=$self->{jobid};
+        my $subjobid=$self->{subjobid};
+        my $file=$self->{campaign}->{files}->[0]->{srcfilename};
+
+        foreach my $rfile (@$ReportFiles)
+        {
+            my $source=$rfile->{source};
+            my $target=$rfile->{output};
+            my $description=$rfile->{description};
+            foreach my $item ($source,$target,$description)
+            {
+                $item=~s/\[jobid\]/$jobid/g;
+                $item=~s/\[subjob\]/$subjobid/g;
+                $item=~s/\[bernid\]/$bernid/g;
+                $item=~s/\[file\]/$file/g;
+                $item=~s/\[cccc\]/$mark/g;
+                $item=~s/\[ssss\]/$session/g;
+            }
+            my $sourcepath=$self->{campaigndir}.'/'.$source;
+            if( ! -f $sourcepath )
+            {
+                _Logger()->warn("Report file $sourcepath is missing\n") if $self->complete();
+            }
+            elsif( $target !~ /^[A-Z0-9_.-]+$/i )
+            {
+                _Logger()->error("Invalid report file target name $target defined\n");
+            }
+            else
+            {
+                push(@$files,{source=>$sourcepath,target=>$target,description=>$description});
+            }
+        }
+        $self->{report_files}=$files;
+    }
+}
+
+=head2 $bernjob->writestats
+
+Write summary statistics to the statistics log files
+
+=cut
+
+sub writeStats
+{
+    my($self)=@_;
+    my $status=$self->{status};
+    return if $status ne 'complete' && $status ne 'fail';
+    my $file=$status eq 'complete' ? $SuccessStatisticsFile : $FailStatisticsFile;
+    my $header=$status eq 'complete' ? $SuccessStatisticsHeader : $FailStatisticsHeader;
+    my $row=$status eq 'complete' ? $SuccessStatisticsRow : $FailStatisticsRow;
+    return if $file eq '' || $row eq '';
+    $file=$LogStatisticsDir.'/'.$file;
+    eval
+    {
+        if( ! -d $LogStatisticsDir )
+        {
+            my $error=[];
+            make_path($LogStatisticsDir,{error=>\$error});
+            if( ! -d $LogStatisticsDir )
+            {
+                die("Cannot create statistics log directory $LogStatisticsDir\n".
+                    join("\n",@$error)."\n");
+            }
+        }
+        my $newfile = ! -f $file;
+        open( my $f, ">>$file" ) || die "Cannot open statistics file $file\n";
+        LINZ::PNZPP::Template->new($header)->write($f,%$self) if $newfile && $header ne '';
+        LINZ::PNZPP::Template->new($row)->write($f,%$self,seconds_datetime=>sub { return seconds_datetime(@_);} );
+        close($f);
+    };
+    if( $@ )
+    {
+        _Logger->error($@);
+    }    
+}
+
+=head2 $bernjob->archive( $zipname )
+
+Archives the job to the specified directory.  The amount archived is based on the 
+$ArchiveBerneseSuccess and $ArchiveBerneseFailure configuration, and may be one of
+'all' (all data archived), or 'output' (BPE and OUT directories archived).  Otherwise
+nothing is archived and the file is not created.
+
+=cut
+
+sub archive
+{
+    my ($self,$zipfile)=@_;
+    my $level='';
+    $level = $ArchiveBerneseSuccess if $self->{status} eq 'complete';
+    $level = $ArchiveBerneseFail if $self->{status} eq 'fail';
+    $level = uc($level);
+    if( $level eq 'ALL')
+    {
+        $level = '\w\w\w';
+    }
+    elsif( $level eq 'OUTPUT' )
+    {
+        $level = '(OUT|BPE)';
+    }
+    elsif( $level =~ /^\w\w\w(?:\/\w\w\w)*$/)
+    {
+        $level=~ s/\//|/g;
+        $level="($level)";
+    }
+    else
+    {
+        return;
+    }
+    $level="\\/$level\$";
+    my $campdir=$self->{campaigndir};
+    eval
+    {
+        my $zip=Archive::Zip->new();
+        my $campdirlen=length($campdir)+1;
+        my @archfiles=();
+
+        my $findsub=sub
+        {
+            return if -d $_;
+            return if $File::Find::dir !~ /$level/;
+            push(@archfiles,$File::Find::name);
+        };
+
+        find( {wanted=>$findsub, no_chdir=>1},$campdir);
+        return if ! @archfiles;
+        foreach my $f (@archfiles)
+        {
+            my $localname=substr($f,$campdirlen);
+            $zip->addFile($f,$localname);
+        }
+        $zip->writeToFileNamed($zipfile)==AZ_OK || die "Cannot create archive zip $zipfile\n";
+    };
+    if( $@ )
+    {
+        _Logger()->error("Failed to archive bernese data $campdir: ".$@);
+    }
+}
+
+=head2 $bernjob->remove()
+
+Deletes the Bernese campaign directories created by the job.
+
+=cut 
+
+sub remove
+{
+    my ($self)=@_;
+    if( $self->{campaigndir} )
+    {
+        my $error=[];
+        remove_tree($self->{campaigndir},{error=>\$error}) if ! $KeepBerneseCampaign;
+        if( @$error )
+        {
+            _Logger()->error("Unable to delete Bernese directories\n".join('',@$error));
+        }
+        delete $self->{campaign};
+        delete $self->{campaigndir};
+    }
+}
+
+=head2 $bernjob->sendFailNotification()
+
+Sends an email to the system administrators advising of a failed job
+
+=cut
+
+sub sendFailNotification
+{
+    my($self)=@_;
+
+
+    my $server = $SmtpServer;
+    return if $server eq '' || $server eq 'none';
+
+    my $smtp = Net::SMTP->new($server);
+    if( ! $smtp )
+    {
+        _Logger()->error("Cannot connect to SMTP server $server to send fail notification message");
+        return;
+    }
+
+    my @to = split(/\;/,$NotificationEmailTo);
+
+    my $title=$NotificationEmailTitle;
+    $title=~ s/\[bernid\]/$self->{campaignid}/eg;
+    
+    my $message="PositioNZ-PP processing job ".$self->{campaignid}." failed\n";
+    eval
+    {
+        $message=LINZ::PNZPP::Template->new($NotificationEmailTemplate)->expand(
+            %$self,seconds_datetime=>sub { return seconds_datetime(@_);} );
+    };
+    if( $@ )
+    {
+        _Logger->error("Error creating bern fail mail: $@");
+    }
+
+    $smtp->mail($NotificationEmailFrom);
+    $smtp->to(@to,{SkipBad=>1});
+    $smtp->data();
+    $smtp->datasend("To: $NotificationEmailTo\n");
+    $smtp->datasend("From: $NotificationEmailFrom\n");
+    $smtp->datasend("Subject: $title\n\n");
+    $smtp->datasend($message);
+    $smtp->dataend();
+    $smtp->quit();
+}
+
+1;

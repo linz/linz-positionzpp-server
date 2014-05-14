@@ -1,0 +1,38 @@
+
+CAMPAIGN     0
+  ## widget = initmenu; pointer = ACTIVE_CAMPAIGN
+
+! List of Subdirectories
+! ----------------------
+LIST_SUBDIRS    10
+  "ATM"
+  "BPE"
+  "GRD"
+  "OBS"
+  "ORB"
+  "ORX"
+  "OUT"
+  "RAW"
+  "SOL"
+  "STA"
+  ## widget = uniline; numlines = 25
+
+MSG_LIST_SUBDIRS 1  "Create campaign subdirectories"
+
+! List of Files to be copied
+! --------------------------
+LIST_FILES     1  "${X}/SKL/SESSIONS.SES" "STA"
+  ## widget = uniline; numlines = 25
+
+MSG_LIST_FILES 1  "Copy files into the campaign"
+
+
+# BEGIN_PANEL NO_CONDITION #####################################################
+# CREATE NEW CAMPAIGN - NEWCAMP                                                #
+#                                                                              #
+#    Selected campaign: > %%%%%%%%%%%% <                                       # CAMPAIGN
+#                                                                              #
+#    Create campaign              Copy files into the campaign                 #
+#  > subdirectories        <    > from________________________     to__  <     # LIST_SUBDIRS LIST_FILES
+#                                                                              #
+# END_PANEL ####################################################################

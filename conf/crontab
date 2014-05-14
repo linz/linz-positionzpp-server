@@ -1,0 +1,21 @@
+# PositioNZ-PP crontab log
+# 
+# Cron for running the servers
+#
+# Servers are started potentially every 3 minutes, with each server being
+# run again after 12 minutes (if it is not still going).  
+# 
+# m h  dom mon dow   command
+
+0,12,24,36,48 * * * * positionzpp run 001 > /var/log/positionzpp/cron_001.out 2>&1
+3,15,27,39,51 * * * * positionzpp run 002 > /var/log/positionzpp/cron_002.out 2>&1
+6,18,30,42,54 * * * * positionzpp run 003 > /var/log/positionzpp/cron_003.out 2>&1
+9,21,33,45,57 * * * * positionzpp run 004 > /var/log/positionzpp/cron_004.out 2>&1
+
+# Update reference data
+
+0 5,17 * * * positionzpp update_refdata > /var/log/positionzpp/cron_refdata.out 2>&1
+
+# Run maintenance scripts
+
+0 1 * * * positionzpp run_maintenance > /var/log/positionzpp/cron_maintenance 2>&1

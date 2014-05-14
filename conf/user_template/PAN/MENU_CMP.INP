@@ -1,0 +1,16 @@
+
+! List of Campaigns
+! -----------------
+CAMPAIGN     1  "${P}/EXAMPLE"
+  ## widget = uniline; numlines = 30
+
+MSG_CAMPAIGN 1  "Campaign directory"
+
+
+
+# BEGIN_PANEL NO_CONDITION #####################################################
+# EDIT LIST OF CAMPAIGNS - MENU_CMP                                            #
+#                                                                              #
+# > Campaign_directory       <                                                 # CAMPAIGN
+#                                                                              #
+# END_PANEL ####################################################################

@@ -1,0 +1,105 @@
+
+PCFFILRS     0
+  ## widget = comment
+
+MSG_PCFFILRS 1 "Filename"
+
+LIST_OF_SCRIPTS     1  "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" ""
+  ## widget = uniline
+  ## check_type.1 = integer; check_min.1 = 0; check_max.1 = 999
+  ## check_strlen.2 = 8; check_strlen.3 = 8
+  ## check_strlen.4 = 8; check_strlen.5 = 8; check_strlen.6 = 1
+  ## check_type.7 = integer; check_min.7 = 0; check_max.7 = 999
+  ## check_type.8 = integer; check_min.8 = 0; check_max.8 = 999
+  ## check_type.9 = integer; check_min.9 = 0; check_max.9 = 999
+  ## check_type.10 = integer; check_min.10 = 0; check_max.10 = 999
+  ## check_type.11 = integer; check_min.11 = 0; check_max.11 = 999
+  ## check_type.12 = integer; check_min.12 = 0; check_max.12 = 999
+  ## check_type.13 = integer; check_min.13 = 0; check_max.13 = 999
+  ## check_type.14 = integer; check_min.14 = 0; check_max.14 = 999
+  ## check_type.15 = integer; check_min.15 = 0; check_max.15 = 999
+  ## check_type.16 = integer; check_min.16 = 0; check_max.16 = 999
+  ## numlines = 15
+
+MSG_LIST_OF_SCRIPTS 1 "List of BPE scripts"
+
+SPECIALS     1  "" "" "" "" "" "" "" "" "" "" "" "" "" ""
+  ## widget = uniline; menuaux = MENUAUX; action = PCF_SPECIALS
+  ## updateifsave = true
+  ## menuauxkeys = LIST_OF_SCRIPTS SPECIALS
+  ## check_strlen.5 = 8
+  ## check_type.6 = integer; check_min.6 = 0; check_max.6 = 999
+  ## check_type.7 = integer; check_min.7 = 0; check_max.7 = 999
+  ## check_type.8 = integer; check_min.8 = 0; check_max.8 = 999
+  ## check_type.9 = integer; check_min.9 = 0; check_max.9 = 999
+  ## check_type.10 = integer; check_min.10 = 0; check_max.10 = 999
+  ## check_type.11 = integer; check_min.11 = 0; check_max.11 = 999
+  ## check_type.12 = integer; check_min.12 = 0; check_max.12 = 999
+  ## check_type.13 = integer; check_min.13 = 0; check_max.13 = 999
+  ## check_type.14 = integer; check_min.14 = 0; check_max.14 = 999
+  ## editable.1 = false; editable.2 = false; editable.3 = false
+  ## editable = false; numlines = 15; keepvariables = true
+
+MSG_SPECIALS 1 "Special actions for BPE scripts"
+
+PARAMETERS     1  "" "" "" "" "" "" "" "" "" "" "" ""
+  ## widget = uniline; menuaux = MENUAUX; action = PCF_PARAMS
+  ## updateifsave = true
+  ## menuauxkeys = LIST_OF_SCRIPTS SPECIALS PARAMETERS
+  ## check_strlen.4 = 8; check_strlen.5 = 8; check_strlen.6 = 8
+  ## check_strlen.7 = 8; check_strlen.8 = 8; check_strlen.9 = 8
+  ## check_strlen.10 = 8; check_strlen.11 = 8; check_strlen.12 = 8
+  ## editable.1 = false; editable.2 = false; editable.3 = false
+  ## numlines = 15; keepvariables = true
+
+MSG_PARAMETERS 1 "Parameters for BPE scripts"
+
+PCF_VARIABLES     1  "" "" ""
+  ## widget = uniline
+  ## check_strlen.1 = 8; check_strlen.2 = 32; check_strlen.3 = 40
+  ## numlines = 20; keepvariables = true
+
+MSG_PCF_VARIABLES 1 "BPE variables"
+
+ADDITIONAL_INFO     1  "" "" "" ""
+  ## widget = uniline
+
+
+# BEGIN_PANEL NO_CONDITION ###################################################################
+# EDIT PROCESS CONTROL FILE (PCF) - EDITPCF 1: LIST OF BPE SCRIPTS                           #
+#                                                                                            #
+#  Filename > %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% <               # PCFFILRS
+#                                            F: Flags                                        #
+#                                               S = Singleton for multi-session processing   #
+#                                                                                            #
+#                                                            Wait for...                     #
+# > PID Script__ Opt_dir_ Campaign CPU_____  F  ___ ___ ___ ___ ___ ___ ___ ___ ___ ___<     # LIST_OF_SCRIPTS
+#                                                                                            #
+# END_PANEL ##################################################################################
+
+
+# BEGIN_PANEL NO_CONDITION ##################################################################
+# EDITPCF 2: SPECIAL ACTIONS FOR BPE SCRIPTS                                                #
+#                        Special actions may be: SKIP, PARALLEL, NEXTJOB, CONT_ERR          #
+#                                                                                           #
+#                                   (if PARALLEL)          PIDs (if NEXTJOB)                #
+# > PID Script__ Opt_dir_ Special_ File____ Master ___ ___ ___ ___ ___ ___ ___ ___<         # SPECIALS
+#                                                                                           #
+# END_PANEL #################################################################################
+
+
+# BEGIN_PANEL NO_CONDITION #####################################################################################
+# EDITPCF 3: PARAMETERS FOR BPE SCRIPTS                                                                        #
+#                        (Available as $$bpe{PARAM1}..$$bpe{PARAM9} in the user scripts)                       #
+#                                                                                                              #
+#> PID Script__ Opt_dir_ Param1__ Param2__ Param3__ Param4__ Param5__ Param6__ Param7__ Param8__ Param9__<     # PARAMETERS
+#                                                                                                              #
+# END_PANEL ####################################################################################################
+
+
+# BEGIN_PANEL NO_CONDITION #####################################################
+# EDITPCF 4: BPE SERVER VARIABLES                                              #
+#                                                                              #
+# > Variable Default_value___ Description_____________________________   <     # PCF_VARIABLES
+#                                                                              #
+# END_PANEL ####################################################################

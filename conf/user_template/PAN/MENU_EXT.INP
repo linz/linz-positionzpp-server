@@ -1,0 +1,1674 @@
+
+! No path/no extension
+! --------------------
+NO_PTH     0
+
+NO_EXT     0
+
+! General files: Path
+! -------------------
+PTH_GEN     1  "${X}/GEN"
+  ## widget = lineedit
+
+MSG_PTH_GEN 1 "General files: path"
+
+! General Files: SatCrux/StaCrux
+! ------------------------------
+EXT_CRX     1  "CRX"
+  ## widget = lineedit
+
+MSG_EXT_CRX 1 "Satellite problem file/old station problem file: extension"
+
+! General Files: Ant/Rec translation
+! ----------------------------------
+EXT_TRN     1  "TRN"
+  ## widget = lineedit
+
+MSG_EXT_TRN 1 "Old antenna/receiver name translation table: extension"
+
+! General Files: Ocean tide model
+! -------------------------------
+EXT_TID     1  "TID"
+  ## widget = lineedit
+
+MSG_EXT_TID 1 "Ocean tide model: extension"
+
+! General Files: Solid Earth tide model
+! -------------------------------------
+EXT_TPO     1  "TPO"
+  ## widget = lineedit
+
+MSG_EXT_TPO 1 "Solid Earth tide model: extension"
+
+! General Files: Planetary ephemeris
+! ----------------------------------
+EXT_EPH     1  "EPH"
+  ## widget = lineedit
+
+MSG_EXT_EPH 1 "Planetary ephemeris: extension"
+
+! General Files: Frequency information
+! ------------------------------------
+EXT_FRQ     1  "FRQ"
+  ## widget = lineedit
+
+MSG_EXT_FRQ 1 "Frequency information: extension"
+
+! Orbit files: Broadcast file
+! ---------------------------
+DIR_BRD     1  "ORB"
+  ## widget = lineedit
+
+MSG_DIR_BRD 1 "Broadcast orbits: directory"
+
+EXT_BRD     1  "BRD"
+  ## widget = lineedit
+
+MSG_EXT_BRD 1 "Broadcast orbits: extension"
+
+! Orbit files: Precise file (original)
+! ------------------------------------
+DIR_OPR     1  "ORB"
+  ## widget = lineedit
+
+MSG_DIR_OPR 1 "Precise orbits (original): directory"
+
+! Orbit files: Precise file
+! -------------------------
+DIR_PRE     1  "ORB"
+  ## widget = lineedit
+
+MSG_DIR_PRE 1 "Precise orbits: directory"
+
+EXT_PRE     1  "PRE"
+  ## widget = lineedit
+
+MSG_EXT_PRE 1 "Precise orbits: extension"
+
+! Orbit files: Tabular orbit
+! --------------------------
+DIR_TAB     1  "ORB"
+  ## widget = lineedit
+
+MSG_DIR_TAB 1 "Tabular orbits: directory"
+
+EXT_TAB     1  "TAB"
+  ## widget = lineedit
+
+MSG_EXT_TAB 1 "Tabular orbits: extension"
+
+! Orbit files: Orbital elements
+! -----------------------------
+DIR_ELE     1  "ORB"
+  ## widget = lineedit
+
+MSG_DIR_ELE 1 "Improved orbit elements: directory"
+
+EXT_ELE     1  "ELE"
+  ## widget = lineedit
+
+MSG_EXT_ELE 1 "Improved orbit elements: extension"
+
+! Orbit files: Standard orbit
+! ---------------------------
+DIR_STD     1  "ORB"
+  ## widget = lineedit
+
+MSG_DIR_STD 1 "Standard orbits: directory"
+
+EXT_STD     1  "STD"
+  ## widget = lineedit
+
+MSG_EXT_STD 1 "Standard orbits: extension"
+
+! Orbit files: Radian press.
+! --------------------------
+DIR_RPR     1  "ORB"
+  ## widget = lineedit
+
+MSG_DIR_RPR 1 "Radian pressure coefficients: directory"
+
+EXT_RPR     1  "RPR"
+  ## widget = lineedit
+
+MSG_EXT_RPR 1 "Radian pressure coefficients: extension"
+
+! Orbot files: ERP-file
+! ---------------------
+DIR_ERP     1  "ORB"
+  ## widget = lineedit
+
+MSG_DIR_ERP 1 "Earth orientation parameters: directory"
+
+EXT_ERP     1  "ERP"
+  ## widget = lineedit
+
+MSG_EXT_ERP 1 "Earth orientation parameters: extension"
+
+! Orbit files: ERP-file (IERS)
+! ----------------------------
+DIR_IEP     1  "ORB"
+  ## widget = lineedit
+
+MSG_DIR_IEP 1 "Earth orientation parameters (IERS format): directory"
+
+EXT_IEP     1  "IEP"
+  ## widget = lineedit
+
+MSG_EXT_IEP 1 "Earth orientation parameters (IERS format): extension"
+
+! Orbit files: Geocenter file
+! ---------------------------
+DIR_GCC     1  "ORB"
+  ## widget = lineedit
+
+MSG_DIR_GCC 1 "Geocenter coordinates: directory"
+
+EXT_GCC     1  "GCC"
+  ## widget = lineedit
+
+MSG_EXT_GCC 1 "Geocenter coordinates: extension"
+
+! Orbit files: Sat. clocks
+! ------------------------
+DIR_CLK     1  "ORB"
+  ## widget = lineedit
+
+MSG_DIR_CLK 1 "Satellite/Receiver clocks: directory"
+
+EXT_CLK     1  "CLK"
+  ## widget = lineedit
+
+MSG_EXT_CLK 1 "Satellite/Receiver clocks: extension"
+
+! Orbit files: Diff. code bias
+! ----------------------------
+DIR_DCB     1  "ORB"
+  ## widget = lineedit
+
+MSG_DIR_DCB 1 "Differential code biases: directory"
+
+EXT_DCB     1  "DCB"
+  ## widget = lineedit
+
+MSG_EXT_DCB 1 "Differential code biases: extension"
+
+! Orbit files: Inter-system bias
+! ------------------------------
+DIR_ISB     1  "ORB"
+  ## widget = lineedit
+
+MSG_DIR_ISB 1  "Inter-system biases: directory"
+
+EXT_ISB     1  "ISB"
+  ## widget = lineedit
+
+MSG_EXT_ISB 1  "Inter-system biases: extension"
+
+! Orbit: BIAS SINEX
+! -----------------
+DIR_BIA 1  "ORB"
+  ## widget = lineedit
+
+MSG_DIR_BIA 1  "Biases (SINEX format): directory"
+
+EXT_BIA 1  "BIA"
+  ## widget = lineedit
+
+MSG_EXT_BIA 1  "Biases (SINEX format): extension"
+
+! Orbit: IRV file
+! ---------------
+DIR_IRV     1  "ORB"
+  ## widget = lineedit
+
+MSG_DIR_IRV 1 "IRVs: directory"
+
+EXT_IRV     1  "IRV"
+  ## widget = lineedit
+
+MSG_EXT_IRV 1 "IRVs: extension"
+
+! Orbit: CPF file
+! ---------------
+DIR_CPF     1  "ORB"
+  ## widget = lineedit
+
+MSG_DIR_CPF 1 "CPFs: directory"
+
+EXT_CPF     1  "CPF"
+  ## widget = lineedit
+
+MSG_EXT_CPF 1 "CPFs: extension"
+
+! Orbit: State vector file
+! ------------------------
+DIR_STV     1  "ORB"
+  ## widget = lineedit
+
+MSG_DIR_STV 1 "State vectors: directory"
+
+EXT_STV     1  "STV"
+  ## widget = lineedit
+
+MSG_EXT_STV 1 "State vectors: extension"
+
+! Orbit: Accelerometer data
+! -------------------------
+DIR_ACC     1  "ORB"
+  ## widget = lineedit
+
+MSG_DIR_ACC 1 "Accelerometer data: directory"
+
+EXT_ACC     1  "ACC"
+  ## widget = lineedit
+
+MSG_EXT_ACC 1 "Accelerometer data: extension"
+
+! LEO-Orbit: Attitude data
+! ------------------------
+DIR_ATT     1  "ORB"
+  ## widget = lineedit
+
+MSG_DIR_ATT 1 "Attitude data: directory"
+
+EXT_ATT     1  "ATT"
+  ## widget = lineedit
+
+MSG_EXT_ATT 1 "Attitude data: extension"
+
+! LEO-Orbit: LEO maneuvers
+! ------------------------
+DIR_MAN     1  "ORB"
+  ## widget = lineedit
+
+MSG_DIR_MAN 1 "LEO maneuvers: directory"
+
+EXT_MAN     1  "MAN"
+  ## widget = lineedit
+
+MSG_EXT_MAN 1 "LEO maneuvers: extension"
+
+! LEO-Orbit: CHAMP orbit format
+! -----------------------------
+DIR_CHO     1  "ORB"
+  ## widget = lineedit
+
+MSG_DIR_CHO 1 "File in CHAMP orbit format: directory"
+
+EXT_CHO     1  "CHO"
+  ## widget = lineedit
+
+MSG_EXT_CHO 1 "File in CHAMP orbit format: extension"
+
+! Orbit: POE orbit format
+! -----------------------
+DIR_POE     1  "ORB"
+  ## widget = lineedit
+
+MSG_DIR_POE 1 "File in POE: directory"
+
+EXT_POE     1  "POE"
+  ## widget = lineedit
+
+MSG_EXT_POE 1 "File in POE: extension"
+
+! LEO-Orbit: LEO Kinematic velocities
+! -----------------------------------
+DIR_KVL     1  "STA"
+  ## widget = lineedit
+
+MSG_DIR_KVL 1 "LEO velocities (epoch-wise): directory"
+
+EXT_KVL     1  "VEL"
+  ## widget = lineedit
+
+MSG_EXT_KVL 1 "LEO velocities (epoch-wise): extension"
+
+! LEO-Orbit: LEO Aux. file (attitude,accelerom. data, thruster events...)
+! ------------------------
+DIR_AUX     1  "ORB"
+  ## widget = lineedit
+
+MSG_DIR_AUX 1 "LEO external aux. information: directory"
+
+EXT_AUX     1  "AUX"
+  ## widget = lineedit
+
+MSG_EXT_AUX 1 "LEO external aux. information: extension"
+
+! RINEX files: rinex obs files
+! ----------------------------
+DIR_OXO     1  "ORX"
+  ## widget = lineedit
+
+MSG_DIR_OXO 1 "RINEX observations (original): directory"
+
+DIR_RXO     1  "RAW"
+  ## widget = lineedit
+
+MSG_DIR_RXO 1 "RINEX observations: directory"
+
+EXT_RXO     1  "$YO"
+  ## widget = lineedit
+
+MSG_EXT_RXO 1 "RINEX observations: extension"
+
+! RINEX files: smoothed rinex
+! ---------------------------
+DIR_SMT     1  "RAW"
+  ## widget = lineedit
+
+MSG_DIR_SMT 1 "Smoothed RINEX observations: directory"
+
+EXT_SMT     1  "SMT"
+  ## widget = lineedit
+
+MSG_EXT_SMT 1 "Smoothed RINEX observations: extension"
+
+! RINEX files: rinex nav files
+! ----------------------------
+DIR_OXN     1  "ORX"
+  ## widget = lineedit
+
+MSG_DIR_OXN 1 "RINEX navigation messages (GPS, original): directory"
+
+DIR_RXN     1  "RAW"
+  ## widget = lineedit
+
+MSG_DIR_RXN 1 "RINEX navigation messages (GPS): directory"
+
+EXT_RXN     1  "$YN"
+  ## widget = lineedit
+
+MSG_EXT_RXN 1 "RINEX navigation messages (GPS): extension"
+
+! RINEX files: rinex nav files
+! ----------------------------
+DIR_OXG     1  "ORX"
+  ## widget = lineedit
+
+MSG_DIR_OXG 1 "RINEX navigation messages (GLONASS, original): directory"
+
+DIR_RXG     1  "RAW"
+  ## widget = lineedit
+
+MSG_DIR_RXG 1 "RINEX navigation messages (GLONASS): directory"
+
+EXT_RXG     1  "$YG"
+  ## widget = lineedit
+
+MSG_EXT_RXG 1 "RINEX navigation messages (GLONASS): extension"
+
+! RINEX files: rinex nav files
+! ----------------------------
+DIR_OGA     1  "ORX"
+  ## widget = lineedit
+
+MSG_DIR_OGA 1 "RINEX navigation messages (GALILEO, original): directory"
+
+DIR_RGA     1  "RAW"
+  ## widget = lineedit
+
+MSG_DIR_RGA 1 "RINEX navigation messages (GALILEO): directory"
+
+EXT_RGA     1  "$YE"
+  ## widget = lineedit
+
+MSG_EXT_RGA 1 "RINEX navigation messages (GALILEO): extension"
+
+! RINEX files: rinex met files
+! ----------------------------
+DIR_RXM     1  "RAW"
+  ## widget = lineedit
+
+MSG_DIR_RXM 1 "RINEX meteo data: directory"
+
+EXT_RXM     1  "$YM"
+  ## widget = lineedit
+
+MSG_EXT_RXM 1 "RINEX meteo data: extension"
+
+! Obs. files: Code zero head
+! --------------------------
+DIR_CZH     1  "OBS"
+  ## widget = lineedit
+
+MSG_DIR_CZH 1 "Zero difference code observations, header: directory"
+
+EXT_CZH     1  "CZH"
+  ## widget = lineedit
+
+MSG_EXT_CZH 1 "Zero difference code observations, header: extension"
+
+! Obs. files: Code zero data
+! --------------------------
+DIR_CZO     1  "OBS"
+  ## widget = lineedit
+
+MSG_DIR_CZO 1 "Zero difference code  observations, data: directory"
+
+EXT_CZO     1  "CZO"
+  ## widget = lineedit
+
+MSG_EXT_CZO 1 "Zero difference code observations, data: extension"
+
+! Obs. files: Phase zero head
+! ---------------------------
+DIR_PZH     1  "OBS"
+  ## widget = lineedit
+
+MSG_DIR_PZH 1 "Zero difference phase observations, header: directory"
+
+EXT_PZH     1  "PZH"
+  ## widget = lineedit
+
+MSG_EXT_PZH 1 "Zero difference phase observations, header: extension"
+
+! Obs. files: Phase zero data
+! ---------------------------
+DIR_PZO     1  "OBS"
+  ## widget = lineedit
+
+MSG_DIR_PZO 1 "Zero difference phase observations, data: directory"
+
+EXT_PZO     1  "PZO"
+  ## widget = lineedit
+
+MSG_EXT_PZO 1 "Zero difference phase observations, data: extension"
+
+! Obs. files: Range zero head
+! ---------------------------
+DIR_RZH     1  "OBS"
+  ## widget = lineedit
+
+MSG_DIR_RZH 1 "Range observations, header: directory"
+
+EXT_RZH     1  "RZH"
+  ## widget = lineedit
+
+MSG_EXT_RZH 1 "Range observations, header: extension"
+
+! Obs. files: Range zero data
+! ---------------------------
+DIR_RZO     1  "OBS"
+  ## widget = lineedit
+
+MSG_DIR_RZO 1 "Range observations, data: directory"
+
+EXT_RZO     1  "RZO"
+  ## widget = lineedit
+
+MSG_EXT_RZO 1 "Range observations, data: extension"
+
+! Obs. files: Code single head
+! ----------------------------
+DIR_CSH     1  "OBS"
+  ## widget = lineedit
+
+MSG_DIR_CSH 1 "Single difference code  observations, header: directory"
+
+EXT_CSH     1  "CSH"
+  ## widget = lineedit
+
+MSG_EXT_CSH 1 "Single difference code  observations, header: extension"
+
+! Obs. files: Code single data
+! ----------------------------
+DIR_CSO     1  "OBS"
+  ## widget = lineedit
+
+MSG_DIR_CSO 1 "Single difference code  observations, data: directory"
+
+EXT_CSO     1  "CSO"
+  ## widget = lineedit
+
+MSG_EXT_CSO 1 "Single difference code  observations, data: extension"
+
+! Obs. files: Phase single head
+! -----------------------------
+DIR_PSH     1  "OBS"
+  ## widget = lineedit
+
+MSG_DIR_PSH 1 "Single difference phase observations, header: directory"
+
+EXT_PSH     1  "PSH"
+  ## widget = lineedit
+
+MSG_EXT_PSH 1 "Single difference phase observations, header: extension"
+
+! Obs. files: Phase single data
+! -----------------------------
+DIR_PSO     1  "OBS"
+  ## widget = lineedit
+
+MSG_DIR_PSO 1 "Single difference phase observations, data: directory"
+
+EXT_PSO     1  "PSO"
+  ## widget = lineedit
+
+MSG_EXT_PSO 1 "Single difference phase observations, data: extension"
+
+! Station files: Coordinates
+! --------------------------
+DIR_CRD     1  "STA"
+  ## widget = lineedit
+
+MSG_DIR_CRD 1 "Station coordinates: directory"
+
+EXT_CRD     1  "CRD"
+  ## widget = lineedit
+
+MSG_EXT_CRD 1 "Station coordinates: extension"
+
+! Station files: Eccentricities
+! -----------------------------
+DIR_ECC     1  "STA"
+  ## widget = lineedit
+
+MSG_DIR_ECC 1 "Station eccentricities: directory"
+
+EXT_ECC     1  "ECC"
+  ## widget = lineedit
+
+MSG_EXT_ECC 1 "Station eccentricities: extension"
+
+! Station files: Velocities
+! -------------------------
+DIR_VEL     1  "STA"
+  ## widget = lineedit
+
+MSG_DIR_VEL 1 "Station velocities: directory"
+
+EXT_VEL     1  "VEL"
+  ## widget = lineedit
+
+MSG_EXT_VEL 1 "Station velocities: extension"
+
+! Station files: Station information
+! ----------------------------------
+DIR_STA     1  "STA"
+  ## widget = lineedit
+
+MSG_DIR_STA 1 "Station information: directory"
+
+EXT_STA     1  "STA"
+  ## widget = lineedit
+
+MSG_EXT_STA 1 "Station information: extension"
+
+! Station files: Ocean loading
+! ----------------------------
+DIR_BLQ     1  "STA"
+  ## widget = lineedit
+
+MSG_DIR_BLQ 1 "Ocean loading table: directory"
+
+EXT_BLQ     1  "BLQ"
+  ## widget = lineedit
+
+MSG_EXT_BLQ 1 "Ocean loading table: extension"
+
+! Station files: Atmospheric tidal loading
+! ----------------------------------------
+DIR_ATL     1  "STA"
+  ## widget = lineedit
+
+MSG_DIR_ATL 1 "Atmospheric tidal loading table: directory"
+
+EXT_ATL     1  "ATL"
+  ## widget = lineedit
+
+MSG_EXT_ATL 1 "Atmospheric tidal loading table: extension"
+
+! Station files: Plate definition for NUVEL1/1A
+! ---------------------------------------------
+DIR_PLD     1  "STA"
+  ## widget = lineedit
+
+MSG_DIR_PLD 1 "Tectonic plate assignment (for NUVEL1/1A): directory"
+
+EXT_PLD     1  "PLD"
+  ## widget = lineedit
+
+MSG_EXT_PLD 1 "Tectonic plate assignment (for NUVEL1/1A): extension"
+
+! Station files: Baseline def.
+! ----------------------------
+DIR_BSL     1  "STA"
+  ## widget = lineedit
+
+MSG_DIR_BSL 1 "Baseline definition: directory"
+
+EXT_BSL     1  "BSL"
+  ## widget = lineedit
+
+MSG_EXT_BSL 1 "Baseline definition: extension"
+
+! Station files: Cluster def.
+! ---------------------------
+DIR_CLU     1  "STA"
+  ## widget = lineedit
+
+MSG_DIR_CLU 1 "Cluster definition: directory"
+
+EXT_CLU     1  "CLU"
+  ## widget = lineedit
+
+MSG_EXT_CLU 1 "Cluster definition: extension"
+
+! Station files: Cluster/baseline assignment
+! ------------------------------------------
+DIR_CLB     1  "STA"
+  ## widget = lineedit
+
+MSG_DIR_CLB 1 "Cluster/baseline assignment: directory"
+
+EXT_CLB     1  "CLB"
+  ## widget = lineedit
+
+MSG_EXT_CLB 1 "Cluster/baseline assignment: extension"
+
+! Station files: Selection list
+! -----------------------------
+DIR_FIX     1  "STA"
+  ## widget = lineedit
+
+MSG_DIR_FIX 1 "Station selection list: directory"
+
+EXT_FIX     1  "FIX"
+  ## widget = lineedit
+
+MSG_EXT_FIX 1 "Station selection list: extension"
+
+! Station files: Selection list
+! -----------------------------
+DIR_SIG     1  "STA"
+  ## widget = lineedit
+
+MSG_DIR_SIG 1 "Station sigma file: directory"
+
+EXT_SIG     1  "SIG"
+  ## widget = lineedit
+
+MSG_EXT_SIG 1 "Station sigma file: extension"
+
+! Station files: Observation weights
+! ----------------------------------
+DIR_SOS     1  "STA"
+  ## widget = lineedit
+
+MSG_DIR_SOS 1 "Station observation sigma factors: directory"
+
+EXT_SOS     1  "SOS"
+  ## widget = lineedit
+
+MSG_EXT_SOS 1 "Station observation sigma factors: extension"
+
+! Station files: Ant.Azimut
+! -------------------------
+DIR_AZI     1  "STA"
+  ## widget = lineedit
+
+MSG_DIR_AZI 1 "Receiver antenna orientation: directory"
+
+EXT_AZI     1  "AZI"
+  ## widget = lineedit
+
+MSG_EXT_AZI 1 "Receiver antenna orientation: extension"
+
+! Kinematic Coord.
+! ----------------
+DIR_KIN     1  "STA"
+  ## widget = lineedit
+
+MSG_DIR_KIN 1 "Kinematic coordinates: directory"
+
+EXT_KIN     1  "KIN"
+  ## widget = lineedit
+
+MSG_EXT_KIN 1 "Kinematic coordinates: extension"
+
+! Station files: Session table
+! ----------------------------
+DIR_SES     1  "STA"
+  ## widget = lineedit
+
+MSG_DIR_SES 1 "Session table: directory"
+
+EXT_SES     1  "SES"
+  ## widget = lineedit
+
+MSG_EXT_SES 1 "Session table: extension"
+
+! Station files: Abbr. table
+! --------------------------
+DIR_ABB     1  "STA"
+  ## widget = lineedit
+
+MSG_DIR_ABB 1 "Abbreviation table: directory"
+
+EXT_ABB     1  "ABB"
+  ## widget = lineedit
+
+MSG_EXT_ABB 1 "Abbreviation table: extension"
+
+! Station files: StaName translation
+! ----------------------------------
+DIR_STN     1  "STA"
+  ## widget = lineedit
+
+MSG_DIR_STN 1 "Station name translation (old): directory"
+
+EXT_STN     1  "STN"
+  ## widget = lineedit
+
+MSG_EXT_STN 1 "Station name translation (old): extension"
+
+! Station files: AntHeight Translation
+! ------------------------------------
+DIR_HTR     1  "STA"
+  ## widget = lineedit
+
+MSG_DIR_HTR 1 "Antenna height translation (old): directory"
+
+EXT_HTR     1  "HTR"
+  ## widget = lineedit
+
+MSG_EXT_HTR 1 "Antenna height translation (old): extension"
+
+! Range biases
+! ------------
+DIR_RGB     1  "STA"
+  ## widget = lineedit
+
+MSG_DIR_RGB 1  "SLR data handling: directory"
+
+EXT_RGB     1  "SLR"
+  ## widget = lineedit
+
+MSG_EXT_RGB 1  "SLR data handling: extension"
+
+! Atmosphere: Tropo.model
+! -----------------------
+DIR_TRP     1  "ATM"
+  ## widget = lineedit
+
+MSG_DIR_TRP 1 "Troposphere parameters: directory"
+
+EXT_TRP     1  "TRP"
+  ## widget = lineedit
+
+MSG_EXT_TRP 1 "Troposphere parameters: extension"
+
+! Atmosphere: Tropo.SINEX
+! -----------------------
+DIR_TRO     1  "ATM"
+  ## widget = lineedit
+
+MSG_DIR_TRO 1 "Troposphere parameters (SINEX format): directory"
+
+EXT_TRO     1  "TRO"
+  ## widget = lineedit
+
+MSG_EXT_TRO 1 "Troposphere parameters (SINEX format): extension"
+
+! Atmosphere: Ionos.model
+! -----------------------
+DIR_ION     1  "ATM"
+  ## widget = lineedit
+
+MSG_DIR_ION 1 "Ionosphere models: directory"
+
+EXT_ION     1  "ION"
+  ## widget = lineedit
+
+MSG_EXT_ION 1 "Ionosphere models: extension"
+
+! Atmosphere: Ionos.IONEX
+! -----------------------
+DIR_INX     1  "ATM"
+  ## widget = lineedit
+
+MSG_DIR_INX 1 "Ionosphere maps (IONEX): directory"
+
+EXT_INX     1  "INX"
+  ## widget = lineedit
+
+MSG_EXT_INX 1 "Ionosphere maps (IONEX): extension"
+
+! Atmosphere: Met.data
+! --------------------
+DIR_MET     1  "ATM"
+  ## widget = lineedit
+
+MSG_DIR_MET 1 "Meteo data: directory"
+
+EXT_MET     1  "MET"
+  ## widget = lineedit
+
+MSG_EXT_MET 1 "Meteo data: extension"
+
+! Vienna grid files
+! -----------------
+DIR_GRD     1  "GRD"
+  ## widget = lineedit
+
+MSG_DIR_GRD 1 "Vienna grid files"
+
+EXT_GRD     1  "GRD"
+  ## widget = lineedit
+
+MSG_EXT_GRD 1 "Vienna grid files: extension"
+
+! Output: Program output
+! ----------------------
+DIR_OUT     1  "OUT"
+  ## widget = lineedit
+
+MSG_DIR_OUT 1 "Program output: directory"
+
+EXT_OUT     1  "OUT"
+  ## widget = lineedit
+
+MSG_EXT_OUT 1 "Program output: extension"
+
+! Output: Plot files
+! ------------------
+DIR_PLT     1  "OUT"
+  ## widget = lineedit
+
+MSG_DIR_PLT 1 "Plot file: directory"
+
+EXT_PLT     1  "PLT"
+  ## widget = lineedit
+
+MSG_EXT_PLT 1 "Plot file: extension"
+
+! Output: Summary files
+! ---------------------
+DIR_SUM     1  "OUT"
+  ## widget = lineedit
+
+MSG_DIR_SUM 1 "Summary output: directory"
+
+EXT_SUM     1  "SUM"
+  ## widget = lineedit
+
+MSG_EXT_SUM 1 "Summary output: extension"
+
+! Output: List files
+! ------------------
+DIR_LST     1  "OUT"
+  ## widget = lineedit
+
+MSG_DIR_LST 1 "Listing output: directory"
+
+EXT_LST     1  "LST"
+  ## widget = lineedit
+
+MSG_EXT_LST 1 "Listing output: extension"
+
+! Output: CODSPP summary
+! ----------------------
+DIR_SMC     1  "OUT"
+  ## widget = lineedit
+
+MSG_DIR_SMC 1 "CODSPP summary output (XYZ): directory"
+
+EXT_SMC     1  "SMC"
+  ## widget = lineedit
+
+MSG_EXT_SMC 1 "CODSPP summary output (XYZ): extension"
+
+! Output: CODSPP summary
+! ----------------------
+DIR_SME     1  "OUT"
+  ## widget = lineedit
+
+MSG_DIR_SME 1 "CODSPP summary output (BLH): directory"
+
+EXT_SME     1  "SME"
+  ## widget = lineedit
+
+MSG_EXT_SME 1 "CODSPP summary output (BLH): extension"
+
+! Output: Residual file
+! ---------------------
+DIR_RES     1  "OUT"
+  ## widget = lineedit
+
+MSG_DIR_RES 1 "Residuals: directory"
+
+EXT_RES     1  "RES"
+  ## widget = lineedit
+
+MSG_EXT_RES 1 "Residuals: extension"
+
+! Output: Clocks RINEX
+! --------------------
+DIR_RXC     1  "OUT"
+  ## widget = lineedit
+
+MSG_DIR_RXC 1 "Clock information (clock RINEX format): directory"
+
+EXT_RXC     1  "CLK"
+  ## widget = lineedit
+
+MSG_EXT_RXC 1 "Clock information (clock RINEX format): extension"
+
+! Output: Covariance file
+! -----------------------
+DIR_COV     1  "OUT"
+  ## widget = lineedit
+
+MSG_DIR_COV 1 "Covariances: directory"
+
+EXT_COV     1  "COV"
+  ## widget = lineedit
+
+MSG_EXT_COV 1 "Covariances: extension"
+
+! Covariance components
+! ---------------------
+DIR_WGT     1  "OUT"
+  ## widget = lineedit
+
+MSG_DIR_WGT 1 "Covariance components: directory"
+
+EXT_WGT     1  "WGT"
+  ## widget = lineedit
+
+MSG_EXT_WGT 1 "Covariance components: extension"
+
+! Output: Sub-daily ERP Model
+! ---------------------------
+EXT_SUB     1  "SUB"
+  ## widget = lineedit
+
+MSG_EXT_SUB 1 "Sub-daily earth rotation model: extension"
+
+! Output: Nutation Model
+! ----------------------
+EXT_NUT     1  "NUT"
+  ## widget = lineedit
+
+MSG_EXT_NUT 1 "Nutation model: extension"
+
+! Output: Ant PCV (grid)
+! ----------------------
+DIR_PHG     1  "OUT"
+  ## widget = lineedit
+
+MSG_DIR_PHG 1 "Receiver  antenna PCV estimates (grid): directory"
+
+EXT_PHG     1  "PHG"
+  ## widget = lineedit
+
+MSG_EXT_PHG 1 "Receiver  antenna PCV estimates (grid): extension"
+
+! Output: Ant PCV (harm)
+! ----------------------
+DIR_PHH     1  "OUT"
+  ## widget = lineedit
+
+MSG_DIR_PHH 1 "Receiver  antenna PCV estimates (harm): directory"
+
+EXT_PHH     1  "PHH"
+  ## widget = lineedit
+
+MSG_EXT_PHH 1 "Receiver  antenna PCV estimates (harm): extension"
+
+! Output: Obs. editing file
+! -------------------------
+DIR_EDT     1  "OUT"
+  ## widget = lineedit
+
+MSG_DIR_EDT 1 "Observation editing information: directory"
+
+EXT_EDT     1  "EDT"
+  ## widget = lineedit
+
+MSG_EXT_EDT 1 "Observation editing information: extension"
+
+! Output: Deletion list
+! ---------------------
+DIR_DEL     1  "OUT"
+  ## widget = lineedit
+
+MSG_DIR_DEL 1 "File deletion list: directory"
+
+EXT_DEL     1  "DEL"
+  ## widget = lineedit
+
+MSG_EXT_DEL 1 "File deletion list: extension"
+
+! Input/output Time series event list file
+! ----------------------------------------
+DIR_EVL     1  "STA"
+  ## widget = lineedit
+
+MSG_DIR_EVL 1  "Events list file: directory"
+
+EXT_EVL     1  "EVL"
+  ## widget = lineedit
+
+MSG_EXT_EVL 1  "Time series events list file: extension"
+
+! Output: Parameter estimates
+! ---------------------------
+DIR_EST     1  "SOL"
+  ## widget = lineedit
+
+MSG_DIR_EST 1  "Parameter estimates: directory"
+
+EXT_EST     1  "EST"
+  ## widget = lineedit
+
+MSG_EXT_EST 1  "Parameter estimates: extension"
+
+! Output: Normal equations
+! ------------------------
+DIR_NEQ     1  "SOL"
+  ## widget = lineedit
+
+MSG_DIR_NEQ 1 "Normal equation: directory"
+
+EXT_NEQ     1  "NQ0"
+  ## widget = lineedit
+
+MSG_EXT_NEQ 1 "Normal equation: extension"
+
+! Output: Normal equation (old)
+! -----------------------------
+DIR_ONQ     1  "SOL"
+  ## widget = lineedit
+
+MSG_DIR_ONQ 1 "Normal equation (old format): directory"
+
+EXT_ONQ     1  "NEQ"
+  ## widget = lineedit
+
+MSG_EXT_ONQ 1 "Normal equation (old format): extension"
+
+! Output: SINEX (crd/vel)
+! -----------------------
+DIR_SNX     1  "SOL"
+  ## widget = lineedit
+
+MSG_DIR_SNX 1 "SINEX output: directory"
+
+EXT_SNX     1  "SNX"
+  ## widget = lineedit
+
+MSG_EXT_SNX 1 "SINEX output: extension"
+
+! Orbit files: Standard orbit (ASCII)
+! -----------------------------------
+DIR_FSO     1  "ORB"
+  ## widget = lineedit
+
+MSG_DIR_FSO 1 "Standard orbits: directory"
+
+EXT_FSO     1  "FSO"
+  ## widget = lineedit
+
+MSG_EXT_FSO 1 "Standard orbits: extension"
+
+! Orbit files: Rad. press. (ASCII)
+! --------------------------------
+DIR_FRP     1  "ORB"
+  ## widget = lineedit
+
+MSG_DIR_FRP 1 "Radiation pressure coefficients: directory"
+
+EXT_FRP     1  "FRP"
+  ## widget = lineedit
+
+MSG_EXT_FRP 1 "Radiation pressure coefficients: extension"
+
+! Obs. files: Code zero ascii
+! ---------------------------
+DIR_FCZ     1  "OBS"
+  ## widget = lineedit
+
+MSG_DIR_FCZ 1 "Zero difference code observations: directory"
+
+EXT_FCZ     1  "FCZ"
+  ## widget = lineedit
+
+MSG_EXT_FCZ 1 "Zero difference code observations: extension"
+
+! Obs. files: Phase zero ascii
+! ----------------------------
+DIR_FPZ     1  "OBS"
+  ## widget = lineedit
+
+MSG_DIR_FPZ 1 "Zero difference phase observations: directory"
+
+EXT_FPZ     1  "FPZ"
+  ## widget = lineedit
+
+MSG_EXT_FPZ 1 "Zero difference phase observations: extension"
+
+! Obs. files: Range ascii
+! -----------------------
+DIR_FRZ     1  "OBS"
+  ## widget = lineedit
+
+MSG_DIR_FRZ 1  "Range observations: directory"
+
+EXT_FRZ     1  "FRZ"
+  ## widget = lineedit
+
+MSG_EXT_FRZ 1  "Range observations: extension"
+
+! Output: Sat. Ant. PCV
+! ---------------------
+DIR_SPV     1  "OUT"
+  ## widget = lineedit
+
+MSG_DIR_SPV 1 "Satellite antenna PCV estimates: directory"
+
+EXT_SPV     1  "SPV"
+  ## widget = lineedit
+
+MSG_EXT_SPV 1 "Satellite antenna PCV estimates: extension"
+
+! Obs. files: Code single ascii
+! -----------------------------
+DIR_FCS     1  "OBS"
+  ## widget = lineedit
+
+MSG_DIR_FCS 1 "Single difference code  observations: directory"
+
+EXT_FCS     1  "FCS"
+  ## widget = lineedit
+
+MSG_EXT_FCS 1 "Single difference code  observations: extension"
+
+! Obs. files: Phase single ascii
+! ------------------------------
+DIR_FPS     1  "OBS"
+  ## widget = lineedit
+
+MSG_DIR_FPS 1 "Single difference phase observations: directory"
+
+EXT_FPS     1  "FPS"
+  ## widget = lineedit
+
+MSG_EXT_FPS 1 "Single difference phase observations: extension"
+
+! Output: Residual file (ASCII)
+! -----------------------------
+DIR_FRS     1  "OUT"
+  ## widget = lineedit
+
+MSG_DIR_FRS 1 "Residuals: directory"
+
+EXT_FRS     1  "FRS"
+  ## widget = lineedit
+
+MSG_EXT_FRS 1 "Residuals: extension"
+
+! Output: Normal equations (ASCII)
+! --------------------------------
+DIR_FN0     1  "SOL"
+  ## widget = lineedit
+
+MSG_DIR_FN0 1 "Normal equation: directory"
+
+EXT_FN0     1  "FN0"
+  ## widget = lineedit
+
+MSG_EXT_FN0 1 "Normal equation: extension"
+
+! Output: Normal equations (old, ASCII)
+! -------------------------------------
+DIR_FNQ     1  "SOL"
+  ## widget = lineedit
+
+MSG_DIR_FNQ 1 "Normal equation (old format): directory"
+
+EXT_FNQ     1  "FNQ"
+  ## widget = lineedit
+
+MSG_EXT_FNQ 1 "Normal equation (old format): extension"
+
+! BPE: PCF-name
+! -------------
+PTH_PCF     1  "${U}/PCF"
+  ## widget = lineedit
+
+MSG_PTH_PCF 1 "Processing control files: path"
+
+EXT_PCF     1  "PCF"
+  ## widget = lineedit
+
+MSG_EXT_PCF 1 "Processing control files: extension"
+
+! BPE: CPU-file name
+! ------------------
+PTH_CPU     1  "${U}/PAN"
+  ## widget = lineedit
+
+MSG_PTH_CPU 1 "CPU control file: path"
+
+EXT_CPU     1  "CPU"
+  ## widget = lineedit
+
+MSG_EXT_CPU 1 "CPU control file: extension"
+
+PTH_CPUNUM     1  "${U}/WORK"
+  ## widget = lineedit
+
+MSG_PTH_CPUNUM 1 "Scratch for CPU control file"
+
+! BPE: Output files
+! -----------------
+DIR_BPEOUT     1  "BPE"
+  ## widget = lineedit
+
+MSG_DIR_BPEOUT 1 "Output files: directory"
+
+EXT_BPEOUT     1  "OUT"
+  ## widget = lineedit
+
+MSG_EXT_BPEOUT 1 "Output files: extension"
+
+! BPE: Status files
+! -----------------
+DIR_BPERUN     1  "BPE"
+  ## widget = lineedit
+
+MSG_DIR_BPERUN 1 "Status files: directory"
+
+EXT_BPERUN     1  "RUN"
+  ## widget = lineedit
+
+MSG_EXT_BPERUN 1 "Status files: extension"
+
+! BPE: Protocol files
+! -------------------
+DIR_BPEPRT     1  "BPE"
+  ## widget = lineedit
+
+MSG_DIR_BPEPRT 1 "Protocol files: directory"
+
+EXT_BPEPRT     1  "PRT"
+  ## widget = lineedit
+
+MSG_EXT_BPEPRT 1 "Protocol files: extension"
+
+! BPE: log files
+! --------------
+DIR_BPELOG     1  "BPE"
+  ## widget = lineedit
+
+MSG_DIR_BPELOG 1 "Log files: directory"
+
+EXT_BPELOG     1  "LOG"
+  ## widget = lineedit
+
+MSG_EXT_BPELOG 1 "Log files: extension"
+
+! BPE: scripts
+! ------------
+PTH_SCRIPT     1  "${U}/SCRIPT"
+  ## widget = lineedit
+
+MSG_PTH_SCRIPT 1 "BPE script directory: path"
+
+! BPE: Option directories
+! -----------------------
+PTH_OPT     1  "${U}/OPT"
+  ## widget = lineedit
+
+MSG_PTH_OPT 1 "Option directory: path"
+
+! Others: Help
+! ------------
+PTH_HLP     1  "${X}/HLP"
+  ## widget = lineedit
+
+MSG_PTH_HLP 1 "Help files: path"
+
+EXT_HLP     1  "HLP"
+  ## widget = lineedit
+
+MSG_EXT_HLP 1 "Help files: extension"
+
+! Others: Skeleton
+! ----------------
+PTH_SKL     1  "${X}/SKL"
+  ## widget = lineedit
+
+MSG_PTH_SKL 1 "Skeleton files (e.g. for plot files): path"
+
+EXT_SKL     1  "SKL"
+  ## widget = lineedit
+
+MSG_EXT_SKL 1 "Skeleton files (e.g. for plot files): extension"
+
+! Others: updpan - master and list
+! --------------------------------
+PTH_UPDPAN     1  "${X}/PAN"
+  ## widget = lineedit
+
+MSG_PTH_UPDPAN 1 "Program input master files: path"
+
+PTH_UPD     1  "${X}/SKL"
+  ## widget = lineedit
+
+MSG_PTH_UPD 1 "Directory list for panel update: path"
+
+EXT_UPD     1  "UPD"
+  ## widget = lineedit
+
+MSG_EXT_UPD 1 "Directory list for panel update: extension"
+
+! Others: Campaign independent output
+! -----------------------------------
+PTH_OUT     1  "${U}/OUT"
+  ## widget = lineedit
+
+MSG_PTH_OUT 1 "Program output files (campaign indep.): path"
+
+! Others: User input files
+! ------------------------
+PTH_INP     1  "${U}/PAN"
+  ## widget = lineedit
+
+MSG_PTH_INP 1 "Program input files: path"
+
+EXT_INP     1  "INP"
+  ## widget = lineedit
+
+MSG_EXT_INP 1 "Program input files: extension"
+
+! Others: Scratch files
+! ---------------------
+PTH_SCR     1  "${U}/WORK"
+  ## widget = lineedit
+
+MSG_PTH_SCR 1 "Scratch files: path"
+
+EXT_SCR     1  "SCR"
+  ## widget = lineedit
+
+MSG_EXT_SCR 1 "Scratch files: extension"
+
+EXT_SC1     1  "SC1"
+  ## widget = lineedit
+
+MSG_EXT_SC1 1 "Scratch files: extension"
+
+EXT_SC2     1  "SC2"
+  ## widget = lineedit
+
+MSG_EXT_SC2 1 "Scratch files: extension"
+
+! Others: Error message
+! ---------------------
+PTH_ERR     1  "${U}/WORK"
+  ## widget = lineedit
+
+MSG_PTH_ERR 1 "Error message files: path"
+
+EXT_ERR     1  "MSG"
+  ## widget = lineedit
+
+MSG_EXT_ERR 1 "Error message files: extension"
+
+! Interally used by the menu
+! --------------------------
+PTH_INP_OUT     1  "${U}/PAN"
+  ## widget = lineedit
+
+EXT_IN1     1  "IN1"
+  ## widget = lineedit
+
+! Auxiliary Menu Program
+! ----------------------
+MENUAUX_EXE     1  "MENUAUX"
+
+MENUAUX_INP     1  "MENUAUX.INP"
+
+MENUAUX_SCR     1  "MENUAUX.SCR"
+
+MENUAUX_ERR     1  "MENUAUX.ERR"
+
+MENUAUX_DEBUG     1  "0"
+
+GEN_CONST_FILE     1  "CONST."
+
+GEN_DATUM_FILE     1  "DATUM."
+
+
+# BEGIN_PANEL NO_CONDITION #####################################################
+# PATHS AND EXTENSIONS - MENU_EXT 1: General Files                             #
+#                                                         path       extension #
+# GENERAL FILES                                       > %%%%%%%%% <            # PTH_GEN
+#   Sub-daily earth rotation model                                   > %%% <   # EXT_SUB
+#   Nutation model                                                   > %%% <   # EXT_NUT
+#   Planetary ephemeris                                              > %%% <   # EXT_EPH
+#   Satellite problem file/old station problem file                  > %%% <   # EXT_CRX
+#   Solid Earth tides model                                          > %%% <   # EXT_TPO
+#   Ocean tide model                                                 > %%% <   # EXT_TID
+#   Frequency information                                            > %%% <   # EXT_FRQ
+#   Old antenna/receiver name translation table                      > %%% <   # EXT_TRN
+#                                                                              #
+# END_PANEL ####################################################################
+
+
+# BEGIN_PANEL NO_CONDITION #####################################################
+# MENU_EXT 2.1: Campaign Data, Orbit and EOP Files                             #
+#                                                  campaign                    #
+# ORBIT FILES                                      directory   extension       #
+#   Broadcast orbits                              > %%%%%% <    > %%% <        # DIR_BRD EXT_BRD
+#   Precise orbits (original)                     > %%%%%% <                   # DIR_OPR
+#   Precise orbits                                > %%%%%% <    > %%% <        # DIR_PRE EXT_PRE
+#   Tabular orbits                                > %%%%%% <    > %%% <        # DIR_TAB EXT_TAB
+#   Standard orbits                               > %%%%%% <    > %%% <        # DIR_STD EXT_STD
+#   Radian pressure coefficients                  > %%%%%% <    > %%% <        # DIR_RPR EXT_RPR
+#   Improved orbit elements                       > %%%%%% <    > %%% <        # DIR_ELE EXT_ELE
+#   Earth orientation parameters                  > %%%%%% <    > %%% <        # DIR_ERP EXT_ERP
+#   Earth orientation parameters (IERS format)    > %%%%%% <    > %%% <        # DIR_IEP EXT_IEP
+#   Geocenter coordinates                         > %%%%%% <    > %%% <        # DIR_GCC EXT_GCC
+#   Satellite/Receiver clocks                     > %%%%%% <    > %%% <        # DIR_CLK EXT_CLK
+#   Differential code biases                      > %%%%%% <    > %%% <        # DIR_DCB EXT_DCB
+#   Inter-system biases                           > %%%%%% <    > %%% <        # DIR_ISB EXT_ISB
+#   Bias SINEX                                    > %%%%%% <    > %%% <        # DIR_BIA EXT_BIA
+#                                                                              #
+#   IRV file                                      > %%%%%% <    > %%% <        # DIR_IRV EXT_IRV
+#   Precise orbit in CPF orbit format             > %%%%%% <    > %%% <        # DIR_CPF EXT_CPF
+#   State vector file                             > %%%%%% <    > %%% <        # DIR_STV EXT_STV
+#                                                                              #
+# END_PANEL ####################################################################
+
+
+# BEGIN_PANEL NO_CONDITION #####################################################
+# MENU_EXT 2.2: Campaign Data, Orbit Files for LEOs                            #
+#                                                  campaign                    #
+# LEO FILES                                        directory   extension       #
+#   Accelerometer data                            > %%%%%% <    > %%% <        # DIR_ACC EXT_ACC
+#   Attitude data                                 > %%%%%% <    > %%% <        # DIR_ATT EXT_ATT
+#   LEO maneuvers                                 > %%%%%% <    > %%% <        # DIR_MAN EXT_MAN
+#   File in CHAMP orbit format                    > %%%%%% <    > %%% <        # DIR_CHO EXT_CHO
+#   File in POE@@ orbit format                    > %%%%%% <    > %%% <        # DIR_POE EXT_POE
+#   LEO velocities (epoch-wise)                   > %%%%%% <    > %%% <        # DIR_KVL EXT_KVL
+#   LEO external aux. information                 > %%%%%% <    > %%% <        # DIR_AUX EXT_AUX
+#                                                                              #
+# END_PANEL ####################################################################
+
+
+# BEGIN_PANEL NO_CONDITION #####################################################
+# MENU_EXT 3: Campaign Data, RINEX Files                                       #
+#                                                  campaign                    #
+# RINEX FILES                                      directory   extension       #
+#   RINEX observations (original)                 > %%%%%% <                   # DIR_OXO
+#   RINEX observations                            > %%%%%% <    > %%% <        # DIR_RXO EXT_RXO
+#   Smoothed RINEX observations                   > %%%%%% <    > %%% <        # DIR_SMT EXT_SMT
+#   RINEX navigation messages (GPS, original)     > %%%%%% <                   # DIR_OXN
+#   RINEX navigation messages (GPS)               > %%%%%% <    > %%% <        # DIR_RXN EXT_RXN
+#   RINEX navigation messages (GLONASS, original) > %%%%%% <                   # DIR_OXG
+#   RINEX navigation messages (GLONASS)           > %%%%%% <    > %%% <        # DIR_RXG EXT_RXG
+#   RINEX navigation messages (GALILEO, original) > %%%%%% <                   # DIR_OGA
+#   RINEX navigation messages (GALILEO)           > %%%%%% <    > %%% <        # DIR_RGA EXT_RGA
+#   RINEX meteo data                              > %%%%%% <    > %%% <        # DIR_RXM EXT_RXM
+#                                                                              #
+# END_PANEL ####################################################################
+
+
+# BEGIN_PANEL NO_CONDITION #####################################################
+# MENU_EXT 4: Campaign Data, Observation Files                                 #
+#                                                  campaign                    #
+# OBSERVATION FILES                                directory   extension       #
+#   Zero@@ difference code@ observations, header  > %%%%%% <    > %%% <        # DIR_CZH EXT_CZH
+#   Zero@@ difference code@ observations, data    > %%%%%% <    > %%% <        # DIR_CZO EXT_CZO
+#   Zero@@ difference phase observations, header  > %%%%%% <    > %%% <        # DIR_PZH EXT_PZH
+#   Zero@@ difference phase observations, data    > %%%%%% <    > %%% <        # DIR_PZO EXT_PZO
+#   Single difference code@ observations, header  > %%%%%% <    > %%% <        # DIR_CSH EXT_CSH
+#   Single difference code@ observations, data    > %%%%%% <    > %%% <        # DIR_CSO EXT_CSO
+#   Single difference phase observations, header  > %%%%%% <    > %%% <        # DIR_PSH EXT_PSH
+#   Single difference phase observations, data    > %%%%%% <    > %%% <        # DIR_PSO EXT_PSO
+#                                                                              #
+#   Range observations (SLR), header              > %%%%%% <    > %%% <        # DIR_RZH EXT_RZH
+#   Range observations (SLR), data                > %%%%%% <    > %%% <        # DIR_RZO EXT_RZO
+#                                                                              #
+# END_PANEL ####################################################################
+
+
+# BEGIN_PANEL NO_CONDITION #####################################################
+# MENU_EXT 5: Campaign Data, Station Files                                     #
+#                                                  campaign                    #
+# STATION FILES                                    directory   extension       #
+#   Station coordinates                           > %%%%%% <    > %%% <        # DIR_CRD EXT_CRD
+#   Station velocities                            > %%%%%% <    > %%% <        # DIR_VEL EXT_VEL
+#   Kinematic coordinates                         > %%%%%% <    > %%% <        # DIR_KIN EXT_KIN
+#   Station eccentricities                        > %%%%%% <    > %%% <        # DIR_ECC EXT_ECC
+#   Station information                           > %%%%%% <    > %%% <        # DIR_STA EXT_STA
+#   Ocean loading table                           > %%%%%% <    > %%% <        # DIR_BLQ EXT_BLQ
+#   Atmospheric tidal loading table               > %%%%%% <    > %%% <        # DIR_ATL EXT_ATL
+#   Station selection list                        > %%%%%% <    > %%% <        # DIR_FIX EXT_FIX
+#   Station sigma file                            > %%%%%% <    > %%% <        # DIR_SIG EXT_SIG
+#   Station observation sigma factors             > %%%%%% <    > %%% <        # DIR_SOS EXT_SOS
+#   Abbreviation table                            > %%%%%% <    > %%% <        # DIR_ABB EXT_ABB
+#   Tectonic plate assignment (for NUVEL1/1A)     > %%%%%% <    > %%% <        # DIR_PLD EXT_PLD
+#   Baseline definition                           > %%%%%% <    > %%% <        # DIR_BSL EXT_BSL
+#   Cluster definition                            > %%%%%% <    > %%% <        # DIR_CLU EXT_CLU
+#   Cluster/baseline assignment                   > %%%%%% <    > %%% <        # DIR_CLB EXT_CLB
+#   Receiver antenna orientation                  > %%%%%% <    > %%% <        # DIR_AZI EXT_AZI
+#   Session table                                 > %%%%%% <    > %%% <        # DIR_SES EXT_SES
+#   Station name translation (old)                > %%%%%% <    > %%% <        # DIR_STN EXT_STN
+#   Antenna height translation (old)              > %%%%%% <    > %%% <        # DIR_HTR EXT_HTR
+#   SLR data handling (range bias, CoM)           > %%%%%% <    > %%% <        # DIR_RGB EXT_RGB
+#                                                                              #
+# END_PANEL ####################################################################
+
+
+# BEGIN_PANEL NO_CONDITION #####################################################
+# MENU_EXT 6: Campaign Data, Atmosphere Modeling Files                         #
+#                                                  campaign                    #
+# ATMOSPHERE MODELING FILES                        directory   extension       #
+#   Troposphere parameters                        > %%%%%% <    > %%% <        # DIR_TRP EXT_TRP
+#   Troposphere parameters (SINEX format)         > %%%%%% <    > %%% <        # DIR_TRO EXT_TRO
+#   Ionosphere models                             > %%%%%% <    > %%% <        # DIR_ION EXT_ION
+#   Ionosphere maps (IONEX)                       > %%%%%% <    > %%% <        # DIR_INX EXT_INX
+#   Meteo data                                    > %%%%%% <    > %%% <        # DIR_MET EXT_MET
+#   Vienna grid files (VMF and loading maps)      > %%%%%% <    > %%% <        # DIR_GRD EXT_GRD
+#                                                                              #
+# END_PANEL ####################################################################
+
+
+# BEGIN_PANEL NO_CONDITION #####################################################
+# MENU_EXT 7: Campaign Data, Output Files                                      #
+#                                                  campaign                    #
+# OUTPUT FILES                                     directory   extension       #
+#   Program output                                > %%%%%% <    > %%% <        # DIR_OUT EXT_OUT
+#   Plot file                                     > %%%%%% <    > %%% <        # DIR_PLT EXT_PLT
+#   Summary output                                > %%%%%% <    > %%% <        # DIR_SUM EXT_SUM
+#   Listing output                                > %%%%%% <    > %%% <        # DIR_LST EXT_LST
+#   CODSPP summary output (XYZ)                   > %%%%%% <    > %%% <        # DIR_SMC EXT_SMC
+#   CODSPP summary output (BLH)                   > %%%%%% <    > %%% <        # DIR_SME EXT_SME
+#                                                                              #
+# BERNESE IN-/OUTPUT FILES                                                     #
+#   Residuals                                     > %%%%%% <    > %%% <        # DIR_RES EXT_RES
+#   Clock information (clock RINEX format)        > %%%%%% <    > %%% <        # DIR_RXC EXT_RXC
+#   Covariances                                   > %%%%%% <    > %%% <        # DIR_COV EXT_COV
+#   Covariance components                         > %%%%%% <    > %%% <        # DIR_WGT EXT_WGT
+#   Receiver@ antenna PCV estimates (grid)        > %%%%%% <    > %%% <        # DIR_PHG EXT_PHG
+#   Receiver@ antenna PCV estimates (harm)        > %%%%%% <    > %%% <        # DIR_PHH EXT_PHH
+#   Satellite antenna PCV estimates               > %%%%%% <    > %%% <        # DIR_SPV EXT_SPV
+#   Observation editing information               > %%%%%% <    > %%% <        # DIR_EDT EXT_EDT
+#   File deletion list                            > %%%%%% <    > %%% <        # DIR_DEL EXT_DEL
+#   Time series list of events file               > %%%%%% <    > %%% <        # DIR_EVL EXT_EVL
+#                                                                              #
+# END_PANEL ####################################################################
+
+
+# BEGIN_PANEL NO_CONDITION #####################################################
+# MENU_EXT 8: Campaign Data, Solution Files                                    #
+#                                                  campaign                    #
+# SOLUTION FILES                                   directory   extension       #
+#   Parameter estimates                           > %%%%%% <    > %%% <        # DIR_EST EXT_EST
+#   Normal equation                               > %%%%%% <    > %%% <        # DIR_NEQ EXT_NEQ
+#   Normal equation (old format)                  > %%%%%% <    > %%% <        # DIR_ONQ EXT_ONQ
+#   SINEX output                                  > %%%%%% <    > %%% <        # DIR_SNX EXT_SNX
+#                                                                              #
+# END_PANEL ####################################################################
+
+
+# BEGIN_PANEL NO_CONDITION #####################################################
+# MENU_EXT 9: Campaign Data, Bernese Files (ASCII)                             #
+#                                                 campaign                     #
+# BERNESE FILES (FORMATTED)                       directory   extension        #
+#   Standard orbits                              > %%%%%% <    > %%% <         # DIR_FSO EXT_FSO
+#   Radiation pressure coefficients              > %%%%%% <    > %%% <         # DIR_FRP EXT_FRP
+#   Zero@@ difference code@ observations         > %%%%%% <    > %%% <         # DIR_FCZ EXT_FCZ
+#   Zero@@ difference phase observations         > %%%%%% <    > %%% <         # DIR_FPZ EXT_FPZ
+#   Single difference code@ observations         > %%%%%% <    > %%% <         # DIR_FCS EXT_FCS
+#   Single difference phase observations         > %%%%%% <    > %%% <         # DIR_FPS EXT_FPS
+#   Range observations                           > %%%%%% <    > %%% <         # DIR_FRZ EXT_FRZ
+#   Residuals                                    > %%%%%% <    > %%% <         # DIR_FRS EXT_FRS
+#   Normal equation                              > %%%%%% <    > %%% <         # DIR_FN0 EXT_FN0
+#   Normal equation (old format)                 > %%%%%% <    > %%% <         # DIR_FNQ EXT_FNQ
+#                                                                              #
+# END_PANEL ####################################################################
+
+
+# BEGIN_PANEL NO_CONDITION #####################################################
+# MENU_EXT 10: Bernese Processing Engine (BPE)                                 #
+#                                                 campaign                     #
+# BERNESE PROCESSING ENGINE                       directory   extension        #
+#   BPE output                                   > %%%%%% <    > %%% <         # DIR_BPEOUT EXT_BPEOUT
+#   BPE status                                   > %%%%%% <    > %%% <         # DIR_BPERUN EXT_BPERUN
+#   Protocol files                               > %%%%%% <    > %%% <         # DIR_BPEPRT EXT_BPEPRT
+#   Log files                                    > %%%%%% <    > %%% <         # DIR_BPELOG EXT_BPELOG
+#                                                                              #
+# BERNESE PROCESSING ENGINE                          path     extension        #
+#   Processing control files                     > %%%%%%%%%% <> %%% <         # PTH_PCF EXT_PCF
+#   CPU control file                             > %%%%%%%%%% <> %%% <         # PTH_CPU EXT_CPU
+#   Scratch for CPU control file                 > %%%%%%%%%% <                # PTH_CPUNUM
+#   BPE script directory                         > %%%%%%%%%% <                # PTH_SCRIPT
+#   Option directory                             > %%%%%%%%%% <                # PTH_OPT
+#                                                                              #
+# END_PANEL ####################################################################
+
+
+# BEGIN_PANEL NO_CONDITION #####################################################
+# MENU_EXT 11: Other Files and Directories                                     #
+#                                                                              #
+# GENERAL                                     path      extension(s)           #
+#   Help files                            > %%%%%%%%% <  > %%% <               # PTH_HLP EXT_HLP
+#   Skeleton files (e.g. for plot files)  > %%%%%%%%% <  > %%% <               # PTH_SKL EXT_SKL
+#   Directory list for panel update       > %%%%%%%%% <  > %%% <               # PTH_UPD EXT_UPD
+#   Program input master files            > %%%%%%%%% <                        # PTH_UPDPAN
+#                                                                              #
+# USER DEPENDENT                                                               #
+#   Program output files (campaign indep.)> %%%%%%%%% <                        # PTH_OUT
+#   Program input files                   > %%%%%%%%% <  > %%% <               # PTH_INP EXT_INP
+#   Scratch files                         > %%%%%%%%% <  > %%% <> %%% <> %%% < # PTH_SCR EXT_SCR EXT_SC1 EXT_SC2
+#   Error message files                   > %%%%%%%%% <  > %%% <               # PTH_ERR EXT_ERR
+#                                                                              #
+# END_PANEL ####################################################################

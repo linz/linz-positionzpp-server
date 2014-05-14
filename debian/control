@@ -1,0 +1,25 @@
+Source: linz-positionzpp-server
+Section: science
+Priority: optional
+Maintainer: Chris Crook <ccrook@linz.govt.nz>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.2
+Homepage: 
+
+Package: linz-positionzpp-server
+Architecture: all
+Depends: ${misc:Depends} ,
+    linz-bernese52,
+    linz-positionzpp-pcf,
+    liblinz-bern-perl,
+    liblinz-gnss-perl,
+    libfile-copy-recursive-perl
+Description: LINZ PositioNZ-PP server
+ LINZ PositioNZ-PP server scripts
+ .
+ Provides the scripts required to run the LINZ PositioNZ-PP backend server.
+ This comprises the LINZ::PNZPP perl modules, and the positionzpp script.
+ Also installs the configuration files in /etc/positionzpp, and sets up 
+ the data directories in /var.
+
+    

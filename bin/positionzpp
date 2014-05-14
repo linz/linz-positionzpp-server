@@ -1,0 +1,266 @@
+#!/usr/bin/perl 
+
+eval 'exec /usr/bin/perl  -S $0 ${1+"$@"}'
+    if 0; # not running under some shell
+
+use strict;
+use LINZ::BERN::BernUtil;
+use LINZ::PNZPP;
+use LINZ::PNZPP::PnzServer;
+use JSON::PP;
+
+my $commands={
+    run=>\&run,
+    update_refdata=>\&updateRefdata,
+    run_maintenance=>\&runMaintenance,
+    pause=>\&pause,
+    start=>\&start,
+    stop=>\&stop,
+    status=>\&status,
+};
+
+my $commandline=join(" ",$0,@ARGV);
+my $command=shift(@ARGV);
+$command = lc($command);
+
+if( $command eq 'help' || $command eq '--help' || $command eq '-h' )
+{
+    help();
+}
+
+if( ! exists $commands->{$command} )
+{
+    print "Invalid command \"$command\".\n\n";
+    help(1);
+}
+
+LINZ::BERN::BernUtil::SetBerneseEnv();
+exit $commands->{$command}->(@ARGV);
+
+
+sub help
+{
+    my ($brief)=@_;
+    require Pod::Usage;
+    my $text=join('',<DATA>);
+    Pod::Usage::pod2usage(
+    {
+        -verbose=>$brief ? 99 : 2,
+        -sections=>'Synopsis',
+        -exitval=>2,
+    });
+}
+
+sub run
+{
+    my ($serverid)=@_;
+    die "Run command needs server id to run\n" if $serverid eq '';
+    die "Invalid server id \"$serverid\"\n" if $serverid !~ /^\w{1,10}$/;
+    checkUser();
+    LINZ::PNZPP::Run($serverid);
+    return 0;
+}
+
+sub updateRefdata
+{
+    checkUser();
+    LINZ::PNZPP::UpdateReferenceData();
+    return 0;
+}
+
+sub runMaintenance
+{
+    checkUser();
+    LINZ::PNZPP::PurgeArchive();
+    return 0;
+}
+
+sub pause
+{
+    my ($pause,$wait)=@_;
+    die "Invalid pause time \"$pause\" specified\n" if $pause !~ /^\d{1,5}$/;
+    die "Invalid wait time \"$wait\" specified\n" if $wait !~ /^\d{0,5}$/;
+    checkUser();
+    LINZ::PNZPP::LoadConfig();
+    my $stopped = LINZ::PNZPP::PnzServer::Pause($pause,$wait);
+    print "Wait time expired.\n" if ! $stopped;
+    return $stopped ? 0 : 1;
+}
+
+sub start
+{
+    my $crontab='/etc/positionzpp/crontab';
+    die "Cannot find crontab file $crontab\n" if ! -f $crontab;
+    checkUser();
+    print "Installing crontab from $crontab\n";
+    system('/usr/bin/crontab',$crontab);
+}
+
+sub stop
+{
+    my ($wait)=@_;
+    die "Invalid wait time \"$wait\" specified\n" if $wait !~ /^\d{0,5}$/;
+    checkUser();
+    LINZ::PNZPP::LoadConfig();
+    system('/usr/bin/crontab','-r');
+    my $stopped=0;
+    if( $wait )
+    {
+        print "Waiting for servers to stop ...\n";
+        $stopped = LINZ::PNZPP::PnzServer::Pause(0,$wait);
+        print "Wait time expired.\n" if ! $stopped;
+    }
+    return $stopped ? 0 : 1;
+}
+
+sub status
+{
+    my ($json) = @_;
+    LINZ::PNZPP::LoadConfig('',1);
+    if( lc($json) eq 'json')
+    {
+        my $status = LINZ::PNZPP::PnzServer::Status();
+        my $stsjsn = JSON::PP->new->pretty->encode($status);
+        print $stsjsn;
+    }
+    else
+    {
+        print LINZ::PNZPP::PnzServer::StatusString();
+    }
+    return 0;
+}
+
+sub getPnzUser
+{
+    open( my $uf,"</etc/positionzpp/user" ) || die "Cannot open /etc/positionzpp/user\n";
+    my $pnzuser=<$uf>;
+    close($uf);
+    $pnzuser =~ s/\s+//g;
+    return $pnzuser;
+}
+
+sub checkUser
+{
+    my $pnzuser=getPnzUser();
+    my ($curruser)=getpwuid($<);
+    if($curruser ne $pnzuser)
+    {
+        printf "This command must be run as $pnzuser.  Use:\n\n";
+        printf "sudo -u $pnzuser $commandline\n\n";
+        exit;
+    }
+}
+
+__END__
+
+=head1 Name
+
+positionzpp - manages the PositioNZ-PP server backend processes.  Also used by the cronjob to initiate the 
+server processes.
+
+=head1 Synopsis
+
+   positionzpp run <serverid>
+   positionzpp update_refdata
+   positionzpp run_maintenance
+   positionzpp status
+   positionzpp pause <pause-time> <wait-time>
+   positionzpp start
+   positionzpp stop <wait-time>
+
+Most commands must be run by the positionzpp server user, ie 
+
+   sudo -u <positionz_server_user> positionzpp ...
+
+=head1 Description
+
+The PositioNZ-PP Bernese post processing service is implemented by initiating server jobs which upload for 
+new jobs and run the processor on the jobs that have been loaded.  The positionzpp script is used to 
+install the crontab running the jobs, as well as being used by the crontab to actually run the jobs.
+
+The processor is designed to interface with a web server front end using three shared directories (possibly 
+shared via a separate replication process).  The directories are:
+
+=over 
+
+=item input
+
+The directory to which the front end process uploads jobs.  Jobs are removed from here by the processor.
+
+=item output
+
+The directory to which the processor uploads results for consumption by the front end.  It is the
+responsibility of the front end to remove the output files.  Each job may create several output files
+during its processing (for example if it needs to wait for GNSS reference data)
+
+=item refdata
+
+The directory to which the processor uploads reference data that the front end can use.  Currently 
+this is used to upload lists of valid antennae and receivers.  The reference data is overwritten by 
+this script.  It does not need to be removed.
+
+=back
+
+The locations of these directories is defined in the positionzpp configuration file (/etc/positionzpp/positionzpp.conf).
+
+The positionzpp script takes the following options on the command line.  Many can only be run by the positionzpp server
+user.  ie sudo -u positionzpp_server positionzpp <commands>.
+
+=over
+
+=item run <serverid>
+
+Runs the server process. This will fail if the the current user is not positionzpp server user as defined
+in the /etc/positionzpp/user file.
+
+=item update_refdata
+
+Updates the reference data installed in the interface
+
+=item run_maintenance
+
+Runs miscellaneous maintenance tasks on the processor directories, for example removing archived jobs that
+for which the retention date has passed.  
+
+=item status
+
+Prints out the current state of the processor
+
+=item pause <pause-time> <wait-time>
+
+Stops the processor for running for a number of seconds.  The pause time is the number of seconds to pause
+for.  The wait time is the maximum time that the program will wait for processes to stop.  Both times
+are in seconds.  The server is still running while it is paused, but it doesn't do anything!
+
+=item start
+
+Starts the PostioNZ-PP backend by installing the crontab in /etc/positionzpp/crontab.  (Also can 
+be used to reinstall the crontab, for example after modifying it).
+
+=item stop <wait-time>
+
+Stops the server by removing the crontab.  It will wait the specified time for the server processes to
+halt before returning.  
+
+=back
+
+=head1 Files
+
+=over
+
+=item /etc/positionzpp/user
+
+File containing just the name of the user that should run the processor jobs
+
+=item /etc/positionzpp/crontab
+
+The crontab that is installed by this script.  
+
+=item /etc/positionzpp/positionzpp.conf
+
+The main positionz configuration script
+
+=back
+
+=cut
+

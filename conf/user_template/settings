@@ -1,0 +1,11 @@
+# Settings used to build the user environment
+
+CLIENT_ENV ${U}/PNZPP.setvar
+CPU_FILE PNZPP
+PCF_FILE RUN_PNZ
+symlink ${X}/OPT ${U}/OPT
+symlink ${X}/PCF ${U}/PCF
+symlink ${X}/USERSCPT ${U}/SCRIPT
+makedir ${U}/WORK
+
+

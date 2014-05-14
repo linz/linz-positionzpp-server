@@ -1,0 +1,96 @@
+
+! Release Information Notes
+! -------------------------
+RELEASE_INFO 1  "${X}/DOC/RELEASE.TXT"
+
+! List of Remaining Menu Input Files (full Pathes)
+! ------------------------------------------------
+MENU_CMP_INP     1  "${U}/PAN/MENU_CMP.INP"
+
+MSG_MENU_CMP_INP 1  "Edit list of campaigns"
+
+MENU_VAR_INP     1  "${U}/PAN/MENU_VAR.INP"
+
+MSG_MENU_VAR_INP 1  "Menu variables"
+
+MENU_EXT_INP     1  "${U}/PAN/MENU_EXT.INP"
+
+MSG_MENU_EXT_INP 1  "Paths and extensions"
+
+MENU_PGM_INP     1  "${U}/PAN/MENU_PGM.INP"
+
+MSG_MENU_PGM_INP 1  "Program names"
+
+! Active Campaign
+! ---------------
+ACTIVE_CAMPAIGN     1  "${P}/PNZPP18"
+
+! Modified Julian Date
+! --------------------
+MODJULDATE     1  "55296.000000"
+
+! Session (only the last character is relevant)
+! ---------------------------------------------
+SESSION_CHAR 1  "Y"
+
+SESSION_TABLE     1  "${P}/PNZPP18/STA/SESSIONS.SES"
+  ## widget = selwin; path = DIR_SES; ext = EXT_SES; maxfiles = 1
+
+! Job character
+! -------------
+JOB_ID 1  ""
+
+! Size of the Main Window
+! -----------------------
+MAIN_WIDTH 0
+
+MAIN_HEIGHT 0
+
+! Colors (RGB Button + RGB Background)
+! ------------------------------------
+MAIN_PALETTE 0
+
+! Font Types and Font Sizes
+! -------------------------
+FONTTYPE_BASE 0
+
+FONTSIZE_BASE 0
+
+FONTBOLD_BASE 0
+
+FONTITALIC_BASE 0
+
+FONTSTRIKEOUT_BASE 0
+
+FONTUNDERLINE_BASE 0
+
+FONTTYPE_LARGE 0
+
+FONTSIZE_LARGE 0
+
+FONTBOLD_LARGE 0
+
+FONTITALIC_LARGE 0
+
+FONTSTRIKEOUT_LARGE 0
+
+FONTUNDERLINE_LARGE 0
+
+FONTTYPE_SMALL 0
+
+FONTSIZE_SMALL 0
+
+FONTBOLD_SMALL 0
+
+FONTITALIC_SMALL 0
+
+FONTSTRIKEOUT_SMALL 0
+
+FONTUNDERLINE_SMALL 0
+
+
+
+
+
+
+
