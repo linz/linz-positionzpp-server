@@ -12,6 +12,8 @@ process existing jobs, and remove expired jobs.  It also provides the
 
 package LINZ::PNZPP;
 
+our $VERSION='1.1.0';
+
 use LINZ::PNZPP::PnzServer;
 use LINZ::PNZPP::PnzJob;
 use LINZ::PNZPP::BernJob;
