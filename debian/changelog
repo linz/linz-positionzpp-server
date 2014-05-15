@@ -1,10 +1,10 @@
-linz-positionzpp-server (1.2.0-1) UNRELEASED; urgency=low
+linz-positionzpp-server (1.2.0-1) precise; urgency=low
 
   * Adding hook scripts for pre and post run processing
   * Moved locks out of /var/run as too hard to keep running there
   * Setting job file mtime so that it isn't run again until the data is due
 
- -- Chris Crook <ccrook@linz.govt.nz>  Thu, 15 May 2014 14:35:26 +1200
+ -- Chris Crook <ccrook@linz.govt.nz>  Thu, 15 May 2014 14:37:27 +1200
 
 linz-positionzpp-server (1.1.0-1) precise; urgency=low
 
