@@ -174,7 +174,7 @@ sub createCampaign
             AddNoneRadome=>1,
             MakeSessionFile=>1,
             SettingsFile=>1,
-            CanOverWrite=>1,
+            CanOverwrite=>1,
         );
         die "Cannot create Bernese job for RINEX file $srcfile\n" if ! $campaign;
 
