@@ -1,0 +1,75 @@
+#!/bin/sh
+#
+# NOTE: This doesn't work as needs setuid but setuid not allowed for 
+#
+# Script called by PositioNZ-PP processor to initiate file transfers.
+#
+# This script will be called with one of the following options:
+#
+# script  prerun <input_dir>
+#
+#  Called before the processing server reads jobs from the input directory.
+#
+# script postupdate <update_file>
+#
+#  Called after the server has placed a file in the output directory
+#
+# script postrefdata <refdata_file>
+#
+#  Called after the server has updated a file in the refdata directory
+#
+
+command=$1
+file=$2
+
+serverdir=/var/lib/positionzpp/interface
+srvin=${serverdir}/input
+srvout=${serverdir}/output
+srvref=${serverdir}/refdata
+srvuser=`cat /etc/positionzpp/user`
+
+webdir=/home/ccrook/projects/positionzpp/www/data/pnz_processor
+webin=${webdir}/input
+webout=${webdir}/output
+webref=${webdir}/refdata
+webuser=www-data
+
+case $command in
+
+   prerun)
+      echo "Uploading files from web server"
+      for f in `find "${webin}" -name "*.zip"`; do
+          bf=`basename "$f"`
+          echo "Uploading ${bf}"
+          mv -f "${webin}/$bf" "${srvin}/${bf}"
+          chown ${srvuser}: "${srvin}/${bf}"
+      done
+      exit
+      ;;
+
+   postupdate)
+      echo "Sending results to web server"
+      for f in `find ${srvout} -name "*.zip"`; do
+          bf=`basename $f`
+          echo "Sending ${bf}"
+          mv "${srvout}/${bf}" "${webout}/${bf}"
+          chown ${webuser}: "${webout}/${bf}"
+      done
+      exit
+      ;;
+
+   postrefdata)
+      reffile=`basename ${file}`
+      echo "Copying reference file ${reffile} to web refdata"
+      mv "${srvref}/${reffile}" "${webref}"
+      chown ${webuser}: "${webref}/*"
+      exit
+      ;;
+
+   *)
+      echo "`basename ${0}` called with invalid command ${command}"
+      exit 1;
+      ;;
+esac
+
+
