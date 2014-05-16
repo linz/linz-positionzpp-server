@@ -1,0 +1,68 @@
+#!/bin/bash
+#
+# Script to move files between the PositioNZ-PP server web front end and processing server back end.
+#
+# The script must be run as the positionzpp_server user.  The script is written to run as a positionzpp_hook script,
+# which means that it expects parameters
+#
+#  prerun <inputdir>
+#  postupdate <outputfile>
+#  postrefdata <refdatafile>
+#
+#  This version ignores the file names and just copies all files. 
+#
+#  The directory names are ignored to avoid abuse of the script.
+#  The file names because it is just as easy to transfer all files, and allows the script to catch up if
+#  a named file isn't transferred (eg because of locking).
+
+echo "PositioNZ-PP data synchronisation"
+
+webdir=bernese_sync@144.66.241.126:/var/www/linz/linz7test/sites/default/files/positionz/data/pnz_processor
+pnzdir=/var/lib/positionzpp/interface
+
+input_from=${webdir}/input
+input_to=${pnzdir}/input
+
+output_from=${pnzdir}/output
+output_to=${webdir}/output
+
+refdata_from=${pnzdir}/refdata
+refdata_to=${webdir}/refdata
+
+# For input/output directories move the files and remove from the source.
+# This requires that we are renaming files to their final destination.  
+# 
+# Set the file filter to just move .zip files.  Files are created with a 
+# different extension an renamed, so ensuring that incomplete files are 
+# not moved or deleted.
+io_params="-v -a -O --remove-source-files --chmod=ug+w -p --include='*.zip'"
+
+# For reference data - use rsync to mirror the directories so that remote
+# directory contains the same as local.  Only interested in the .json files.
+refdata_params="-v -a -O --delete-after --chmod=ug+w -p --include='*.json'"
+
+me=`whoami`
+if [ $me != "positionzpp_server" ]; then
+    echo "Error: synchronisation script must be run as the positionzpp_server user."
+    exit 1
+fi
+
+lock=/var/lib/positionzpp/locks/datasync.lockfile
+
+case $1 in
+    prerun)
+        flock -w 15 $lock -c "rsync $io_params $input_from/ $input_to"
+        ;;
+    postupdate)
+        flock -w 15 $lock -c "rsync $io_params $output_from/ $output_to"
+        ;;
+    postrefdata)
+        flock -w 15 $lock -c "rsync --include=$refdata_files $refdata_params $refdata_from/ $refdata_to"
+        ;;
+    *)
+        echo "Error: synchronisation script needs parameter prerun, postupdate, or postrefdata"
+        exit 1;
+        ;;
+esac
+
+exit 0
