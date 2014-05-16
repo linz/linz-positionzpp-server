@@ -1,3 +1,12 @@
+linz-positionzpp-server (1.2.1-1) precise; urgency=low
+
+  * Adding example positionzpp_hook script
+  * Removing warning message from postinst script
+  * Minor fix to example script
+  * Adding sample program - script from dev server
+
+ -- Chris Crook <ccrook@linz.govt.nz>  Fri, 16 May 2014 14:32:04 +1200
+
 linz-positionzpp-server (1.2.0-1) precise; urgency=low
 
   * Adding hook scripts for pre and post run processing
