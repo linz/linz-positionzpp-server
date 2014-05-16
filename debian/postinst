@@ -29,6 +29,12 @@ case "$1" in
         mkdir -p $datadir/interface/input
         mkdir -p $datadir/interface/output
         mkdir -p $datadir/interface/refdata
+        mkdir -p $datadir/work
+        mkdir -p $datadir/archive
+        mkdir -p $datadir/berndata
+        mkdir -p $datadir/bernuser
+        mkdir -p $datadir/status
+        mkdir -p $datadir/statistics
         mkdir -p $logdir
 
         chown -R :bern_users $datadir
