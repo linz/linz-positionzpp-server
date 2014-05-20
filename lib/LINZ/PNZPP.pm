@@ -26,8 +26,7 @@ use Log::Log4perl qw/:easy/;
 use Carp;
 
 our $RefDataDir;
-our $AntennaListFile;
-our $ReceiverListFile;
+our $GpsRefDataFile;
 our $HookScript;
 
 =head2 PNZPP::LoadConfig($filename,$nologging)
@@ -67,8 +66,7 @@ sub LoadConfig
         }
     }
     $RefDataDir=$conf->filename("RefDataDir") || croak("RefDataDir not defined in configuration\n");
-    $AntennaListFile=$conf->get("AntennaListFile");
-    $ReceiverListFile=$conf->get("ReceiverListFile");
+    $GpsRefDataFile=$conf->get("GpsRefDataFile");
     $HookScript=$conf->get("HookScript");
     LINZ::PNZPP::PnzServer::LoadConfig($conf);
     LINZ::PNZPP::PnzJob::LoadConfig($conf);
@@ -120,6 +118,18 @@ Update the reference data files used by the PositioNZ-PP application - for examp
 antenna and receiver lists.  These are read from the Bernese directories and reformatted 
 for loading into the front end application (as JSON formatted files)
 
+Creates a JSON formatted file containing a data structure of 
+
+ {
+   antennae=>[ {name=>ant1, used=>0}, {name=>ant2, used=>0}, ...],
+   antennae_alias=>{ from=>to, from=>to },
+   receivers=>[ {name=>rec1, used=>0} ]
+   receiver_alias=>{ from=>to, from=>to },
+ }
+
+The used flag identifies antennae and receivers that have been used in jobs submitted to
+the processor, and the alias lists maps from non-standard names to standard names.
+
 =cut
 
 sub UpdateReferenceData
@@ -130,30 +140,34 @@ sub UpdateReferenceData
     {
         $logger->info("Updating web application reference data\n");
         die("Invalid reference data configuration $RefDataDir\n") if ! -d $RefDataDir;
-        if( $AntennaListFile )
+        if( $GpsRefDataFile )
         {
-            my $antfile=$RefDataDir.'/'.$AntennaListFile;
-            my $anttmp=$antfile.".update";
+            my $reffile=$RefDataDir.'/'.$GpsRefDataFile;
+            my $reftmp=$reffile.".update";
+
             my $antlist=LINZ::BERN::BernUtil::AntennaList();
-            my $antjson=JSON::PP->new->pretty->utf8->encode($antlist);
-            open(my $f,">$anttmp") || die("Cannot open antennae list file $anttmp\n");
-            print $f $antjson;
-            close($f);
-            move($anttmp,$antfile) || die("Cannot update antennae list file $antfile\n");
-            RunHook('postrefdata',$antfile);
-        }
-        if( $ReceiverListFile )
-        {
-            my $recfile=$RefDataDir.'/'.$ReceiverListFile;
-            my $rectmp=$recfile.".update";
+            my @antarr=map { {name=>$_, used=>0} } @$antlist;
+
             my $reclist=LINZ::BERN::BernUtil::ReceiverList();
             foreach my $r (@$reclist) { $r =~ s/\s+$//; }
-            my $recjson=JSON::PP->new->pretty->utf8->encode($reclist);
-            open(my $f,">$rectmp") || die("Cannot open receiver list file $rectmp\n");
-            print $f $recjson;
+            my @recarr=map { {name=>$_, used=>0 } } @$reclist;
+
+            my %antalias=();
+            my %recalias=();
+
+            my $refdata={
+                antennae=>\@antarr,
+                antennae_alias=>\%antalias,
+                receivers=>\@recarr,
+                receiver_alias=>\%recalias
+                };
+
+            my $refjson=JSON::PP->new->pretty->utf8->encode($refdata);
+            open(my $f,">$reftmp") || die("Cannot open antennae list file $reftmp\n");
+            print $f $refjson;
             close($f);
-            move($rectmp,$recfile) || die("Cannot update receiver list file $recfile\n");
-            RunHook('postrefdata',$recfile);
+            move($reftmp,$reffile) || die("Cannot update antennae list file $reffile\n");
+            RunHook('postrefdata',$reffile);
         }
     };
     if( $@ )
