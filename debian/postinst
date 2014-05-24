@@ -33,6 +33,7 @@ case "$1" in
         mkdir -p $datadir/archive
         mkdir -p $datadir/berndata
         mkdir -p $datadir/bernuser
+        mkdir -p $datadir/data
         mkdir -p $datadir/status
         mkdir -p $datadir/statistics
         mkdir -p $logdir

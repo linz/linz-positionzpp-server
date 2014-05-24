@@ -28,7 +28,7 @@ srvout=${serverdir}/output
 srvref=${serverdir}/refdata
 srvuser=`cat /etc/positionzpp/user`
 
-webdir=/home/ccrook/projects/positionzpp/www/data/pnz_processor
+webdir=/var/lib/positionzpp/webapi/data/interface
 webin=${webdir}/input
 webout=${webdir}/output
 webref=${webdir}/refdata

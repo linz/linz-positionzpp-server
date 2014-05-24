@@ -116,7 +116,9 @@ Parameters are:
 
 sub new
 {
-    my($class,$job,$subjobid,$filename,$orbittype,$reftype)=@_;
+    my($class,$job,$subjobid,$filename,$orbittype,$reftype,$filemetadata)=@_;
+
+    $filemetadata ||= {};
 
     my $self= bless {
         jobid=>$job->{id},
@@ -124,6 +126,7 @@ sub new
         campaignid=>$job->{id}.'_'.$subjobid,
         email=>$job->{email},
         filename=>$filename,
+        filemeta=>$filemetadata,
         orbit_type=>$orbittype,
         ref_rinex_type=>$reftype,
         status=>'wait',
@@ -177,6 +180,14 @@ sub createCampaign
             CanOverwrite=>1,
         );
         die "Cannot create Bernese job for RINEX file $srcfile\n" if ! $campaign;
+
+        # Copy file metadata to bernese file record
+        my $meta=$campaign->{files}->[0];
+        foreach my $key (%{$self->{filemetadata}})
+        {
+            $meta->{$key}=$self->{filemetadata}->{$key}
+                if ! exits $meta->{$key};
+        }
 
         # Add variables required by bernese software
         my $vars=$campaign->{variables};
@@ -390,7 +401,7 @@ sub compileReport()
         my $bernid=$self->{campaignid};
         my $jobid=$self->{jobid};
         my $subjobid=$self->{subjobid};
-        my $file=$self->{campaign}->{files}->[0]->{srcfilename};
+        my $file=$self->{campaign}->{files}->[0]->{orig_filename};
 
         foreach my $rfile (@$ReportFiles)
         {

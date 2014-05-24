@@ -184,10 +184,19 @@ sub new
         # Convert files to bern jobs
 
         my $bernjobs=[];
+        my $antennae={};
+        my $receivers={};
         foreach my $file (@{$self->{files}})
         {
             $subjobid++;
             my $filename=$file->{filename};
+            my $filemetadata={
+                    orig_anttype=>$file->{orig_antenna_type},
+                    orig_rectype=>$file->{orig_receiver_type},
+                };
+            $receivers->{$file->{orig_receiver_type}}=$file->{receiver_type};
+            $antennae->{$file->{orig_antenna_type}}=$file->{antenna_type};
+
             my $rfm=$zip->memberNamed($filename) ||
                 die "Data file $filename missing from $zipfile";
             if( $rfm->extractToFileNamed("$jobdir/$filename") != AZ_OK )
@@ -199,12 +208,15 @@ sub new
                     $subjobid,
                     $filename,
                     $fileorbtype,
-                    $filereftype
+                    $filereftype,
+                    $filemetadata,
                 ));
                     
         }
         $self->{bernjobs}=$bernjobs;
         $self->unlock();
+        # Record which antennae and receivers have been used
+        LINZ::PNZPP::UpdateGnssUsage($antennae,$receivers);
    };
    if( $@ )
    {
