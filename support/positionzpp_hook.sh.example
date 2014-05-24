@@ -61,7 +61,7 @@ case $command in
    postrefdata)
       reffile=`basename ${file}`
       echo "Copying reference file ${reffile} to web refdata"
-      mv "${srvref}/${reffile}" "${webref}/${reffile}"
+      cp "${srvref}/${reffile}" "${webref}/${reffile}"
       chown ${webuser}: "${webref}/${reffile}"
       exit
       ;;
