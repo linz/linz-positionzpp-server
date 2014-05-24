@@ -1,3 +1,13 @@
+linz-positionzpp-server (1.3.0-1) precise; urgency=low
+
+  * Creating more required directories in the post-installation script
+  * Adding mark/antennae type/height to the output listings
+  * Adding missing column
+  * Changing GPS reference data format
+  * Changing src... to orig...  Tracking and more reporting on antennae and receiver types used
+
+ -- Chris Crook <ccrook@linz.govt.nz>  Sat, 24 May 2014 14:30:59 +1200
+
 linz-positionzpp-server (1.2.1-1) precise; urgency=low
 
   * Adding example positionzpp_hook script
