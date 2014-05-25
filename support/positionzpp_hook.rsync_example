@@ -15,19 +15,24 @@
 #  The file names because it is just as easy to transfer all files, and allows the script to catch up if
 #  a named file isn't transferred (eg because of locking).
 
-echo "PositioNZ-PP data synchronisation"
 
-webdir=bernese_sync@144.66.241.126:/var/www/linz/linz7test/sites/default/files/positionz/data/pnz_processor
+remote= bernese_sync@144.66.241.126
+
+webdir=/var/www/linz/linz7test/sites/default/files/positionz/data/pnz_processor
 pnzdir=/var/lib/positionzpp/interface
 
-input_from=${webdir}/input
+target=${remote}:${webdir}
+
+echo "PositioNZ-PP data synchronisation to ${target}"
+
+input_from=${target}/input
 input_to=${pnzdir}/input
 
 output_from=${pnzdir}/output
-output_to=${webdir}/output
+output_to=${target}/output
 
 refdata_from=${pnzdir}/refdata
-refdata_to=${webdir}/refdata
+refdata_to=${target}/refdata
 
 # For input/output directories move the files and remove from the source.
 # This requires that we are renaming files to their final destination.  
