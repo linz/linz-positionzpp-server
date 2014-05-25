@@ -372,8 +372,10 @@ sub canRun
 {
     my($self)=@_;
     my $stopfile=$self->{stopfile};
-    return 0 if -e $stopfile && -M $stopfile < 0.0;
-    return 1;
+    return 1 if ! -e $stopfile;
+    my $stoptime=(stat($stopfile))[9];
+    return 1 if $stoptime < time();
+    return 0;
 }
 
 =head2 $locked=$server->lock()
@@ -762,7 +764,8 @@ sub processJobs
         next if ! -d $jobdir;
         next if ! -e "$jobdir/$statusfile";
         # Ignore future dated jobs - they are on hold
-        next if -M "$jobdir/$statusfile" < 0.0;
+        my $waittime=(stat("$jobdir/$statusfile"))[9];
+        next if $waittime > time();
         push(@jobdirs,$jobdir);
     }
     closedir($dir);
