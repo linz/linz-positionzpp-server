@@ -4,6 +4,7 @@ package LINZ::PNZPP::Template;
 
 use Carp;
 use IO::String;
+use Log::Log4perl;
 use Scalar::Util qw/reftype/;
 
 =head1 LINZ::PNZPP::Template
@@ -78,7 +79,13 @@ Trim leading space from the lines (requires using | or \ as first character for 
 
 =cut 
 
-our $debug=0;
+our $_logger=0;
+
+sub _Logger
+{
+    $_logger ||= Log::Log4perl->get_logger('LINZ.PNZPP.Template');
+    return $_logger;
+}
 
 sub new 
 {
@@ -146,7 +153,7 @@ sub _splitexpr
     my $start=1;
     my $end=length($line);
     my @values=();
-    print "Splitting $expr\n" if $debug;
+    _Logger->debug("Splitting $expr");
     while( 1 )
     {
         $expr =~ s/^\s*//;
@@ -180,7 +187,7 @@ sub _splitexpr
         $expr=substr($expr,$end);
 
         push(@values,$vexpr);
-        print "Found $vexpr\n" if $debug;
+        _Logger()->debug("Found $vexpr");
     }
     return @values;
 }
@@ -226,8 +233,12 @@ sub _evalexpr
     $expr =~ s/\]\[/]->[/g;
     $expr =~ s/\}\{/}->{/g;
     $expr =~ s/\}\(/}->(/g;
-    print "Evaluating $src as $expr\n" if $debug;
+    _Logger()->debug("Evaluating $src as $expr");
     my $value = eval $expr;
+    if( $@ )
+    {
+        _Logger()->warn("Error evaluating $src as $expr: $@");
+    }
     return $value;
 }
 
@@ -238,7 +249,7 @@ sub _evalblock
     $line =~ s/^\s*//;
     $line =~ s/\s*$//;
 
-    print "Eval block: $l: $ctlchar: $line\n" if $debug;
+    _Logger()->debug("Eval block: $l: $ctlchar: $line");
 
     my $blockre=qr/^[\+\?\!\*]/;
     my $endre=qr/^\-/;
@@ -337,7 +348,7 @@ sub _evalblock
         $depth++ if $line =~ /$blockre/;
         $depth-- if $line =~ /$endre/;
     }
-    print "Finished eval block $ctlchar: $line at line $l\n" if $debug;
+    _Logger->debug("Finished eval block $ctlchar: $line at line $l");
     return $l;
 }
 
