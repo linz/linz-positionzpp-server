@@ -149,6 +149,8 @@ sub checkUser
         printf "sudo -u $pnzuser $commandline\n\n";
         exit;
     }
+    # Ensure the user environment is set - may not be if running from crontab
+    $ENV{USER}=$pnzuser;
 }
 
 __END__
