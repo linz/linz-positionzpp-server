@@ -183,10 +183,10 @@ sub createCampaign
 
         # Copy file metadata to bernese file record
         my $meta=$campaign->{files}->[0];
-        foreach my $key (%{$self->{filemetadata}})
+        foreach my $key (keys %{$self->{filemetadata}})
         {
             $meta->{$key}=$self->{filemetadata}->{$key}
-                if ! exits $meta->{$key};
+                if ! exists $meta->{$key};
         }
 
         # Add variables required by bernese software
