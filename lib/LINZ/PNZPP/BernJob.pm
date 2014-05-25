@@ -126,7 +126,7 @@ sub new
         campaignid=>$job->{id}.'_'.$subjobid,
         email=>$job->{email},
         filename=>$filename,
-        filemeta=>$filemetadata,
+        filemetadata=>$filemetadata,
         orbit_type=>$orbittype,
         ref_rinex_type=>$reftype,
         status=>'wait',

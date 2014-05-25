@@ -206,15 +206,23 @@ sub _evalexpr
     my $src=$expr;
     my $__str=[];
     my $nstr=0;
+    # Replace literal strings with a string variable
     $expr =~ s/\"((?:[^\\\"]|\\.)*)\"/
         ($__str->[$nstr++]=$1) && "\$__str->[$nstr]"
         /xeg;
+    # Remove escapes from string
     foreach my $s (@$__str){ $s =~ s/\\(\.)/$1/g };
+
+    # Expand expressions, starting with a non-alphabetic or new line, then
+    # a series of strings separated by dots, then possibly a terminating 
+    # [ or (
     $expr=~ s/
                 (^|[^\w\.])
                 ([a-z_]\w*(?:\.[a-z_]\w*)*)
                 ([\[\(])?
             /$1._expandexpr($2,$data,$3)/exsig;
+    # Expand pairs of brackets to be separated by ->, ie x[][] becomes x[]->[],
+    # assuming that everything is a reference..
     $expr =~ s/\]\[/]->[/g;
     $expr =~ s/\}\{/}->{/g;
     $expr =~ s/\}\(/}->(/g;
@@ -236,6 +244,9 @@ sub _evalblock
     my $endre=qr/^\-/;
 
     croak("Invalid line prefix $ctlchar in template\n") if $ctlchar !~ /$blockre/;
+    
+    # Conditional blocks expect a single expression, so enclose in parentheses to ensure this works
+    $line = '( '.$line.' )' if $ctlchar eq '?' || $ctlchar eq '!' && $line !~ /^\(.*\)$/;
 
     my @vars=();
     my @values=();

@@ -29,20 +29,16 @@ case "$1" in
         mkdir -p $datadir/interface/input
         mkdir -p $datadir/interface/output
         mkdir -p $datadir/interface/refdata
-        mkdir -p $datadir/work
-        mkdir -p $datadir/archive
-        mkdir -p $datadir/berndata
-        mkdir -p $datadir/bernuser
-        mkdir -p $datadir/data
-        mkdir -p $datadir/status
-        mkdir -p $datadir/statistics
+        for d in work archive berndata bernuser data status statistics; do
+            mkdir -p $datadir/$d
+            chown -R :bern_users $datadir/$d
+            chmod -R g+u $datadir/$d
+            chmod -R g+s $datadir/$d
+        done
         mkdir -p $logdir
 
-        chown -R :bern_users $datadir
         chown -R :bern_users $logdir
-        chmod -R g+u $datadir
         chmod -R g+u $logdir
-        chmod -R g+s $datadir
         chmod -R g+s $logdir
 
         echo '***********************************************************'
