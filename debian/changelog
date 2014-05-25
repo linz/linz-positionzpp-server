@@ -1,3 +1,17 @@
+linz-positionzpp-server (1.3.1-1) precise; urgency=low
+
+  * Fix selection of SINEX file. Closes #9
+  * Minor fix to sample positionpp_hook
+  * Fixing postinst trigger so that updates do not modify web admin and web api directories
+  * Fixing file metadata in results
+  * Fixing running of job in same session as loaded
+  * Ensuring USER environment variable is defined when running from crontab
+  * Adding missing data directories to postinst
+  * Fixing missing lines in results text
+  * Tidying up rsync positionz hook example
+
+ -- Chris Crook <ccrook@linz.govt.nz>  Sun, 25 May 2014 15:46:11 +1200
+
 linz-positionzpp-server (1.3.0-1) precise; urgency=low
 
   * Creating more required directories in the post-installation script
