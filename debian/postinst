@@ -29,7 +29,7 @@ case "$1" in
         mkdir -p $datadir/interface/input
         mkdir -p $datadir/interface/output
         mkdir -p $datadir/interface/refdata
-        for d in work archive berndata bernuser data status statistics; do
+        for d in archive berndata bernuser data interface locks logs statistics status work; do
             mkdir -p $datadir/$d
             chown -R :bern_users $datadir/$d
             chmod -R g+u $datadir/$d
