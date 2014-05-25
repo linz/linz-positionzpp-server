@@ -390,7 +390,10 @@ sub compileReport()
     $template=$CompleteReportTemplate if $self->complete;
     $template=$FailedReportTemplate if $self->failed;
     my $ftemplate=LINZ::PNZPP::Template->new($template);
-    $self->{report}= LINZ::PNZPP::Template->new($template)->expand(%$self);
+    $self->{report}= LINZ::PNZPP::Template->new($template)->expand(
+            %$self,
+            seconds_datetime=>\&seconds_datetime 
+            );
     $self->{report_files}=[];
 
     if( ! $self->waiting() )
@@ -466,7 +469,7 @@ sub writeStats
         my $newfile = ! -f $file;
         open( my $f, ">>$file" ) || die "Cannot open statistics file $file\n";
         LINZ::PNZPP::Template->new($header)->write($f,%$self) if $newfile && $header ne '';
-        LINZ::PNZPP::Template->new($row)->write($f,%$self,seconds_datetime=>sub { return seconds_datetime(@_);} );
+        LINZ::PNZPP::Template->new($row)->write($f,%$self,seconds_datetime=>\&seconds_datetime);
         close($f);
     };
     if( $@ )
@@ -590,7 +593,7 @@ sub sendFailNotification
     eval
     {
         $message=LINZ::PNZPP::Template->new($NotificationEmailTemplate)->expand(
-            %$self,seconds_datetime=>sub { return seconds_datetime(@_);} );
+            %$self,seconds_datetime=>\&seconds_datetime );
     };
     if( $@ )
     {
