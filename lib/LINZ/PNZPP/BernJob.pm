@@ -325,15 +325,33 @@ sub runBerneseProcessor
     return $self->{status};
 }
 
+=head2 $bernjob->complete
+
+Returns true if the job is successfully completed
+
+=cut
+
 sub complete
 {
     return $_[0]->{status} eq 'complete';
 }
 
+=head2 $bernjob->waiting
+
+Returns true if the job is waiting for data
+
+=cut
+
 sub waiting
 {
     return $_[0]->{status} eq 'wait';
 }
+
+=head2 $bernjob->failed
+
+Returns true if the job completed unsuccessfully
+
+=cut
 
 sub failed
 {
@@ -541,7 +559,7 @@ sub archive
     }
 }
 
-=head2 $bernjob->remove()
+=head2 $bernjob->remove
 
 Deletes the Bernese campaign directories created by the job.
 
@@ -563,7 +581,7 @@ sub remove
     }
 }
 
-=head2 $bernjob->sendFailNotification()
+=head2 $bernjob->sendFailNotification
 
 Sends an email to the system administrators advising of a failed job
 

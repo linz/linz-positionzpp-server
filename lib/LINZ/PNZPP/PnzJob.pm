@@ -31,7 +31,7 @@ use Archive::Zip qw/:ERROR_CODES/;
 use File::Copy;
 use File::Path qw/make_path remove_tree/;
 use JSON::PP;
-use LINZ::GNSS::Time qw/seconds_datetime/;
+use LINZ::GNSS::Time qw/seconds_datetime datetime_seconds/;
 use Log::Log4perl;
 use LWP::Simple qw//;
 use Carp;
@@ -169,6 +169,7 @@ sub new
         $self->{jobdir}=$jobdir;
         $self->{resultsid}=0;
         $self->{completed}=0;
+        $self->{submitted}=$self->{submitted} ? datetime_seconds($self->{submitted}) : time();
         $self->{start_time}=time();
 
         my $error;
@@ -530,7 +531,7 @@ sub _formatTime
     return "" if ! $time;
     my $timestring=seconds_datetime($time);
 
-    $timestring=$1.'T'.$2.'+0000' if $timestring=~/^(\d\d\d\d\-\d\d\-\d\d)\s(\d\d\:\d\d\:\d\d)/;
+    $timestring=$1.'T'.$2.'+00:00' if $timestring=~/^(\d\d\d\d\-\d\d\-\d\d)\s(\d\d\:\d\d\:\d\d)/;
 }
 
 =head2 $job->sendResults
@@ -548,39 +549,76 @@ sub sendResults
 {
     my($self)=@_;
     my $results={};
-    my $complete=1;
     my $eta_time=0;
 
     # Compile the results from all the files
     # and update the status if necessary
 
+    my $nsuccess=0;
+    my $nwait=0;
+    my $nfail=0;
+    my $njob=0;
+
     foreach my $job ($self->bernjobs())
     {
-        # Failed and complete jobs are finished as far as processing 
-        # is concerned... only waiting jobs are continued.
-        if( $job->waiting() )
+        $njob++;
+
+        if( $job->complete )
         {
-            $complete=0;
+            $nsuccess++;
+        }
+        elsif( $job->waiting )
+        {
+            $nwait++;
             my $eta=$job->{eta_time};
             $eta_time=$eta if $eta_time==0;
             $eta_time=$eta if $eta != 0 && $eta < $eta_time;
         }
+        elsif( $job->failed )
+        {
+            $nfail++;
+        }
     }
+
+    # Failed and complete jobs are finished as far as processing 
+    # is concerned... only waiting jobs are continued.
+    my $complete=$nwait==0;
+
     $self->{end_time}=time() if $complete && ! $self->{end_time};
     $self->{eta_time}=$eta_time;
-
-    my $htemplate=LINZ::PNZPP::Template->new($JobHeaderTemplate);
-    my $summary=$htemplate->expand(%$self);
+    my $etastr=_formatTime($eta_time);
 
     # Create the summary data required by the PositioNZ-PP front end
+
+    my $status_info='No files were submitted for processing.';
+    if( $njob == 1 )
+    {
+        if( $nsuccess ){ $status_info="Completed successfully"; }
+        elsif( $nfail ){ $status_info="Processing failed"; }
+        elsif( $nwait ){ $status_info="On hold till $etastr"; }
+    }
+    else
+    {
+        $status_info='';
+        if( $nsuccess ){ $status_info="$nsuccess files successfully processed. ";}
+        if( $nfail ){ $status_info.="$nfail files could not be processed. ";}
+        if( $nwait ){ $status_info.="$nwait files waiting for data. On hold till $etastr. ";}
+        $status_info =~ s/\s*$//;
+    }
+    my $substatus=$nwait ? "waiting" : $nfail ? "failed" : "success";
+
+    my $htemplate=LINZ::PNZPP::Template->new($JobHeaderTemplate);
+    my $summary=$htemplate->expand(%$self,status_info=>$status_info,seconds_datetime=>\&seconds_datetime);
 
     my $resultfiles=[];
     $results=
     {
         status=>$complete ? 'completed' : 'waiting',
+        substatus=>$substatus,
+        status_info=>$status_info,
         start_time=>_formatTime($self->{start_time}),
         end_time=>_formatTime($self->{end_time}),
-        eta_time=>_formatTime($self->{eta_time}),
+        eta_time=>$etastr,
         summary=>$summary,
         results_files=>$resultfiles,
     };
