@@ -175,7 +175,7 @@ sub new
         make_path($jobdir,{error=>\$error});
         die "Cannot create job directory $jobdir\n" if @$error;
 
-        $self->lock();
+        $self->lock() || die "Cannot lock new job $jobid\n";
         
         my $fileorbtype=$OrbitLookup{$self->{orbit_type}} || $DefaultOrbitType;
         my $filereftype=$DefaultRefRinexType;
@@ -398,7 +398,7 @@ quits
 sub update
 {
     my($self)=@_;
-    $self->lock();
+    $self->lock() || return;
     my $updated=0;
     my $server=$self->server;
     
