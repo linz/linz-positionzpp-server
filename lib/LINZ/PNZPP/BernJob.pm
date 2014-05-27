@@ -192,8 +192,8 @@ sub createCampaign
         # Add variables required by bernese software
         my $vars=$campaign->{variables};
         $vars->{V_USRMRK}=$campaign->{marks}->[0];
-        $vars->{V_ORBTYPE}=$self->{orbit_type};
-        $vars->{V_ERPTYPE}=$self->{orbit_type};
+        $vars->{V_ORBTYP}=$self->{orbit_type};
+        $vars->{V_ERPTYP}=$self->{orbit_type};
 
         $self->{campaign}=$campaign;
         $self->{campaigndir}=$campaign->{campaigndir};
