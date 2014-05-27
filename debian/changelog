@@ -1,3 +1,12 @@
+linz-positionzpp-server (1.4.2-1) precise; urgency=low
+
+  * Station renaming and formal errors inf.  Closes #14, #42.
+  * Improving coord epoch wording. Closes #22.
+  * Fixing PCF variable names. Closes #5.
+  * Fixing missing information in failed job statistics
+
+ -- Chris Crook <ccrook@linz.govt.nz>  Wed, 28 May 2014 07:29:15 +1200
+
 linz-positionzpp-server (1.4.1-1) precise; urgency=low
 
   * Adding logging to template code for better error handling
