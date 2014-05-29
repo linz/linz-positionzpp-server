@@ -18,6 +18,9 @@ use LINZ::BERN::BernUtil;
 use LINZ::BERN::PcfFile;
 use LINZ::GNSS::DataCenter;
 use LINZ::GNSS::Time qw/datetime_seconds seconds_datetime/;
+use LINZ::PNZPP::Template;
+use LINZ::PNZPP::Utility qw/TemplateFunctions/;
+use IPC::Run;
 use JSON;
 use Net::SMTP;
 
@@ -44,6 +47,10 @@ our $NotificationEmailFrom='bern_server@linz.govt.nz';
 our $NotificationEmailTo='positionz@linz.govt.nz';
 our $NotificationEmailTitle='PositioNZ-PP job failure: [bernid]';
 our $NotificationEmailTemplate='|PositioNZ-PP job failed';
+
+our $TeqcBin='/usr/bin/teqc';
+our $TeqcUserParams='+metadata';
+our $TeqcRefParams='+metadata';
 
 =head2 LINZ::PNZPP::BernJob::LoadConfig
 
@@ -79,6 +86,9 @@ sub LoadConfig
     $NotificationEmailTo=$conf->get("NotificationEmailTo",$NotificationEmailTo);
     $NotificationEmailTitle=$conf->get("NotificationEmailTitle",$NotificationEmailTitle);
     $NotificationEmailTemplate=$conf->get("NotificationEmailTemplate",$NotificationEmailTemplate);
+    $TeqcBin=$conf->get("TeqcBin",$TeqcBin);
+    $TeqcUserParams=$conf->get("TeqcUserParams",$TeqcUserParams);
+    $TeqcRefParams=$conf->get("TeqcRefParams",$TeqcRefParams);
     my $rfiles=$conf->get("ReportFiles");
     if( ref($rfiles) eq 'HASH' && exists $rfiles->{reportfile} )
     {
@@ -410,7 +420,8 @@ sub compileReport()
     my $ftemplate=LINZ::PNZPP::Template->new($template);
     $self->{report}= LINZ::PNZPP::Template->new($template)->expand(
             %$self,
-            seconds_datetime=>\&seconds_datetime 
+            seconds_datetime=>\&seconds_datetime,
+            TemplateFunctions
             );
     $self->{report_files}=[];
 
@@ -438,14 +449,25 @@ sub compileReport()
                 $item=~s/\[cccc\]/$mark/g;
                 $item=~s/\[ssss\]/$session/g;
             }
+            if( $source eq 'teqc' )
+            {
+                eval
+                {
+                    $source=$self->createTeqcReport($self->{campaigndir});
+                };
+                if( $@ )
+                {
+                    _Logger->warn("Error creating teqc report: $@");
+                }
+            }
             my $sourcepath=$self->{campaigndir}.'/'.$source;
             if( ! -f $sourcepath )
             {
-                _Logger()->warn("Report file $sourcepath is missing\n") if $self->complete();
+                _Logger()->warn("Report file $sourcepath is missing") if $self->complete();
             }
             elsif( $target !~ /^[A-Z0-9_.-]+$/i )
             {
-                _Logger()->error("Invalid report file target name $target defined\n");
+                _Logger()->error("Invalid report file target name $target defined");
             }
             else
             {
@@ -454,6 +476,103 @@ sub compileReport()
         }
         $self->{report_files}=$files;
     }
+}
+
+=head2 $filename=$bernjob->createTeqcReport($campaigndir)
+
+Routine to create a teqc report file for the RINEX files in a campaign.
+
+=cut
+
+sub createTeqcReport
+{
+    my($self,$campaigndir)=@_;
+    my $rnxdir=$campaigndir.'/RAW';
+    my $rptname='OUT/TEQCRPT.OUT';
+    my $rptfile=$campaigndir.'/'.$rptname;
+    my %userfile=();
+    foreach my $uf (@{$self->{campaign}->{files}})
+    {
+        $userfile{$uf->{filename}}=$uf->{orig_filename};
+    }
+
+    my $rpt;
+    if( ! open( $rpt, ">$rptfile" ) )
+    {
+        _Logger()->error("Cannot create teqc report file $rptfile");
+        return $rptname;
+    }
+    if( ! -x $TeqcBin )
+    {
+        _Logger()->error("Cannot run teqc at $TeqcBin") if $TeqcBin != 'none';
+        return $rptname;
+    }
+
+
+    my @userfiles;
+    my @reffiles;
+    if( opendir(my $dh, $rnxdir))
+    {
+        while(my $fname=readdir($dh))
+        {
+            my $fpath=$rnxdir.'/'.$fname;
+            next if ! -f $fpath;
+            if( exists($userfile{$fname}) )
+            {
+                push(@userfiles,$fname);
+            }
+            else
+            {
+                push(@reffiles,$fname);
+            }
+        }
+        close($dh);
+    }
+
+    print $rpt "Summary of rinex data used\n\n";
+    foreach my $i (1,2)
+    {
+        my $list;
+        my $params;
+        if( $i == 1 )
+        {
+            $list=\@userfiles;
+            $params = $TeqcUserParams;
+        }
+        else
+        {
+            my $sess_start=seconds_datetime($self->{campaign}->{session_start});
+            my $sess_end=seconds_datetime($self->{campaign}->{session_end});
+            print $rpt "\n","="x50,"\nReference data files\n";
+            print $rpt "Note: Only using data within the observation window $sess_start to $sess_end.\n\n";
+
+            $list=\@reffiles;
+            $params = $TeqcRefParams;
+        }
+        my @cmd=split(' ',$params);
+        unshift(@cmd,$TeqcBin);
+        push(@cmd,'file');
+
+        my $nfile=0;
+        foreach my $f (sort @$list)
+        {
+            my $userf=$userfile{$f} || $f;
+            print $rpt "-"x50,"\n" if $nfile++;
+            print $rpt "File: $f";
+            print $rpt " renamed from $userf" if $userf ne $f;
+            print $rpt "\n";
+            $cmd[-1] = $rnxdir.'/'.$f;
+            my $output;
+            IPC::Run::run \@cmd, ">", \$output;
+            my $qrnx=quotemeta($rnxdir.'/');
+            $output =~ s/$qrnx//g;
+            print $rpt $output;
+        }
+    }
+
+    close($rpt);
+
+    return $rptname
 }
 
 =head2 $bernjob->writestats
