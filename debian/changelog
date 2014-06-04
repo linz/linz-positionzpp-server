@@ -1,3 +1,11 @@
+linz-positionzpp-server (1.5.0-1) precise; urgency=low
+
+  * Adding teqc report to output files
+  * Adding missing file
+  * Adding coordinate summary reports to output
+
+ -- Chris Crook <ccrook@linz.govt.nz>  Wed, 04 Jun 2014 12:40:00 +1200
+
 linz-positionzpp-server (1.4.2-1) precise; urgency=low
 
   * Station renaming and formal errors inf.  Closes #14, #42.
