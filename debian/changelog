@@ -1,3 +1,9 @@
+linz-positionzpp-server (1.6.0-1) precise; urgency=low
+
+  * Extracting templates from configuration into individual files
+
+ -- Chris Crook <ccrook@linz.govt.nz>  Thu, 05 Jun 2014 10:33:57 +1200
+
 linz-positionzpp-server (1.5.1-1) precise; urgency=low
 
   * Removing dependency on IPC::Run module
