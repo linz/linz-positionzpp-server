@@ -1,0 +1,136 @@
++results
+|Input data
+* campaign.files
+|         File          : $+
+= orig_filename
+? orig_markname eq markname
+|         Mark          : $$$+
+= markname
+-
+? orig_markname ne markname
+|         Mark          : $$$+ (renamed to $$$+)
+= orig_markname markname
+-
+? orig_anttype eq anttype
+|         Antenna       : $+
+= anttype
+-
+? orig_anttype ne anttype
+|         Antenna       : $+ (changed to $+)
+= orig_anttype anttype
+-
+? orig_rectype eq rectype
+|         Receiver      : $+
+= rectype
+-
+? orig_rectype ne rectype
+|         Receiver      : $+ (changed to $+)
+= orig_rectype rectype
+-
+|         Antenna height:  #.### m
+= antheight
+? orig_markname ne markname
+|
+|     Note: The mark was renamed to $+ because the name you used ($+)
+|     is the same as a PositioNZ network station.
+= markname orig_markname
+-
+|
+|Orbit type: $+
+= orbittype
+|
+|Final Coordinates
+* files
++ calc_coords{ markname}
+|
+|  Mark name: $$$$
+= markname
++ itrf96=ConvertCoords( 'ITRF2008_XYZ', xyz[0], xyz[1], xyz[2], 'ITRF96_XYZ', year )
++ llh96=ConvertCoords( 'ITRF96_XYZ', itrf96.X, itrf96.Y, itrf96.Z, 'ITRF96', year )
+|
+|  Epoch coordinates - defined at the observation epoch (decimal year ####.##)
+|
+|    ITRF2008 XYZ (m)            :  ########.#### #########.#### ########.####
+|    ITRF96 (NZGD2000) XYZ       :  ########.#### #########.#### ########.####
+|    ITRF2008 lon/lat/hgt        :  ###.######### ###.#########  #####.####
+|    ITRF96/NZGD2000 lon/lat/hgt :  ###.######### ###.#########  #####.####
+= year
+= xyz[0]  xyz[1]  xyz[2]
+= itrf96.X itrf96.Y itrf96.Z
+= llh[0]  llh[1]  llh[2]
+= llh96.lon llh96.lat llh96.hgt
+-
+-
++ nztm=ConvertCoords( 'NZGD2000', nzgd2kllh[0], nzgd2kllh[1], nzgd2kllh[2], 'NZTM' )
+|
+|  NZGD2000 coordinates - defined at nominal epoch 2000.0
+|  Deformation model version: $+
+|
+|    NZGD2000 lon/lat/hgt     :  ###.######### ###.#########  #####.####
+|    NZTM east/north/hgt      :  ########.#### ########.##### #####.####
+= DefModelVersion( 'NZGD2000' )
+= nzgd2kllh[0]  nzgd2kllh[1]  nzgd2kllh[2]
+= nztm.east nztm.north nztm.hgt
+-
+* circuit=MeridionalCircuits( nzgd2kllh[0], nzgd2kllh[1] )
++ mccrd=ConvertCoords( 'NZGD2000', nzgd2kllh[0], nzgd2kllh[1], nzgd2kllh[2], 'circuit' )
+|    $$$$$$$$$$$$$$$$$$$$$$$$ :  ########.#### ########.##### #####.####
+= ( circuit . 'east/north/hgt') mccrd.east mccrd.north mccrd.hgt
+-
+-
+|    NZVD09 height            :                               #####.####
+= CalcOrthHeight( 'NZGD2000', nzgd2kllh[0], nzgd2kllh[1], nzgd2kllh[2], 'NZVD09' )
+|
+|  Longitudes and latitudes in decimal degrees, heights are in metres
+|
+|  XYZ covariance matrix (m^2):
+|        ##.######### ##.######### ##.#########
+|        ##.######### ##.######### ##.#########
+|        ##.######### ##.######### ##.#########
+|
+|  ENU errors (mm):   #####.# #####.#  #####.#
+|
+|  Note: covariances and standard errors are likely to be optimistic as GNSS
+|  processing does not account for all potential sources of error (for example
+|  plumbing errors).
+|
+= covxyz[0][0]  covxyz[0][1]  covxyz[0][2]
+= covxyz[1][0]  covxyz[1][1]  covxyz[1][2]
+= covxyz[2][0]  covxyz[2][1]  covxyz[2][2]
+= sqrt( covenu[0][0])*1000 sqrt( covenu[1][1])*1000  sqrt( covenu[2][2])*1000
+-
+-
+|
+|Processing summary (for minimum constraints solution):
+|
+|     Session: $$$$$$$$$$$$$$$$$$ (UTC)
+|          to: $$$$$$$$$$$$$$$$$$ (UTC)
+|         DOF: #######  (Degrees of freedom)
+|        SEUW: ##.####  (Standard error of unit weight)
+= UTC( results.session_start) UTC( results.session_end) final.dof final.seu
+|
+|Reference stations:
+|
+|  The following reference stations have been selected to process this mark.
+|  The horizontal and vertical fit here represent how well the calculated
+|  baselines from the supplied mark to these reference stations fit their 
+|  ITRF08 coordinates in the minimum constraints solution.
+|
+|    Station   offset(km)      Fit(mm)
+|                            Hor    Vrt
+* refstns
++ helmert{name}
+|     $$$$     #####.#     ####.# ####.#
+= name offset
+= sqrt( residual_enu[0]**2+residual_enu[1]**2)
+= residual_enu[2]
+-
+-
+-
+# Not printing this as max for hor not the same as sqrt(maxe**2+maxn**2)
+#+ residual_enu=ref_stn_residual_enu
+#|     Maximum              ####.# ####.#
+#= sqrt( residual_enu[0]**2+residual_enu[1]**2)
+#= residual_enu[2]
+#-
+|

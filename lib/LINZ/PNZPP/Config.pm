@@ -16,27 +16,6 @@ use Carp;
 
 our $DefaultFileName='/etc/positionzpp/positionzpp.conf';
 
-sub _expandvar
-{
-    my($self,$filename,%used)=@_;
-    my ($sec,$min,$hour,$day,$mon,$year)=localtime();
-    my %timehash=
-    (
-        second=>sprintf("%02d",$sec),
-        minute=>sprintf("%02d",$min),
-        hour=>sprintf("%02d",$hour),
-        day=>sprintf("%02d",$day),
-        month=>sprintf("%02d",$mon+1),
-        year=>sprintf("%04d",$year+1900),
-    );
-    $filename =~ s/\$\{(\w+)\}/
-                    $self->has($1) ? $self->get($1) : 
-                    exists $ENV{$1} ? $ENV{$1} :
-                    exists $timehash{$1} ? $timehash{$1} :
-                    $1/exg;
-    return $filename;
-}
-
 =head2 my $conf=PNZPP::Config->new($filename)
 
 Loads the PositioNZ-PP configuration from the specified file, or from the default file
@@ -91,6 +70,48 @@ sub get
     return $self->has($key) ? $self->{lc($key)} : $default;
 }
 
+=head2 $expanded=$conf->expand($string)
+
+Expands strings formatted as ${xxx}, where xxx can be one of 
+
+=over
+
+=item an item in the configuration file
+
+=item an environment variable
+
+=item a component of the local time, one of year, month, day, hour, minute, or second
+
+=back
+
+=cut
+
+sub expand
+{
+    my($self,$filename,%used)=@_;
+    my ($sec,$min,$hour,$day,$mon,$year)=localtime();
+    my %timehash=
+    (
+        second=>sprintf("%02d",$sec),
+        minute=>sprintf("%02d",$min),
+        hour=>sprintf("%02d",$hour),
+        day=>sprintf("%02d",$day),
+        month=>sprintf("%02d",$mon+1),
+        year=>sprintf("%04d",$year+1900),
+    );
+
+    my $maxexpand=10;
+    while( $maxexpand-- && $filename=~ /\$\{\w+\}/ )
+    {
+        $filename =~ s/\$\{(\w+)\}/
+                    $self->has($1) ? $self->get($1) : 
+                    exists $ENV{$1} ? $ENV{$1} :
+                    exists $timehash{$1} ? $timehash{$1} :
+                    $1/exg;
+    }
+    return $filename;
+}
+
 =head2 $conf->filename($key,$default)
 
 Similar to $conf->get() except that it substitues ${xxx} for the corresponding environment
@@ -103,10 +124,7 @@ sub filename
     my($self,$key,$default)=@_;
     my $maxexpand=10;
     my $filename=$self->get($key);
-    while( $maxexpand-- && $filename=~ /\$\{\w+\}/ )
-    {
-        $filename=$self->_expandvar($filename);
-    }
+    $filename=$self->expand($filename);
     return $filename;
 }
 

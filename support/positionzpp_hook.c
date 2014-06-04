@@ -9,7 +9,7 @@ int main( int argc, char *argv[] )
     if( argc == 3 )
     {
         sprintf(command,"%s \"%.20s\" \"%.400s\"",
-            "/usr/local/bin/positionzpp_hook.sh",
+            "/opt/positionzpp/positionzpp_hook.sh",
             argv[1],
             argv[2]);
         // setuid(0);

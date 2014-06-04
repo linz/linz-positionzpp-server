@@ -101,7 +101,7 @@ sub LoadConfig
 
     # Templates
 
-    $JobHeaderTemplate=$conf->get("JobHeaderTemplate") || croak("Configuration does not define JobHeaderTemplate\n");
+    $JobHeaderTemplate=$conf->filename("JobHeaderTemplate") || croak("Configuration does not define JobHeaderTemplate\n");
 
     # Optional information
 
@@ -122,7 +122,7 @@ sub LoadConfig
         $reports=[$reports] if ref $reports ne 'ARRAY';
         foreach my $rpt (@{$reports})
         {
-            my $template=$conf->get($rpt->{template},'');
+            my $template=$conf->expand($rpt->{template});
             if( $template )
             {
                 $rpt->{template}=$template;
@@ -635,7 +635,7 @@ sub sendResults
     }
     my $substatus=$nwait ? "waiting" : $nfail ? "failed" : "success";
 
-    my $htemplate=LINZ::PNZPP::Template->new($JobHeaderTemplate);
+    my $htemplate=LINZ::PNZPP::Template->new($JobHeaderTemplate,readfile=>1);
     my $summary=$htemplate->expand(%$self,status_info=>$status_info,TemplateFunctions);
 
     my $resultfiles=[];
@@ -675,7 +675,7 @@ sub sendResults
             print "Building summary file $filename\n";
             eval
             {
-                my $template=LINZ::PNZPP::Template->new($rpt->{template});
+                my $template=LINZ::PNZPP::Template->new($rpt->{template},readfile=>1);
                 my $rptfile=$self->{jobdir}.'/'.$filename;
                 open( my $rptf, ">$rptfile" ) || die "Cannot open $rptfile\n";
                 $template->write($rptf,%$self,TemplateFunctions);

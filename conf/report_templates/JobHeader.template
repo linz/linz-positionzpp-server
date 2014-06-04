@@ -1,0 +1,13 @@
+|LINZ PositioNZ-PP Job Summary
+|
+| Title    : $+
+| Submitted: $+ (local time)
+| Status   : $+
+|
+=title
+= LocalTime( submitted )
+= status_info
+* bernjobs
+|=============================
+|$$+
+=report

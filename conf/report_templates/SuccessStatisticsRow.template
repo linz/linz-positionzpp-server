@@ -1,0 +1,20 @@
+* campaign.files
++ results
++ calc_coords{ markname}
+|$+,$+,$+,$+,$+,$+,#.#,$+,$+,$+,$+,#.###,#.#########,#.#########,#.####,#.#,#.#,#.#,$+,$+,#.##,#.##,#.#,#.#,#.#,$+,#.##,$+,$+,"$+"
+= campaign.JOBID
+= markname
+= orig_markname
+= filename
+= orig_filename
+= UTC( campaign.session_start) 
+= ( campaign.session_end - campaign.session_start )
+= anttype orig_anttype rectype orig_rectype
+= antheight
+= nzgd2kllh[0] nzgd2kllh[1] nzgd2kllh[2]
+= sqrt( covenu[1][1])*1000  sqrt( covenu[0][0])*1000 sqrt( covenu[2][2])*1000
+= refstn_summary.count refstn_summary.marknames refstn_summary.minoffset refstn_summary.maxoffset
+= ref_stn_residual_enu[0] ref_stn_residual_enu[1] ref_stn_residual_enu[2]
+= results.orbittype final.seu
+= UTC( start_time) UTC( end_time) 
+= baseline_wkt

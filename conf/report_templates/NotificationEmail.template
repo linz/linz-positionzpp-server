@@ -1,0 +1,36 @@
+|Bernese processing job failed
+|
+|Job id       : $+
+|User email   : $+
+|Start time   : $+
+|End time     : $+
+|Fail PID     : $+
+|Fail script  : $+
+|Fail message : $+
+=campaign.JOBID
+=email
+=start_time
+=end_time
+=fail_pid
+=fail_script
+=fail_message
++campaign
+*files
+|
+|      User filename: $+
+|      Session start: $+
+|      Duration     : $+
+|      Receiver type: $+
+|       Antenna type: $+
+| User Receiver type: $+
+|  User Antenna type: $+
+|     Antenna height: $+
+|
+= orig_filename
+= UTC( session_start)
+= ( session_end - session_start )
+= anttype
+= rectype
+= orig_anttype
+= orig_rectype
+= antheight

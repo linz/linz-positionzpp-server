@@ -1,0 +1,16 @@
++ campaign
++ runstatus
+* files
+|$+,$+,$+,$+,$+,$+,#.#,$+,$+,$+,$+,#.###,$+,$+,$+,$+,$+,$+,$+
+= JOBID
+= markname
+= orig_markname
+= filename
+= orig_filename
+= UTC( session_start) 
+= ( session_end - session_start )
+= anttype orig_anttype rectype orig_rectype
+= antheight
+= orbit_type
+= UTC( start_time) UTC( end_time) 
+= fail_pid fail_script fail_prog CsvQuote( fail_message )

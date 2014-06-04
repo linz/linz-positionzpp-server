@@ -45,7 +45,7 @@ our $SmtpServer;
 our $NotificationEmailFrom='bern_server@linz.govt.nz';
 our $NotificationEmailTo='positionz@linz.govt.nz';
 our $NotificationEmailTitle='PositioNZ-PP job failure: [bernid]';
-our $NotificationEmailTemplate='|PositioNZ-PP job failed';
+our $NotificationEmailTemplate='';
 
 our $TeqcBin='/usr/bin/teqc';
 our $TeqcUserParams='+metadata';
@@ -71,20 +71,20 @@ sub LoadConfig
     $KeepBerneseCampaign=$conf->get("KeepBerneseCampaign",$KeepBerneseCampaign);
     $LogStatisticsDir=$conf->filename("LogStatisticsDir");
     $SuccessStatisticsFile=$conf->filename("SuccessStatisticsFile");
-    $SuccessStatisticsHeader=$conf->get("SuccessStatisticsHeader");
-    $SuccessStatisticsRow=$conf->get("SuccessStatisticsRow");
+    $SuccessStatisticsHeader=$conf->filename("SuccessStatisticsHeader");
+    $SuccessStatisticsRow=$conf->filename("SuccessStatisticsRow");
     $FailStatisticsFile=$conf->filename("FailStatisticsFile");
-    $FailStatisticsHeader=$conf->get("FailStatisticsHeader");
-    $FailStatisticsRow=$conf->get("FailStatisticsRow");
-    $CompleteReportTemplate=$conf->get("CompleteReportTemplate") || croak("Configuration does not define CompleteReportTemplate\n");
-    $WaitReportTemplate=$conf->get("WaitReportTemplate") || croak("Configuration does not define WaitReportTemplate\n");
-    $FailedReportTemplate=$conf->get("FailedReportTemplate") || croak("Configuration does not define FailedReportTemplate\n");
+    $FailStatisticsHeader=$conf->filename("FailStatisticsHeader");
+    $FailStatisticsRow=$conf->filename("FailStatisticsRow");
+    $CompleteReportTemplate=$conf->filename("CompleteReportTemplate") || croak("Configuration does not define CompleteReportTemplate\n");
+    $WaitReportTemplate=$conf->filename("WaitReportTemplate") || croak("Configuration does not define WaitReportTemplate\n");
+    $FailedReportTemplate=$conf->filename("FailedReportTemplate") || croak("Configuration does not define FailedReportTemplate\n");
 
     $SmtpServer=$conf->get("SmtpServer",'');
     $NotificationEmailFrom=$conf->get("NotificationEmailFrom",$NotificationEmailFrom);
     $NotificationEmailTo=$conf->get("NotificationEmailTo",$NotificationEmailTo);
     $NotificationEmailTitle=$conf->get("NotificationEmailTitle",$NotificationEmailTitle);
-    $NotificationEmailTemplate=$conf->get("NotificationEmailTemplate",$NotificationEmailTemplate);
+    $NotificationEmailTemplate=$conf->filename("NotificationEmailTemplate");
     $TeqcBin=$conf->get("TeqcBin",$TeqcBin);
     $TeqcUserParams=$conf->get("TeqcUserParams",$TeqcUserParams);
     $TeqcRefParams=$conf->get("TeqcRefParams",$TeqcRefParams);
@@ -417,8 +417,8 @@ sub compileReport()
     my $template=$WaitReportTemplate;
     $template=$CompleteReportTemplate if $self->complete;
     $template=$FailedReportTemplate if $self->failed;
-    my $ftemplate=LINZ::PNZPP::Template->new($template);
-    $self->{report}= LINZ::PNZPP::Template->new($template)->expand(
+    my $ftemplate=LINZ::PNZPP::Template->new($template,readfile=>1);
+    $self->{report}= LINZ::PNZPP::Template->new($template,readfile=>1)->expand(
             %$self,
             TemplateFunctions
             );
@@ -620,8 +620,8 @@ sub writeStats
         }
         my $newfile = ! -f $file;
         open( my $f, ">>$file" ) || die "Cannot open statistics file $file\n";
-        LINZ::PNZPP::Template->new($header)->write($f,%$self,TemplateFunctions) if $newfile && $header ne '';
-        LINZ::PNZPP::Template->new($row)->write($f,%$self,,TemplateFunctions);
+        LINZ::PNZPP::Template->new($header,readfile=>1)->write($f,%$self,TemplateFunctions) if $newfile && $header ne '';
+        LINZ::PNZPP::Template->new($row,readfile=>1)->write($f,%$self,,TemplateFunctions);
         close($f);
     };
     if( $@ )
@@ -744,7 +744,7 @@ sub sendFailNotification
     my $message="PositioNZ-PP processing job ".$self->{campaignid}." failed\n";
     eval
     {
-        $message=LINZ::PNZPP::Template->new($NotificationEmailTemplate)->expand(
+        $message=LINZ::PNZPP::Template->new($NotificationEmailTemplate,readfile=>1)->expand(
             %$self,TemplateFunctions);
     };
     if( $@ )

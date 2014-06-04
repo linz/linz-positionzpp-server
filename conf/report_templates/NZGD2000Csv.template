@@ -1,0 +1,26 @@
+|mark,datafile,date,coordsys,east,north,up
+*bernjobs
+* campaign.files
++ results
++ calc_coords{ markname}
+|$+,$+,$+,$+,#.#########,#.#########,#.#####
+= orig_markname orig_filename UTC( session_start)
+= 'NZGD2000' nzgd2kllh[0] nzgd2kllh[1] nzgd2kllh[2]
+#
++ nztm=ConvertCoords( 'NZGD2000', nzgd2kllh[0], nzgd2kllh[1], nzgd2kllh[2], 'NZTM' )
+|$+,$+,$+,$+,#.####,#.####,#.#####
+= orig_markname orig_filename UTC( session_start)
+= 'NZTM' nztm.east nztm.north nztm.hgt
+-
+#
+* circuit=MeridionalCircuits( nzgd2kllh[0], nzgd2kllh[1])
++ mccrd=ConvertCoords( 'NZGD2000', nzgd2kllh[0], nzgd2kllh[1], nzgd2kllh[2], 'circuit' )
+|$+,$+,$+,$+,#.####,#.####,#.#####
+= orig_markname orig_filename UTC( session_start)
+= circuit mccrd.east mccrd.north mccrd.hgt
+-
+-
+#
+|$+,$+,$+,$+,,,#.#####
+= orig_markname orig_filename UTC( session_start)
+= 'NZVD09' CalcOrthHeight( 'NZGD2000', nzgd2kllh[0], nzgd2kllh[1], nzgd2kllh[2], 'NZVD09' )
