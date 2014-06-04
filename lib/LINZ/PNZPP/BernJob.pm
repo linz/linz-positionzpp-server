@@ -20,7 +20,6 @@ use LINZ::GNSS::DataCenter;
 use LINZ::GNSS::Time qw/datetime_seconds seconds_datetime/;
 use LINZ::PNZPP::Template;
 use LINZ::PNZPP::Utility qw/TemplateFunctions/;
-use IPC::Run;
 use JSON;
 use Net::SMTP;
 
@@ -549,9 +548,7 @@ sub createTeqcReport
             $list=\@reffiles;
             $params = $TeqcRefParams;
         }
-        my @cmd=split(' ',$params);
-        unshift(@cmd,$TeqcBin);
-        push(@cmd,'file');
+        my $cmd=$TeqcBin.' '.$params;
 
         my $nfile=0;
         foreach my $f (sort @$list)
@@ -580,9 +577,8 @@ sub createTeqcReport
                 }
             }
 
-            $cmd[-1] = $rnxdir.'/'.$f;
-            my $output;
-            IPC::Run::run \@cmd, ">", \$output;
+            $cmd .= ' "'.$rnxdir.'/'.$f.'"';
+            my $output=`$cmd`;
             my $qrnx=quotemeta($rnxdir.'/');
             $output =~ s/$qrnx//g;
             print $rpt $output;
