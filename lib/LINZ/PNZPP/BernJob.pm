@@ -93,6 +93,7 @@ sub LoadConfig
     if( ref($rfiles) eq 'HASH' && exists $rfiles->{reportfile} )
     {
         $ReportFiles=$rfiles->{reportfile};
+        $ReportFiles=[$ReportFiles] if ref($ReportFiles) ne 'ARRAY';
     }
 }
 
@@ -420,7 +421,6 @@ sub compileReport()
     my $ftemplate=LINZ::PNZPP::Template->new($template);
     $self->{report}= LINZ::PNZPP::Template->new($template)->expand(
             %$self,
-            seconds_datetime=>\&seconds_datetime,
             TemplateFunctions
             );
     $self->{report_files}=[];
@@ -493,7 +493,7 @@ sub createTeqcReport
     my %userfile=();
     foreach my $uf (@{$self->{campaign}->{files}})
     {
-        $userfile{$uf->{filename}}=$uf->{orig_filename};
+        $userfile{$uf->{filename}}=$uf;
     }
 
     my $rpt;
@@ -556,11 +556,30 @@ sub createTeqcReport
         my $nfile=0;
         foreach my $f (sort @$list)
         {
-            my $userf=$userfile{$f} || $f;
+
             print $rpt "-"x50,"\n" if $nfile++;
             print $rpt "File: $f";
-            print $rpt " renamed from $userf" if $userf ne $f;
+            my $uf=$userfile{$f};
+            if( $uf )
+            {
+                my $userf=$uf->{orig_filename};
+                print $rpt " renamed from $userf" if $userf ne $f;
+            }
             print $rpt "\n";
+            if( $uf )
+            {
+                if( $uf->{orig_anttype} ne $uf->{anttype} )
+                {
+                    print $rpt "Note: Antenna type changed from ".
+                        $uf->{orig_anttype}.' to '.$uf->{anttype}."\n";
+                }
+                if( $uf->{orig_rectype} ne $uf->{rectype} )
+                {
+                    print $rpt "Note: Receiver type changed from ".
+                        $uf->{orig_rectype}.' to '.$uf->{rectype}."\n";
+                }
+            }
+
             $cmd[-1] = $rnxdir.'/'.$f;
             my $output;
             IPC::Run::run \@cmd, ">", \$output;
@@ -605,8 +624,8 @@ sub writeStats
         }
         my $newfile = ! -f $file;
         open( my $f, ">>$file" ) || die "Cannot open statistics file $file\n";
-        LINZ::PNZPP::Template->new($header)->write($f,%$self) if $newfile && $header ne '';
-        LINZ::PNZPP::Template->new($row)->write($f,%$self,seconds_datetime=>\&seconds_datetime);
+        LINZ::PNZPP::Template->new($header)->write($f,%$self,TemplateFunctions) if $newfile && $header ne '';
+        LINZ::PNZPP::Template->new($row)->write($f,%$self,,TemplateFunctions);
         close($f);
     };
     if( $@ )
@@ -730,7 +749,7 @@ sub sendFailNotification
     eval
     {
         $message=LINZ::PNZPP::Template->new($NotificationEmailTemplate)->expand(
-            %$self,seconds_datetime=>\&seconds_datetime );
+            %$self,TemplateFunctions);
     };
     if( $@ )
     {

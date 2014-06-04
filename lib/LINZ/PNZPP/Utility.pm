@@ -33,13 +33,15 @@ Simple (non-epoch) coordinate conversion.
 
 Implemented in a template as
 
-  newcoord=ConvertCoords( crdsys, x, y, z, crdsys )
+  newcoord=ConvertCoords( crdsys, x, y, z, crdsys, epoch )
 
 newcoord has elements 
 
    X,Y,Z (for geocentric coordinate)
    lon,lat,hgt (for geodetic coordinate)
    east,north,hght (for a projection coordinate)
+
+If defined epoch is the conversion epoch.
 
 =cut
 
@@ -53,11 +55,12 @@ sub _coordinate
 
 sub ConvertCoords
 {
-    my($csysf,$x,$y,$z,$csyst)=@_;
+    my($csysf,$x,$y,$z,$csyst,$epoch)=@_;
     my $csf=GetCoordSys($csysf);
     my $cst=GetCoordSys($csyst);
     my $crdf=_coordinate($csf,$x,$y,$z);
-    my $crdt=$crdf->as($cst);
+    $crdf->setepoch($epoch) if $epoch;
+    my $crdt=$crdf->as($cst,$epoch);
 
     my $result={};
     if( $cst->type == LINZ::Geodetic::CARTESIAN ) 
@@ -134,7 +137,7 @@ location.
 sub MeridionalCircuits
 {
     my( $csf, $x, $y )  = @_;
-    return[];
+    return [];
 }
 
 =head2 $time=UTC($timestamp,$format)

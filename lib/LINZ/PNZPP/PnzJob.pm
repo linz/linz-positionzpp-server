@@ -32,12 +32,13 @@ use File::Copy;
 use File::Path qw/make_path remove_tree/;
 use JSON::PP;
 use LINZ::GNSS::Time qw/seconds_datetime datetime_seconds/;
+use LINZ::PNZPP::Template;
+use LINZ::PNZPP::Utility qw/TemplateFunctions/;
 use Log::Log4perl;
 use LWP::Simple qw//;
 use Carp;
 
 require LINZ::PNZPP::BernJob;
-require LINZ::PNZPP::Template;
 require LINZ::PNZPP;
 
 
@@ -58,6 +59,7 @@ our $LockFile;
 our $LockFileExpiry;
 our $JobHeaderTemplate;
 our $StatusFile='status.json';
+our $SummaryReports=[];
 
 our $DefaultOrbitType='RAPID+';
 our $DefaultRefRinexType='HOURLY+';
@@ -109,8 +111,25 @@ sub LoadConfig
     $ArchiveInputRetentionDays=$conf->get("ArchiveInputRetentionDays",$ArchiveInputRetentionDays)+0;
     $ArchiveBerneseRetentionDays=$conf->get("ArchiveBerneseRetentionDays",$ArchiveBerneseRetentionDays)+0;
     $ArchiveJobJsonRetentionDays=$conf->get("ArchiveJobJsonRetentionDays",$ArchiveJobJsonRetentionDays)+0;
-    $ArchiveBerneseFile=$conf->get("ArchiveBerneseFile") if exists($conf->{lc("ArchiveBerneseFile")});
-    $ArchiveJobJsonFile=$conf->get("ArchiveJobJsonFile") if exists($conf->{lc("ArchiveJobJsonFile")});
+    $ArchiveBerneseFile=$conf->get("ArchiveBerneseFile",$ArchiveBerneseFile);
+    $ArchiveJobJsonFile=$conf->get("ArchiveJobJsonFile",$ArchiveJobJsonFile);
+    
+    my $sumrpts=$conf->get("SummaryReports");
+    if( ref($sumrpts) eq 'HASH' && exists $sumrpts->{summaryreport} )
+    {
+        $SummaryReports=[];
+        my $reports=$sumrpts->{summaryreport};
+        $reports=[$reports] if ref $reports ne 'ARRAY';
+        foreach my $rpt (@{$reports})
+        {
+            my $template=$conf->get($rpt->{template},'');
+            if( $template )
+            {
+                $rpt->{template}=$template;
+                push(@$SummaryReports,$rpt);
+            }
+        }
+    }
 }
 
 sub _JobDir
@@ -446,7 +465,16 @@ sub update
     };
     if( $@ )
     {
-        _Logger->error($@);
+        _Logger->error("Error processing job ".$self->{id}.': '.$@);
+        eval
+        {
+            $self->remove();
+            _Logger->error("Removing job ".$self->{id});
+        };
+        if( $@ )
+        {
+            _Logger->error("Cannot remove job: ".$@);
+        }
     }
     $self->unlock();
 }
@@ -608,7 +636,7 @@ sub sendResults
     my $substatus=$nwait ? "waiting" : $nfail ? "failed" : "success";
 
     my $htemplate=LINZ::PNZPP::Template->new($JobHeaderTemplate);
-    my $summary=$htemplate->expand(%$self,status_info=>$status_info,seconds_datetime=>\&seconds_datetime);
+    my $summary=$htemplate->expand(%$self,status_info=>$status_info,TemplateFunctions);
 
     my $resultfiles=[];
     $results=
@@ -636,6 +664,35 @@ sub sendResults
     unlink($rzipfile,$rziptmp); # Just in case something is already hanging around?
     # Create the zip file.
     my $rzip=Archive::Zip->new();
+
+    # Add summary report files
+    if( $complete && $nsuccess)
+    {
+        foreach my $rpt (@$SummaryReports)
+        {
+            my $filename=$rpt->{filename};
+            my $description=$rpt->{description};
+            print "Building summary file $filename\n";
+            eval
+            {
+                my $template=LINZ::PNZPP::Template->new($rpt->{template});
+                my $rptfile=$self->{jobdir}.'/'.$filename;
+                open( my $rptf, ">$rptfile" ) || die "Cannot open $rptfile\n";
+                $template->write($rptf,%$self,TemplateFunctions);
+                close($rptf);
+                $rzip->addFile($rptfile,$filename);
+                push(@$resultfiles,{
+                    filename=>$filename,
+                    description=>$rpt->{description}
+                    });
+            };
+            if( $@ )
+            {
+                _Logger()->warn("Error creating summary report $filename: $@");
+            }
+        }
+    }
+
     # Add results files from each bern job
     foreach my $job ($self->bernjobs())
     {

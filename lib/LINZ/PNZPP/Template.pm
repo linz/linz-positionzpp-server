@@ -310,7 +310,7 @@ sub _evalblock
             }
             else
             {
-                push(@lvalues,$v);
+                push(@lvalues,$v) if $v;
             }
             my $varname=$vars[$i];
             foreach $v (@lvalues)
