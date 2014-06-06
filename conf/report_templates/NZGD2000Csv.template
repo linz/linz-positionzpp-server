@@ -10,7 +10,7 @@
 + nztm=ConvertCoords( 'NZGD2000', nzgd2kllh[0], nzgd2kllh[1], nzgd2kllh[2], 'NZTM' )
 |$+,$+,$+,$+,#.####,#.####,#.#####
 = orig_markname orig_filename UTC( session_start)
-= 'NZTM' nztm.east nztm.north nztm.hgt
+= 'NZTM2000' nztm.east nztm.north nztm.hgt
 -
 #
 * circuit=MeridionalCircuits( nzgd2kllh[0], nzgd2kllh[1])

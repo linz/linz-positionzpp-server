@@ -11,9 +11,9 @@
 =email
 =start_time
 =end_time
-=fail_pid
-=fail_script
-=fail_message
+=runstatus.fail_pid
+=runstatus.fail_script
+=runstatus.fail_message
 +campaign
 *files
 |

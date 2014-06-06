@@ -51,7 +51,7 @@
 |  Epoch coordinates - defined at the observation epoch (decimal year ####.##)
 |
 |    ITRF2008 XYZ (m)            :  ########.#### #########.#### ########.####
-|    ITRF96 (NZGD2000) XYZ       :  ########.#### #########.#### ########.####
+|    ITRF96/NZGD2000   XYZ       :  ########.#### #########.#### ########.####
 |    ITRF2008 lon/lat/hgt        :  ###.######### ###.#########  #####.####
 |    ITRF96/NZGD2000 lon/lat/hgt :  ###.######### ###.#########  #####.####
 = year
@@ -67,7 +67,7 @@
 |  Deformation model version: $+
 |
 |    NZGD2000 lon/lat/hgt     :  ###.######### ###.#########  #####.####
-|    NZTM east/north/hgt      :  ########.#### ########.##### #####.####
+|    NZTM2000 east/north/hgt  :  ########.#### ########.##### #####.####
 = DefModelVersion( 'NZGD2000' )
 = nzgd2kllh[0]  nzgd2kllh[1]  nzgd2kllh[2]
 = nztm.east nztm.north nztm.hgt
@@ -114,7 +114,7 @@
 |  The following reference stations have been selected to process this mark.
 |  The horizontal and vertical fit here represent how well the calculated
 |  baselines from the supplied mark to these reference stations fit their 
-|  ITRF08 coordinates in the minimum constraints solution.
+|  ITRF2008 coordinates in the minimum constraints solution.
 |
 |    Station   offset(km)      Fit(mm)
 |                            Hor    Vrt
