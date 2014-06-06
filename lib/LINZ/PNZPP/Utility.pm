@@ -136,8 +136,9 @@ location.
 
 sub MeridionalCircuits
 {
-    my( $csf, $x, $y )  = @_;
-    return [];
+    my( $lon, $lat )  = @_;
+    require LINZ::Geodetic::NZMeridionalCircuits;
+    return LINZ::Geodetic::NZMeridionalCircuits::Circuits($lon,$lat);
 }
 
 =head2 $time=UTC($timestamp,$format)
