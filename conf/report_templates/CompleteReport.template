@@ -66,19 +66,19 @@
 |  NZGD2000 coordinates - defined at nominal epoch 2000.0
 |  Deformation model version: $+
 |
-|    NZGD2000 lon/lat/hgt     :  ###.######### ###.#########  #####.####
-|    NZTM2000 east/north/hgt  :  ########.#### ########.##### #####.####
+|    NZGD2000 lon/lat/hgt      :  ###.######### ###.#########  #####.####
+|    NZTM2000 east/north/hgt   :  ########.#### ########.##### #####.####
 = DefModelVersion( 'NZGD2000' )
 = nzgd2kllh[0]  nzgd2kllh[1]  nzgd2kllh[2]
 = nztm.east nztm.north nztm.hgt
 -
 * circuit=MeridionalCircuits( nzgd2kllh[0], nzgd2kllh[1] )
-+ mccrd=ConvertCoords( 'NZGD2000', nzgd2kllh[0], nzgd2kllh[1], nzgd2kllh[2], 'circuit' )
-|    $$$$$$$$$$$$$$$$$$$$$$$$ :  ########.#### ########.##### #####.####
-= ( circuit . 'east/north/hgt') mccrd.east mccrd.north mccrd.hgt
++ mccrd=ConvertCoords( 'NZGD2000', nzgd2kllh[0], nzgd2kllh[1], nzgd2kllh[2], circuit )
+|    $$$$$$$$$$$$$$$$$$$$$$$$$ :  ########.#### ########.##### #####.####
+= ( circuit . ' east/north/hgt') mccrd.east mccrd.north mccrd.hgt
 -
 -
-|    NZVD09 height            :                               #####.####
+|    NZVD09 height             :                               #####.####
 = CalcOrthHeight( 'NZGD2000', nzgd2kllh[0], nzgd2kllh[1], nzgd2kllh[2], 'NZVD09' )
 |
 |  Longitudes and latitudes in decimal degrees, heights are in metres

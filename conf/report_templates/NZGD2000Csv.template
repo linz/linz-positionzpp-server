@@ -14,7 +14,7 @@
 -
 #
 * circuit=MeridionalCircuits( nzgd2kllh[0], nzgd2kllh[1])
-+ mccrd=ConvertCoords( 'NZGD2000', nzgd2kllh[0], nzgd2kllh[1], nzgd2kllh[2], 'circuit' )
++ mccrd=ConvertCoords( 'NZGD2000', nzgd2kllh[0], nzgd2kllh[1], nzgd2kllh[2], circuit )
 |$+,$+,$+,$+,#.####,#.####,#.#####
 = orig_markname orig_filename UTC( session_start)
 = circuit mccrd.east mccrd.north mccrd.hgt
