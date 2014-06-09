@@ -159,6 +159,18 @@ processed separately.
 
 =cut
 
+sub _subjob
+{
+    my ($nsubjob) = @_;
+    my $chars='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    my $s0=int(($nsubjob)/length($chars));
+    my $s1=$nsubjob-length($chars)*$s0;
+    my $id=substr($chars,$s1,1);
+    $id = substr($chars,$s0-1,1).$id if $s0 > 0;
+    return $id;
+}
+
+
 sub new
 {
     my( $class, $server, $zipfile, $idcheck, $overwrite ) = @_;
@@ -200,7 +212,7 @@ sub new
         my $fileorbtype=$OrbitLookup{$self->{orbit_type}} || $DefaultOrbitType;
         my $filereftype=$DefaultRefRinexType;
 
-        my $subjobid=0;
+        my $nsubjob=0;
         # Convert files to bern jobs
 
         my $bernjobs=[];
@@ -208,7 +220,8 @@ sub new
         my $receivers={};
         foreach my $file (@{$self->{files}})
         {
-            $subjobid++;
+            my $subjobid=_subjob($nsubjob);
+            $nsubjob++;
             my $filename=$file->{filename};
             my $filemetadata={
                     orig_anttype=>$file->{orig_antenna_type},

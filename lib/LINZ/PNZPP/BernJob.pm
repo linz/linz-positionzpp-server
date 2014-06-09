@@ -130,10 +130,12 @@ sub new
 
     $filemetadata ||= {};
 
+    my $campid=substr($job->{id}.'_',0,8-length($subjobid)).$subjobid;
+
     my $self= bless {
         jobid=>$job->{id},
         subjobid=>$subjobid,
-        campaignid=>$job->{id}.'_'.$subjobid,
+        campaignid=>$campid,
         email=>$job->{email},
         filename=>$filename,
         filemetadata=>$filemetadata,
