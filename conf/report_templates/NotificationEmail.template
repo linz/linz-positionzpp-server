@@ -1,5 +1,6 @@
 |Bernese processing job failed
 |
++campaign
 |Job id       : $+
 |User email   : $+
 |Start time   : $+
@@ -7,14 +8,13 @@
 |Fail PID     : $+
 |Fail script  : $+
 |Fail message : $+
-=campaign.JOBID
+=JOBID
 =email
 =start_time
 =end_time
 =runstatus.fail_pid
 =runstatus.fail_script
 =runstatus.fail_message
-+campaign
 *files
 |
 |      User filename: $+

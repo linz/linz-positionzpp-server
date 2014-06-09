@@ -31,7 +31,7 @@ to the block in which they are defined.
 
  +          start of block
  ?          start of conditional block
- !          start of alternative conditional block
+ !          start of negative conditional block
  *          start of repeat block
  \          literal text
  | or blank text with value placeholders
@@ -257,7 +257,7 @@ sub _evalblock
     croak("Invalid line prefix $ctlchar in template\n") if $ctlchar !~ /$blockre/;
     
     # Conditional blocks expect a single expression, so enclose in parentheses to ensure this works
-    $line = '( '.$line.' )' if $ctlchar eq '?' || $ctlchar eq '!' && $line !~ /^\(.*\)$/;
+    $line = '( '.$line.' )' if ($ctlchar eq '?' || $ctlchar eq '!') && $line !~ /^\(.*\)$/;
 
     my @vars=();
     my @values=();
@@ -335,7 +335,7 @@ sub _evalblock
     {
         _evaluate($lines,$fh,$data,$l);
     }
-    elsif( $ctlchar eq '?' && $values[0] )
+    elsif( $ctlchar eq '!' && ! $values[0] )
     {
         _evaluate($lines,$fh,$data,$l);
     }

@@ -30,10 +30,20 @@
 |         Antenna height:  #.### m
 = antheight
 ? orig_markname ne markname
+# If the original name was four characters and we've changed more than
+# the case, then it must conflict with a positionz station
+? uc( orig_markname) ne uc( markname) && orig_markname =~ /^[A-Z0-9]{4}$/i
 |
 |     Note: The mark was renamed to $+ because the name you used ($+)
 |     is the same as a PositioNZ network station.
 = markname orig_markname
+-
+! uc( orig_markname) ne uc( markname) && orig_markname =~ /^[A-Z0-9]{4}$/i
+|
+|     Note: The mark was renamed to $+ as the processing requires a 
+|     simple four character upper case name
+= markname 
+-
 -
 |
 |Orbit type: $+

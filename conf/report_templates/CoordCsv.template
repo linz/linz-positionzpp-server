@@ -2,6 +2,7 @@
 *bernjobs
 * campaign.files
 + results
+? calc_coords
 + calc_coords{ markname}
 + itrf96=ConvertCoords( 'ITRF2008_XYZ', xyz[0], xyz[1], xyz[2], 'ITRF96_XYZ', year )
 |$+,$+,$+,#.####,#.####,#.####,#.####,#.####,#.####,#.######,#.######,#.######,#.####,#.####,#.####
