@@ -131,6 +131,8 @@ sub new
     $filemetadata ||= {};
 
     my $campid=substr($job->{id}.'_',0,8-length($subjobid)).$subjobid;
+    my $serverid='';
+    $serverid=$job->server()->id() if $job->server();
 
     my $self= bless {
         jobid=>$job->{id},
@@ -143,6 +145,7 @@ sub new
         ref_rinex_type=>$reftype,
         status=>'wait',
         message=>'Not yet started.',
+        serverid=>$serverid,
         }, $class;
     return $self;
 }
@@ -258,7 +261,8 @@ sub runBerneseProcessor
 
     my $campid=$self->{campaignid};
     my $logger=_Logger();
-    $logger->info("Running Bernese job  $campid");
+    my $serverid=$self->{serverid};
+    $logger->info("$serverid: Running Bernese job  $campid");
     $self->{start_time}=time();
     my $pcffile=$bernenv->{PCF_FILE};
     my $status=LINZ::BERN::BernUtil::RunPcf(
@@ -324,15 +328,15 @@ sub runBerneseProcessor
         my $runsts=$self->{campaign}->{runstatus} || {};
         my $fail_pid= $runsts->{fail_pid} || '000';
         my $fail_message= $runsts->{fail_message} || $self->{status_description};
-        $logger->error("Bernese job $campid failed: PID $fail_pid: $fail_message");
+        $logger->error("$serverid: Bernese job $campid failed: PID $fail_pid: $fail_message");
     }
     elsif( $self->{status} eq 'wait' )
     {
-        $logger->info("Bernese job $campid on hold till ".seconds_datetime($self->{eta_time},1));
+        $logger->info("$serverid: Bernese job $campid on hold till ".seconds_datetime($self->{eta_time},1));
     }
     else
     {
-        $logger->info("Bernese job $campid completed");
+        $logger->info("$serverid: Bernese job $campid completed");
     }
     return $self->{status};
 }
@@ -388,6 +392,8 @@ sub update
     my ($self,$server)=@_;
     return 0 if $self->{status} ne 'wait';
 
+    $self->{serverid}=$server->id();
+
     # Note that creating the bernese environment also sets the variables
     # in %ENV.
     my $bernenv=$server->berneseClientEnv();
@@ -435,6 +441,7 @@ sub compileReport()
         my $jobid=$self->{jobid};
         my $subjobid=$self->{subjobid};
         my $file=$self->{campaign}->{files}->[0]->{orig_filename};
+        my $serverid=$self->{serverid};
 
         foreach my $rfile (@$ReportFiles)
         {
@@ -458,17 +465,17 @@ sub compileReport()
                 };
                 if( $@ )
                 {
-                    _Logger->warn("Error creating teqc report: $@");
+                    _Logger->warn("$serverid: Error creating teqc report: $@");
                 }
             }
             my $sourcepath=$self->{campaigndir}.'/'.$source;
             if( ! -f $sourcepath )
             {
-                _Logger()->warn("Report file $sourcepath is missing") if $self->complete();
+                _Logger()->warn("$serverid: Report file $sourcepath is missing") if $self->complete();
             }
             elsif( $target !~ /^[A-Z0-9_.-]+$/i )
             {
-                _Logger()->error("Invalid report file target name $target defined");
+                _Logger()->error("$serverid: Invalid report file target name $target defined");
             }
             else
             {
@@ -492,6 +499,7 @@ sub createTeqcReport
     my $rptname='OUT/TEQCRPT.OUT';
     my $rptfile=$campaigndir.'/'.$rptname;
     my %userfile=();
+    my $serverid=$self->{serverid};
     foreach my $uf (@{$self->{campaign}->{files}})
     {
         $userfile{$uf->{filename}}=$uf;
@@ -500,12 +508,12 @@ sub createTeqcReport
     my $rpt;
     if( ! open( $rpt, ">$rptfile" ) )
     {
-        _Logger()->error("Cannot create teqc report file $rptfile");
+        _Logger()->error("$serverid: Cannot create teqc report file $rptfile");
         return $rptname;
     }
     if( ! -x $TeqcBin )
     {
-        _Logger()->error("Cannot run teqc at $TeqcBin") if $TeqcBin != 'none';
+        _Logger()->error("$serverid: Cannot run teqc at $TeqcBin") if $TeqcBin != 'none';
         return $rptname;
     }
 
@@ -608,6 +616,7 @@ sub writeStats
     my $row=$status eq 'complete' ? $SuccessStatisticsRow : $FailStatisticsRow;
     return if $file eq '' || $row eq '';
     $file=$LogStatisticsDir.'/'.$file;
+    my $serverid=$self->{serverid};
     eval
     {
         if( ! -d $LogStatisticsDir )
@@ -628,7 +637,7 @@ sub writeStats
     };
     if( $@ )
     {
-        _Logger->error($@);
+        _Logger->error($serverid.': '.$@);
     }    
 }
 
@@ -691,7 +700,8 @@ sub archive
     };
     if( $@ )
     {
-        _Logger()->error("Failed to archive bernese data $campdir: ".$@);
+        my $serverid=$self->{serverid};
+        _Logger()->error("$serverid: Failed to archive bernese data $campdir: ".$@);
     }
 }
 
@@ -710,7 +720,8 @@ sub remove
         remove_tree($self->{campaigndir},{error=>\$error}) if ! $KeepBerneseCampaign;
         if( @$error )
         {
-            _Logger()->error("Unable to delete Bernese directories\n".join('',@$error));
+            my $serverid=$self->{serverid};
+            _Logger()->error("$serverid: Unable to delete Bernese directories\n".join('',@$error));
         }
         delete $self->{campaign};
         delete $self->{campaigndir};
@@ -734,7 +745,8 @@ sub sendFailNotification
     my $smtp = Net::SMTP->new($server);
     if( ! $smtp )
     {
-        _Logger()->error("Cannot connect to SMTP server $server to send fail notification message");
+        my $serverid=$self->{serverid};
+        _Logger()->error("$serverid: Cannot connect to SMTP server $server to send fail notification message");
         return;
     }
 
@@ -751,7 +763,8 @@ sub sendFailNotification
     };
     if( $@ )
     {
-        _Logger->error("Error creating bern fail mail: $@");
+        my $serverid=$self->{serverid};
+        _Logger->error("$serverid: Error creating bern fail mail: $@");
     }
 
     $smtp->mail($NotificationEmailFrom);

@@ -64,10 +64,10 @@ our $LockTimeoutMin=60;
 
 our $UnpackRetryTime=300;
 
+
 sub _Logger
 {
-    my $logger=Log::Log4perl->get_logger('LINZ.PNZPP.PnzServer');
-    return $logger;
+    return Log::Log4perl->get_logger('LINZ.PNZPP.PnzServer');
 }
 
 =head2 LINZ::PNZPP::PnzServer::LoadConfig
@@ -344,7 +344,6 @@ sub new
         berndatadir=>$berndatadir,
         bernuserdir=>$bernuserdir,
         bernclientenv=>0,
-        logger=>_Logger(),
         }, $class;
 }
 
@@ -354,10 +353,10 @@ sub DESTROY
     $self->unlock();
 }
 
-sub logger 
+sub id
 {
     my($self)=@_;
-    return $self->{logger};
+    return $self->{id};
 }
 
 =head2 $ok=$server->canRun()
@@ -643,6 +642,8 @@ sub loadNewJobs
     }
     closedir($dir);
 
+    my $id=$self->id().': ';
+
     foreach my $ipf (@jobfiles)
     {
         $ipf =~ /$ifre/;
@@ -658,12 +659,12 @@ sub loadNewJobs
         {
             if( $lasttry )
             {
-                $self->logger->warn("Retry unpacking $ipfn");
+                _Logger->warn("$id: Retry unpacking $ipfn");
                 $self->writeStatus("Retrying unpacking $ipfn");
             }
         
             $self->writeStatus("Creating job $jobid");
-            $self->logger()->info("Creating job $jobid");
+            _Logger()->info("$id: Creating job $jobid");
 
             my $suffix='.'.$self->{id}.'.'.time();
 
@@ -674,8 +675,8 @@ sub loadNewJobs
             rename($inputfile,$movefile);
             if( ! -f $movefile )
             {
-                $self->logger->warn("Cannot claim file - taken by another server?");
-                $self->writeStatus("Cannot claim file - taken by another server?");
+                _Logger->warn("$id: Cannot claim file - taken by another server?");
+                $self->writeStatus("$id: Cannot claim file - taken by another server?");
             }
             next if ! -f $movefile;
             my $inputfile=$movefile;
@@ -689,11 +690,11 @@ sub loadNewJobs
         {
             my $errmsg=$@;
             $self->writeStatus("Error: $errmsg");
-            $self->logger()->error($errmsg);
+            _Logger()->error($id.$errmsg);
         }
         if( $lasttry && -f $inputfile )
         {
-            $self->logger()->error("Giving up on job $ipfn after second try at unpacking");
+            _Logger()->error("$id: Giving up on job $ipfn after second try at unpacking");
             $self->writeStatus("Error: Failed to unpack $ipfn on second try - deleting");
             $self->archiveInputFile($inputfile,$ipfn);
             unlink($inputfile);
@@ -711,6 +712,7 @@ sub archiveInputFile
 {
     my ($self,$inputfile,$origname) = @_;
     my $archivedir=$LINZ::PNZPP::PnzJob::ArchiveInputDir;
+    my $id = $self->id();
     if( $archivedir )
     {
         if( ! -d $archivedir )
@@ -719,7 +721,7 @@ sub archiveInputFile
             make_path($archivedir,{error=>\$error});
             if( @$error )
             {
-                $self->logger()->error("Failed to create archive directory $archivedir\n".
+                _Logger()->error("$id: Failed to create archive directory $archivedir\n".
                     join("\n",@$error)."\n");
             }
         }
@@ -733,7 +735,7 @@ sub archiveInputFile
             }
             else
             {
-                $self->logger()->error("Failed to archive input job to $archfile\n");
+                _Logger()->error("$id: Failed to archive input job to $archfile\n");
             }
         }
     }
@@ -754,6 +756,7 @@ sub processJobs
 
     my $workdir=$LINZ::PNZPP::PnzJob::WorkDir;
     my $statusfile=$LINZ::PNZPP::PnzJob::StatusFile;
+    my $id=$self->id();
 
     opendir(my $dir,$workdir) || croak("Cannot open interface directory $workdir");
     my @jobdirs=();
@@ -784,7 +787,7 @@ sub processJobs
         {
             my $errmsg=$@;
             $self->writeStatus("Error: $errmsg");
-            $self->logger()->error($errmsg);
+            _Logger()->error($id.': '.$errmsg);
         }
     }
 }

@@ -142,8 +142,7 @@ sub _JobDir
 
 sub _Logger
 {
-    my $logger=Log::Log4perl->get_logger('LINZ.PNZPP.PnzJob');
-    return $logger;
+    return Log::Log4perl->get_logger('LINZ.PNZPP.PnzJob');
 }
 
 =head2 $job=LINZ::PNZPP::PnzJob->new($server,$zipfile,$idcheck);
@@ -261,6 +260,27 @@ sub new
    return $self;
 }
 
+sub info
+{
+    my ($self,$message)=@_;
+    my $serverid=$self->{_server} ? $self->{_server}->id().': ' : '';
+    _Logger($serverid)->info($serverid.$message);
+}
+
+sub warn
+{
+    my ($self,$message)=@_;
+    my $serverid=$self->{_server} ? $self->{_server}->id().': ' : '';
+    _Logger($serverid)->warn($serverid.$message);
+}
+
+sub error
+{
+    my ($self,$message)=@_;
+    my $serverid=$self->{_server} ? $self->{_server}->id().': ' : '';
+    _Logger($serverid)->error($serverid.$message);
+}
+
 =head2 $job=LINZ::PNZPP::PnzJob->reload($server,$jobdir)
 
 Restores a PnzJob object that was preserved.  Takes the job working directory
@@ -275,7 +295,15 @@ sub reload
     open( my $sf, "<$savefile" ) || croak("Cannot open job status $savefile\n");
     my $json = join('',<$sf>);
     close($sf);
-    my $self=JSON->new->utf8->decode($json);
+    my $self;
+    eval
+    {
+        $self=JSON->new->utf8->decode($json);
+    };
+    if( $@ )
+    {
+        croak("Cannot load job status $savefile\n$@");
+    }
     $self->{jobdir}=$jobdir;
     foreach my $job (@{$self->{bernjobs}})
     {
@@ -354,12 +382,12 @@ sub lock
     my $now=time();
     if( -e $lockfile )
     {
-        _Logger()->warn("Ignoring expired lock for job ".$self->{id});
+        $self->warn("Ignoring expired lock for job ".$self->{id});
     }
     my $lf;
     if( ! open($lf,">$lockfile") )
     {
-        _Logger()->error("Cannot create lock file for job ".$self->{id});
+        $self->error("Cannot create lock file for job ".$self->{id});
         croak("Cannot create lock file for job ".$self->{id});
     }
     print $lf "Lock created at ".seconds_datetime($now,1)." for job ".$self->{id}." in process $$\n";
@@ -458,7 +486,7 @@ sub update
             {
                 my $errmsg=$@;
                 $server->writeStatus("Error: ".$errmsg);
-                _Logger->error($errmsg);
+                $self->error($errmsg);
             }
             $server->writeStatus("Bernese job finished");
         }
@@ -478,15 +506,15 @@ sub update
     };
     if( $@ )
     {
-        _Logger->error("Error processing job ".$self->{id}.': '.$@);
+        $self->error("Error processing job ".$self->{id}.': '.$@);
         eval
         {
             $self->remove();
-            _Logger->error("Removing job ".$self->{id});
+            $self->error("Removing job ".$self->{id});
         };
         if( $@ )
         {
-            _Logger->error("Cannot remove job: ".$@);
+            $self->error("Cannot remove job: ".$@);
         }
     }
     $self->unlock();
@@ -511,7 +539,7 @@ sub notifyComplete
         };
         if( $@ )
         {
-            _Logger()->warn("Failed to notify completion of ".$self->{id}.": ".$@);
+            $self->warn("Failed to notify completion of ".$self->{id}.": ".$@);
         }
     }
 }
@@ -526,14 +554,14 @@ Removes the job working directory and the component bern jobs from the system.
 sub remove
 {
     my($self)=@_;
-    _Logger()->info("Removing job ".$self->{id});
+    $self->info("Removing job ".$self->{id});
     my $error;
     foreach my $dir ($ArchiveBerneseDir,$ArchiveJobJsonDir)
     {
         next if ! $dir || -d $dir;
         my $error;
         make_path($dir,{error=>\$error});
-        _Logger()->error("Cannot create archive directory $dir\n".
+        $self->error("Cannot create archive directory $dir\n".
                          join("\n",@$error)."\n") if @$error;
     }
     if( $ArchiveJobJsonDir && -d $ArchiveJobJsonDir )
@@ -562,7 +590,7 @@ sub remove
     remove_tree($jobdir,{error=>\$error});
     if( @$error )
     {
-        _Logger->warn("Unable to delete job $jobdir");
+        $self->warn("Unable to delete job $jobdir");
     }
 }
 
@@ -701,7 +729,7 @@ sub sendResults
             };
             if( $@ )
             {
-                _Logger()->warn("Error creating summary report $filename: $@");
+                $self->warn("Error creating summary report $filename: $@");
             }
         }
     }
@@ -714,11 +742,11 @@ sub sendResults
         {
             if( ! -f $rf->{source} )
             {
-                _Logger()->warn("Report output file ".$rf->{source}." is missing");
+                $self->warn("Report output file ".$rf->{source}." is missing");
             }
             elsif( exists $zfiles{$rf->{target}})
             {
-                _Logger()->warn("Report output target file name ".$rf->{target}.
+                $self->warn("Report output target file name ".$rf->{target}.
                     " already used (".$rf->{description}.")");
             }
             else
