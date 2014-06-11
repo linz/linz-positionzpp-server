@@ -182,6 +182,29 @@ sub CsvQuote
     return '"'.$text.'"';
 }
 
+=head2 $id = GetId( $sequence, $key )
+
+Generates sequential is. $sequence identifieds the sequence on which ids are to be generated.
+$key, if present is a lookup for the id.  If it has been used before then the original value
+will be returned, otherwise a new value generated.
+
+=cut
+
+our $sequences={};
+
+sub GetId
+{
+    my($seq,$key)=@_;
+    $sequences->{$seq}={id=>0,keys=>{}} if ! exists $sequences->{$seq};
+    my $curseq=$sequences->{$seq};
+    return $curseq->{keys}->{$key} if $key ne '' && exists $curseq->{keys}->{$key};
+    $curseq->{id}++;
+    my $id=$curseq->{id};
+    $curseq->{keys}->{$key}=$id if $id ne '';
+    return $id;
+}
+
+
 sub TemplateFunctions
 {
     return (
@@ -192,6 +215,7 @@ sub TemplateFunctions
         UTC => \&UTC,
         LocalTime => \&LocalTime,
         CsvQuote => \&CsvQuote,
+        GetId => \&GetId,
         );
 }
 
