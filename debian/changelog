@@ -1,3 +1,11 @@
+linz-positionzpp-server (1.8.0-1) precise; urgency=low
+
+  * Adding template utility GetId to generate sequential ids
+  * Adding server id to log messages for easier tracking
+  * Adding KML file output
+
+ -- Chris Crook <ccrook@linz.govt.nz>  Thu, 12 Jun 2014 13:09:16 +1200
+
 linz-positionzpp-server (1.7.1-1) precise; urgency=low
 
   * Prevent creating bern campaign names with more than 8 characters. Fixes #84
