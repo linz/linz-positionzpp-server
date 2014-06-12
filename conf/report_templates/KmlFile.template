@@ -18,7 +18,7 @@
 \            </IconStyle>
 \        </Style>
 \        <Style id="baselineLineStyle">
-\            <LineStyle><color>FF0000FF</color><width>1.0</width></LineStyle>
+\            <LineStyle><color>FF0000FF</color><width>3.0</width></LineStyle>
 \        </Style>
 * bernjobs
 * campaign.files 
