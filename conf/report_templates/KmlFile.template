@@ -1,0 +1,72 @@
+\<?xml version="1.0" encoding="UTF-8"?>
+\<kml xmlns="http://earth.google.com/kml/2.1">
+\    <Document>
+|        <name>PositioNZ-PP job $+ marks</name>
+= id
+\        <Style id="userMarkIcon">
+\            <IconStyle>
+\                <Icon>
+\                    <href>http://maps.google.com/mapfiles/kml/shapes/placemark_circle_highlight.png</href>
+\                </Icon>
+\            </IconStyle>
+\        </Style>
+\        <Style id="refMarkIcon">
+\            <IconStyle>
+\                <Icon>
+\                    <href>http://maps.google.com/mapfiles/kml/shapes/placemark_square.png</href>
+\                </Icon>
+\            </IconStyle>
+\        </Style>
+\        <Style id="baselineLineStyle">
+\            <LineStyle><color>FF0000FF</color><width>1.0</width></LineStyle>
+\        </Style>
+* bernjobs
+* campaign.files 
++ results
++ calc_coords{ markname }
+\        <Placemark>
+\            <styleUrl>#userMarkIcon</styleUrl>
+|            <name>$+</name>
+|            <description>User mark $+ (from file $+)</description>
+|            <Point><coordinates>#.########,#.########,0.0</coordinates></Point>
+= orig_markname orig_markname orig_filename 
+= nzgd2kllh[0] nzgd2kllh[1] 
+\        </Placemark>
+* refstns
++ refllh=ConvertCoords( 'ITRF2008_XYZ', xyz[0], xyz[1], xyz[2], 'NZGD2000', year )
+\
+\        <Placemark>
+|            <name>$+</name>
+\            <styleUrl>#refMarkIcon</styleUrl>
+\            <description><![CDATA[
+|                Reference mark $+ for $+ in file $+
+|                <a href="http://apps.linz.govt.nz/gdb?code=$+"><i>More Info</i></a><br />
+\                <b>Note:</b> LINZ does not guarantee that this mark is correctly located
+\                in respect of the underlying map.
+\                ]]></description>
+|            <Point><coordinates>#.########,#.########,0.0</coordinates></Point>
+= name 
+= name orig_markname orig_filename 
+= name
+= refllh.lon refllh.lat
+\        </Placemark>
+\
+\        <Placemark>
+\            <styleUrl>#baselineLineStyle</styleUrl>
+\            <LineString><altitudeMode>clampToGround</altitudeMode>
+\                <coordinates>
+|                    #.########,#.########,0.0
+|                    #.########,#.########,0.0
+= nzgd2kllh[0] nzgd2kllh[1] 
+= refllh.lon refllh.lat
+\                </coordinates>
+\            </LineString>
+\        </Placemark>
+-
+-
+-
+-
+-
+-
+\    </Document>
+\</kml>

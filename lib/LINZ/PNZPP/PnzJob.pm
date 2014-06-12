@@ -712,6 +712,7 @@ sub sendResults
         foreach my $rpt (@$SummaryReports)
         {
             my $filename=$rpt->{filename};
+            $filename=~ s/\[jobid\]/$self->{id}/eg;
             my $description=$rpt->{description};
             print "Building summary file $filename\n";
             eval
