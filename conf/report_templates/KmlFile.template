@@ -23,6 +23,7 @@
 * bernjobs
 * campaign.files 
 + results
+? calc_coords{ markname }
 + calc_coords{ markname }
 \        <Placemark>
 \            <styleUrl>#userMarkIcon</styleUrl>
@@ -62,6 +63,7 @@
 \                </coordinates>
 \            </LineString>
 \        </Placemark>
+-
 -
 -
 -

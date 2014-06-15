@@ -707,10 +707,12 @@ sub sendResults
     my $rzip=Archive::Zip->new();
 
     # Add summary report files
-    if( $complete && $nsuccess)
+    if( $complete )
     {
         foreach my $rpt (@$SummaryReports)
         {
+            next if lc($rpt->{require}) eq 'success' && ! $nsuccess;
+            next if lc($rpt->{require}) eq 'fail' && ! $nfail;
             my $filename=$rpt->{filename};
             $filename=~ s/\[jobid\]/$self->{id}/eg;
             my $description=$rpt->{description};
