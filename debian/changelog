@@ -1,3 +1,10 @@
+linz-positionzpp-server (1.8.2-1) precise; urgency=low
+
+  * Remove empty output coordinate and kml files when no successful processing
+  * Tidying up reports. Removing oversized jobs from archive
+
+ -- Chris Crook <ccrook@linz.govt.nz>  Fri, 20 Jun 2014 15:59:55 +1200
+
 linz-positionzpp-server (1.8.1-1) precise; urgency=low
 
   * Bug fix: KML line width too small
