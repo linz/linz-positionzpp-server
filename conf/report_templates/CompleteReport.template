@@ -61,7 +61,7 @@
 |  Epoch coordinates - defined at the observation epoch (decimal year ####.##)
 |
 |    ITRF2008 XYZ (m)            :  ########.#### #########.#### ########.####
-|    ITRF96/NZGD2000   XYZ       :  ########.#### #########.#### ########.####
+|    ITRF96/NZGD2000   XYZ (m)   :  ########.#### #########.#### ########.####
 |    ITRF2008 lon/lat/hgt        :  ###.######### ###.#########  #####.####
 |    ITRF96/NZGD2000 lon/lat/hgt :  ###.######### ###.#########  #####.####
 = year
@@ -122,7 +122,7 @@
 |Reference stations:
 |
 |  The following reference stations have been selected to process this mark.
-|  The horizontal and vertical fit represents how well the calculated
+|  The horizontal and vertical fit represent how well the calculated
 |  baselines from the supplied mark to these reference stations fit their 
 |  ITRF2008 coordinates in the minimum constraints solution.
 |

@@ -29,6 +29,8 @@ our $SummaryJsonFile= 'OUT/SUMMARY.JSON';
 our $KeepBerneseCampaign=0;
 our $ArchiveBerneseSuccess='none';
 our $ArchiveBerneseFail='none';
+our $ArchiveBerneseSuccessDelete='none';
+our $ArchiveBerneseFailDelete='none';
 our $LogStatisticsDir;
 our $SuccessStatisticsFile;
 our $SuccessStatisticsHeader;
@@ -67,7 +69,9 @@ sub LoadConfig
     $SummaryJsonFile=$conf->get("PcfSummaryJasonFile",$SummaryJsonFile);
     $StatusFile=$conf->get("PcfStatusFile",$StatusFile);
     $ArchiveBerneseSuccess=$conf->get("ArchiveBerneseSuccess",$ArchiveBerneseSuccess);
+    $ArchiveBerneseSuccessDelete=$conf->get("ArchiveBerneseSuccessDelete",$ArchiveBerneseSuccessDelete);
     $ArchiveBerneseFail=$conf->get("ArchiveBerneseFail",$ArchiveBerneseFail);
+    $ArchiveBerneseFailDelete=$conf->get("ArchiveBerneseFailDelete",$ArchiveBerneseFailDelete);
     $KeepBerneseCampaign=$conf->get("KeepBerneseCampaign",$KeepBerneseCampaign);
     $LogStatisticsDir=$conf->filename("LogStatisticsDir");
     $SuccessStatisticsFile=$conf->filename("SuccessStatisticsFile");
@@ -654,8 +658,12 @@ sub archive
 {
     my ($self,$zipfile)=@_;
     my $level='';
+    my $exclude='';
     $level = $ArchiveBerneseSuccess if $self->{status} eq 'complete';
+    $exclude = $ArchiveBerneseSuccessDelete if $self->{status} eq 'complete';
     $level = $ArchiveBerneseFail if $self->{status} eq 'fail';
+    $exclude = $ArchiveBerneseFailDelete if $self->{status} eq 'fail';
+
     $level = uc($level);
     if( $level eq 'ALL')
     {
@@ -675,6 +683,21 @@ sub archive
         return;
     }
     $level="\\/$level\$";
+
+    $exclude=uc($exclude);
+    if( $exclude eq 'NONE' )
+    {
+        $exclude='';
+    }
+    else
+    {
+        $exclude =~ s/\s*$//;
+        $exclude =~ s/^\s*//;
+        $exclude =~ s/\s+/\|/g;
+        $exclude =~ s/\*/\\w+/g;
+        $exclude = "($exclude)";
+    }
+
     my $campdir=$self->{campaigndir};
     eval
     {
@@ -686,6 +709,7 @@ sub archive
         {
             return if -d $_;
             return if $File::Find::dir !~ /$level/;
+            return if $exclude && $File::Find::name =~ /$exclude/;
             push(@archfiles,$File::Find::name);
         };
 

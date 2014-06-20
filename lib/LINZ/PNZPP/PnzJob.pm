@@ -57,7 +57,7 @@ our $InputControlFile;
 our $OutputControlFile;
 our $LockFile;
 our $LockFileExpiry;
-our $JobHeaderTemplate;
+our $SummaryTemplate;
 our $StatusFile='status.json';
 our $SummaryReports=[];
 
@@ -101,7 +101,7 @@ sub LoadConfig
 
     # Templates
 
-    $JobHeaderTemplate=$conf->filename("JobHeaderTemplate") || croak("Configuration does not define JobHeaderTemplate\n");
+    $SummaryTemplate=$conf->filename("SummaryTemplate") || croak("Configuration does not define SummaryTemplate\n");
 
     # Optional information
 
@@ -676,7 +676,7 @@ sub sendResults
     }
     my $substatus=$nwait ? "waiting" : $nfail ? "failed" : "success";
 
-    my $htemplate=LINZ::PNZPP::Template->new($JobHeaderTemplate,readfile=>1);
+    my $htemplate=LINZ::PNZPP::Template->new($SummaryTemplate,readfile=>1);
     my $summary=$htemplate->expand(%$self,status_info=>$status_info,TemplateFunctions);
 
     my $resultfiles=[];
