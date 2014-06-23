@@ -188,7 +188,7 @@ sub createCampaign
         my $campaign=LINZ::BERN::BernUtil::CreateCampaign(
             $campid,
             RinexFiles=>[$srcfile],
-            RenameRinex=>'U###',
+            # RenameRinex=>'U###',
             RenameCodes=>$codes,
             CrdFile=>'APR$S+0',
             AbbFile=>'ABBREV',
