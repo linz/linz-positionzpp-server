@@ -18,6 +18,7 @@ use LINZ::BERN::BernUtil;
 use LINZ::BERN::PcfFile;
 use LINZ::GNSS::DataCenter;
 use LINZ::GNSS::Time qw/datetime_seconds seconds_datetime/;
+use LINZ::GNSS::SinexFile();
 use LINZ::PNZPP::Template;
 use LINZ::PNZPP::Utility qw/TemplateFunctions/;
 use JSON;
@@ -423,6 +424,13 @@ Generates a user readable report detailing the current status of the job
 
 =cut
 
+sub _filterSinex
+{
+    my($source,$filtered)=@_;
+    my $sf=new LINZ::GNSS::SinexFile( $source );
+    $sf->filterStationsOnly($filtered);
+}
+
 sub compileReport()
 {
     my ($self)=@_;
@@ -451,6 +459,7 @@ sub compileReport()
         {
             my $source=$rfile->{source};
             my $target=$rfile->{output};
+            my $filter=$rfile->{filter} || 'copy';
             my $description=$rfile->{description};
             foreach my $item ($source,$target,$description)
             {
@@ -483,6 +492,19 @@ sub compileReport()
             }
             else
             {
+                if( $filter eq 'sinex' )
+                {
+                    my $filtered=$sourcepath.'.flt';
+                    eval
+                    {
+                        _filterSinex($sourcepath,$filtered);
+                        $sourcepath=$filtered;
+                    };
+                    if( $@ )
+                    {
+                        _Logger()->warn("$serverid: Error filtering sinex $source: $@");
+                    }
+                }
                 push(@$files,{source=>$sourcepath,target=>$target,description=>$description});
             }
         }
