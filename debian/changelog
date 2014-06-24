@@ -1,3 +1,11 @@
+linz-positionzpp-server (1.9.0-1) precise; urgency=low
+
+  * Changing station renaming to make minimal changes to user codes
+  * Filtering SINEX files to only include station coordinates
+  * Including CSV and KML files in partial completed results
+
+ -- Chris Crook <ccrook@linz.govt.nz>  Tue, 24 Jun 2014 14:30:39 +1200
+
 linz-positionzpp-server (1.8.2-1) precise; urgency=low
 
   * Remove empty output coordinate and kml files when no successful processing
