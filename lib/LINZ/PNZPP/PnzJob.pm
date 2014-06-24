@@ -47,9 +47,7 @@ our $OutputDir;
 our $WorkDir;
 our $JobDir;
 our $ArchiveInputDir;
-our $ArchiveBerneseDir;
 our $ArchiveJobJsonDir;
-our $ArchiveBerneseFile='[bernid]_bernese.zip';
 our $ArchiveJobJsonFile='[job_id]_status.json';
 our $InputJobFile;
 our $OutputJobFile;
@@ -106,12 +104,10 @@ sub LoadConfig
     # Optional information
 
     $ArchiveInputDir=$conf->filename("ArchiveInputDir");
-    $ArchiveBerneseDir=$conf->filename("ArchiveBerneseDir");
     $ArchiveJobJsonDir=$conf->filename("ArchiveJobJsonDir");
     $ArchiveInputRetentionDays=$conf->get("ArchiveInputRetentionDays",$ArchiveInputRetentionDays)+0;
     $ArchiveBerneseRetentionDays=$conf->get("ArchiveBerneseRetentionDays",$ArchiveBerneseRetentionDays)+0;
     $ArchiveJobJsonRetentionDays=$conf->get("ArchiveJobJsonRetentionDays",$ArchiveJobJsonRetentionDays)+0;
-    $ArchiveBerneseFile=$conf->get("ArchiveBerneseFile",$ArchiveBerneseFile);
     $ArchiveJobJsonFile=$conf->get("ArchiveJobJsonFile",$ArchiveJobJsonFile);
     
     my $sumrpts=$conf->get("SummaryReports");
@@ -475,10 +471,7 @@ sub update
                 if( $job->update($self->server) )
                 {
                     $updated=1;
-                    if( $job->waiting())
-                    {
-                        my $eta
-                    }
+                    $job->archive();
                     $self->save();
                 }
             };
@@ -556,19 +549,20 @@ sub remove
     my($self)=@_;
     $self->info("Removing job ".$self->{id});
     my $error;
-    foreach my $dir ($ArchiveBerneseDir,$ArchiveJobJsonDir)
+    
+    my $dir=$ArchiveJobJsonDir;
+    if( $dir && ! -d $dir )
     {
-        next if ! $dir || -d $dir;
         my $error;
         make_path($dir,{error=>\$error});
         $self->error("Cannot create archive directory $dir\n".
                          join("\n",@$error)."\n") if @$error;
     }
-    if( $ArchiveJobJsonDir && -d $ArchiveJobJsonDir )
+    if( $dir && -d $dir )
     {
         my $archfile=$ArchiveJobJsonFile;
         $archfile =~ s/\[jobid\]/$self->{id}/eg;
-        $archfile = $ArchiveJobJsonDir.'/'.$archfile;
+        $archfile = $dir.'/'.$archfile;
         eval
         {
             $self->save($archfile);
@@ -576,14 +570,6 @@ sub remove
     }
     foreach my $job ($self->bernjobs())
     {
-        if( $ArchiveBerneseDir && -d $ArchiveBerneseDir )
-        {
-            my $archzip=$ArchiveBerneseFile;
-            my $campid=$job->{campaignid};
-            $archzip =~ s/\[bernid\]/$campid/eig;
-            $archzip=$ArchiveBerneseDir.'/'.$archzip;
-            $job->archive($archzip);
-        }
         $job->remove();
     }
     my $jobdir=$self->{jobdir};

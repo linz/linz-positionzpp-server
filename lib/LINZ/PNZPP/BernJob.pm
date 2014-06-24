@@ -28,8 +28,12 @@ our @LockFiles = ('OUT/GETORB.LCK', 'OUT/GETREF.LCK');
 our $StatusFile= 'OUT/STATUS.LCK';
 our $SummaryJsonFile= 'OUT/SUMMARY.JSON';
 our $KeepBerneseCampaign=0;
+our $ArchiveBerneseDir;
+our $ArchiveBerneseFile='[bernid]_bernese.zip';
+our $ArchiveBernesePending='none';
 our $ArchiveBerneseSuccess='none';
 our $ArchiveBerneseFail='none';
+our $ArchiveBernesePendingDelete='none';
 our $ArchiveBerneseSuccessDelete='none';
 our $ArchiveBerneseFailDelete='none';
 our $LogStatisticsDir;
@@ -69,6 +73,10 @@ sub LoadConfig
     }
     $SummaryJsonFile=$conf->get("PcfSummaryJasonFile",$SummaryJsonFile);
     $StatusFile=$conf->get("PcfStatusFile",$StatusFile);
+    $ArchiveBerneseDir=$conf->filename("ArchiveBerneseDir");
+    $ArchiveBerneseFile=$conf->get("ArchiveBerneseFile",$ArchiveBerneseFile);
+    $ArchiveBernesePending=$conf->get("ArchiveBernesePending",$ArchiveBernesePending);
+    $ArchiveBernesePendingDelete=$conf->get("ArchiveBernesePendingDelete",$ArchiveBernesePendingDelete);
     $ArchiveBerneseSuccess=$conf->get("ArchiveBerneseSuccess",$ArchiveBerneseSuccess);
     $ArchiveBerneseSuccessDelete=$conf->get("ArchiveBerneseSuccessDelete",$ArchiveBerneseSuccessDelete);
     $ArchiveBerneseFail=$conf->get("ArchiveBerneseFail",$ArchiveBerneseFail);
@@ -667,20 +675,41 @@ sub writeStats
     }    
 }
 
-=head2 $bernjob->archive( $zipname )
+=head2 $bernjob->archive()
 
 Archives the job to the specified directory.  The amount archived is based on the 
-$ArchiveBerneseSuccess and $ArchiveBerneseFailure configuration, and may be one of
-'all' (all data archived), or 'output' (BPE and OUT directories archived).  Otherwise
-nothing is archived and the file is not created.
+$ArchiveBernesePending, $ArchiveBerneseSuccess and $ArchiveBerneseFailure configuration, 
+and may be one of 'all' (all data archived), or 'output' (BPE and OUT 
+directories archived).  Otherwise nothing is archived and the 
+file is not created.
+
+The $ArchiveXxxxDelete flag may be used to exclude particulare file names or 
+patterns using the * wild card.
 
 =cut
 
 sub archive
 {
-    my ($self,$zipfile)=@_;
-    my $level='';
-    my $exclude='';
+    my ($self)=@_;
+    my $dir=$ArchiveBerneseDir;
+    return if ! $dir;
+    my $serverid=$self->{serverid};
+    if( ! -d $dir )
+    {
+        my $error;
+        make_path($dir,{error=>\$error});
+       _Logger()->error("$serverid: Cannot create archive directory $dir\n".
+                         join("\n",@$error)."\n") if @$error;
+        return;
+    }
+
+    my $archzip=$ArchiveBerneseFile;
+    my $campid=$self->{campaignid};
+    $archzip =~ s/\[bernid\]/$campid/eig;
+    $archzip=$dir.'/'.$archzip;
+
+    my $level=$ArchiveBernesePending;
+    my $exclude=$ArchiveBernesePendingDelete;
     $level = $ArchiveBerneseSuccess if $self->{status} eq 'complete';
     $exclude = $ArchiveBerneseSuccessDelete if $self->{status} eq 'complete';
     $level = $ArchiveBerneseFail if $self->{status} eq 'fail';
@@ -742,11 +771,10 @@ sub archive
             my $localname=substr($f,$campdirlen);
             $zip->addFile($f,$localname);
         }
-        $zip->writeToFileNamed($zipfile)==AZ_OK || die "Cannot create archive zip $zipfile\n";
+        $zip->writeToFileNamed($archzip)==AZ_OK || die "Cannot create archive zip $archzip\n";
     };
     if( $@ )
     {
-        my $serverid=$self->{serverid};
         _Logger()->error("$serverid: Failed to archive bernese data $campdir: ".$@);
     }
 }
