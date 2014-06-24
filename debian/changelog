@@ -1,3 +1,9 @@
+linz-positionzpp-server (1.10.0-1) precise; urgency=low
+
+  * Improved archiving of Bernese jobs to make info more accessible for unfinished jobs
+
+ -- Chris Crook <ccrook@linz.govt.nz>  Wed, 25 Jun 2014 08:33:12 +1200
+
 linz-positionzpp-server (1.9.0-1) precise; urgency=low
 
   * Changing station renaming to make minimal changes to user codes
