@@ -707,33 +707,30 @@ sub sendResults
     my $rzip=Archive::Zip->new();
 
     # Add summary report files
-    if( $complete )
+    foreach my $rpt (@$SummaryReports)
     {
-        foreach my $rpt (@$SummaryReports)
+        next if lc($rpt->{require}) eq 'success' && ! $nsuccess;
+        next if lc($rpt->{require}) eq 'fail' && ! $nfail;
+        my $filename=$rpt->{filename};
+        $filename=~ s/\[jobid\]/$self->{id}/eg;
+        my $description=$rpt->{description};
+        print "Building summary file $filename\n";
+        eval
         {
-            next if lc($rpt->{require}) eq 'success' && ! $nsuccess;
-            next if lc($rpt->{require}) eq 'fail' && ! $nfail;
-            my $filename=$rpt->{filename};
-            $filename=~ s/\[jobid\]/$self->{id}/eg;
-            my $description=$rpt->{description};
-            print "Building summary file $filename\n";
-            eval
-            {
-                my $template=LINZ::PNZPP::Template->new($rpt->{template},readfile=>1);
-                my $rptfile=$self->{jobdir}.'/'.$filename;
-                open( my $rptf, ">$rptfile" ) || die "Cannot open $rptfile\n";
-                $template->write($rptf,%$self,TemplateFunctions);
-                close($rptf);
-                $rzip->addFile($rptfile,$filename);
-                push(@$resultfiles,{
-                    filename=>$filename,
-                    description=>$rpt->{description}
-                    });
-            };
-            if( $@ )
-            {
-                $self->warn("Error creating summary report $filename: $@");
-            }
+            my $template=LINZ::PNZPP::Template->new($rpt->{template},readfile=>1);
+            my $rptfile=$self->{jobdir}.'/'.$filename;
+            open( my $rptf, ">$rptfile" ) || die "Cannot open $rptfile\n";
+            $template->write($rptf,%$self,TemplateFunctions);
+            close($rptf);
+            $rzip->addFile($rptfile,$filename);
+            push(@$resultfiles,{
+                filename=>$filename,
+                description=>$rpt->{description}
+                });
+        };
+        if( $@ )
+        {
+            $self->warn("Error creating summary report $filename: $@");
         }
     }
 
