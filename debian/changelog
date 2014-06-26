@@ -1,3 +1,10 @@
+linz-positionzpp-server (1.11.1-1) precise; urgency=low
+
+  * Removing O from list of valid chars for a job id to avoid confusion with 0
+  * Tidying up reports, filling content of readme.txt
+
+ -- Chris Crook <ccrook@linz.govt.nz>  Fri, 27 Jun 2014 10:11:25 +1200
+
 linz-positionzpp-server (1.11.0-1) precise; urgency=low
 
   * Removing perl warnings (recursive use ... specification), adding support for additional hook functions
