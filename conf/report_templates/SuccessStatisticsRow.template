@@ -15,6 +15,6 @@
 = sqrt( covenu[1][1])*1000  sqrt( covenu[0][0])*1000 sqrt( covenu[2][2])*1000
 = refstn_summary.count refstn_summary.marknames refstn_summary.minoffset refstn_summary.maxoffset
 = ref_stn_residual_enu[0] ref_stn_residual_enu[1] ref_stn_residual_enu[2]
-= results.orbittype final.seu
+= results.orbittype final.seuw
 = UTC( start_time) UTC( end_time) 
 = baseline_wkt

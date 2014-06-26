@@ -1,9 +1,15 @@
-|mark,datafile,date,coordsys,east,north,up
+|mark,datafile,date,coordsys,east,north,height
 *bernjobs
 * campaign.files
 + results
 ? calc_coords
 + calc_coords{ markname}
++ nz2k=ConvertCoords( 'NZGD2000', nzgd2kllh[0], nzgd2kllh[1], nzgd2kllh[2], 'NZGD2000' )
+|$+,$+,$+,$+,"$+","$+",#.#####
+= orig_markname orig_filename UTC( session_start)
+= 'NZGD2000' nz2k.londms nz2k.latdms nzgd2kllh[2]
+-
+#
 |$+,$+,$+,$+,#.#########,#.#########,#.#####
 = orig_markname orig_filename UTC( session_start)
 = 'NZGD2000' nzgd2kllh[0] nzgd2kllh[1] nzgd2kllh[2]

@@ -1,11 +1,11 @@
-|mark,datafile,date,itrf2008_X,itrf2008_Y,itrf2008_Z,itrf96_X,itrf96_Y,itrf96_Z,err_e,err_n,err_u,corr_en,corr_eu,corr_nu
+|mark,datafile,date,itrf2008_X,itrf2008_Y,itrf2008_Z,itrf96_X,itrf96_Y,itrf96_Z,err_e,err_n,err_u,corr_en,corr_eu,corr_nu,seuw
 *bernjobs
 * campaign.files
 + results
 ? calc_coords
 + calc_coords{ markname}
 + itrf96=ConvertCoords( 'ITRF2008_XYZ', xyz[0], xyz[1], xyz[2], 'ITRF96_XYZ', year )
-|$+,$+,$+,#.####,#.####,#.####,#.####,#.####,#.####,#.######,#.######,#.######,#.####,#.####,#.####
+|$+,$+,$+,#.####,#.####,#.####,#.####,#.####,#.####,#.######,#.######,#.######,#.####,#.####,#.####,#.###
 = orig_markname
 = orig_filename
 = UTC( session_start)
@@ -15,3 +15,4 @@
 = (covenu[0][1] / sqrt( covenu[0][0] * covenu[1][1] ))
 = (covenu[0][2] / sqrt( covenu[0][0] * covenu[2][2] ))
 = (covenu[1][2] / sqrt( covenu[1][1] * covenu[2][2] ))
+= final.seuw

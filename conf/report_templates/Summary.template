@@ -5,11 +5,13 @@
 | be liable for loss of any kind whatsoever with respect to the use of these
 | results.
 |
+| Job id   : $+
 | Title    : $+
 | Submitted: $+ (local time)
 | Status   : $+
 |
-=title
+= id
+= title
 = LocalTime( submitted )
 = status_info
 * bernjobs

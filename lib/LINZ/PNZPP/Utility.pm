@@ -71,9 +71,12 @@ sub ConvertCoords
     }
     elsif( $cst->type == LINZ::Geodetic::GEODETIC ) 
     {
+        my $dms=$crdt->asstring(5,4);
         $result->{lon}=$crdt->lon;
         $result->{lat}=$crdt->lat;
         $result->{hgt}=$crdt->hgt;
+        $result->{latdms}=$dms->[0];
+        $result->{londms}=$dms->[1];
     }
     else
     {

@@ -1,33 +1,34 @@
 +results
 |Input data
 * campaign.files
-|         File          : $+
+|
+|    File          : $+
 = orig_filename
 ? orig_markname eq markname
-|         Mark          : $$$+
+|    Mark          : $$$+
 = markname
 -
 ? orig_markname ne markname
-|         Mark          : $$$+ (renamed to $$$+)
+|    Mark          : $$$+ (renamed to $$$+)
 = orig_markname markname
 -
 ? orig_anttype eq anttype
-|         Antenna       : $+
+|    Antenna       : $+
 = anttype
 -
 ? orig_anttype ne anttype
-|         Antenna       : $+ (changed to $+)
+|    Antenna       : $+ (changed to $+)
 = orig_anttype anttype
 -
 ? orig_rectype eq rectype
-|         Receiver      : $+
+|    Receiver      : $+
 = rectype
 -
 ? orig_rectype ne rectype
-|         Receiver      : $+ (changed to $+)
+|    Receiver      : $+ (changed to $+)
 = orig_rectype rectype
 -
-|         Antenna height:  #.### m
+|    Antenna height:  #.### m
 = antheight
 ? orig_markname ne markname
 # If the original name was four characters and we've changed more than
@@ -52,9 +53,9 @@
 |Final Coordinates
 * files
 + calc_coords{ markname}
-|
-|  Mark name: $$$$
-= markname
+#|
+#|  Mark name: $$$$
+#= markname
 + itrf96=ConvertCoords( 'ITRF2008_XYZ', xyz[0], xyz[1], xyz[2], 'ITRF96_XYZ', year )
 + llh96=ConvertCoords( 'ITRF96_XYZ', itrf96.X, itrf96.Y, itrf96.Z, 'ITRF96', year )
 |
@@ -72,26 +73,32 @@
 -
 -
 + nztm=ConvertCoords( 'NZGD2000', nzgd2kllh[0], nzgd2kllh[1], nzgd2kllh[2], 'NZTM' )
++ nz2k=ConvertCoords( 'NZGD2000', nzgd2kllh[0], nzgd2kllh[1], nzgd2kllh[2], 'NZGD2000' )
 |
 |  NZGD2000 coordinates - defined at nominal epoch 2000.0
 |  Deformation model version: $+
 |
-|    NZGD2000 lon/lat/hgt      :  ###.######### ###.#########  #####.####
-|    NZTM2000 east/north/hgt   :  ########.#### ########.##### #####.####
+|    NZGD2000 lon/lat/hgt (DMS): $$$$$$$$$$$$$$$$$$  $$$$$$$$$$$$$$$$$ #####.####
+|    NZGD2000 lon/lat/hgt      : ###.#########      ###.#########      #####.####
+|    NZTM2000 east/north/hgt   : ########.####      ########.#####     #####.####
 = DefModelVersion( 'NZGD2000' )
+= nz2k.londms nz2k.latdms nzgd2kllh[2]
 = nzgd2kllh[0]  nzgd2kllh[1]  nzgd2kllh[2]
 = nztm.east nztm.north nztm.hgt
 -
+-
 * circuit=MeridionalCircuits( nzgd2kllh[0], nzgd2kllh[1] )
 + mccrd=ConvertCoords( 'NZGD2000', nzgd2kllh[0], nzgd2kllh[1], nzgd2kllh[2], circuit )
-|    $$$$$$$$$$$$$$$$$$$$$$$$$ :  ########.#### ########.##### #####.####
+|    $$$$$$$$$$$$$$$$$$$$$$$$$ : ########.####      ########.#####     #####.####
 = ( circuit . ' east/north/hgt') mccrd.east mccrd.north mccrd.hgt
 -
 -
-|    NZVD09 height             :                               #####.####
+|    NZVD09 height             :                                       #####.####
 = CalcOrthHeight( 'NZGD2000', nzgd2kllh[0], nzgd2kllh[1], nzgd2kllh[2], 'NZVD09' )
 |
-|  Longitudes and latitudes in decimal degrees, heights are in metres
+|  Longitudes and latitudes in degrees minutes and seconds (DMS), ordecimal degrees, 
+|  eastings, northings, and heights are in metres.  Heights are ellipsoidal except
+|  for the NZVD09 height.
 |
 |  XYZ covariance matrix (m^2):
 |        ##.######### ##.######### ##.#########
@@ -102,7 +109,7 @@
 |
 |  Note: covariances and standard errors are likely to be optimistic as GNSS
 |  processing does not account for all potential sources of error (for example
-|  plumbing errors).
+|  plumbing errors). All errors are apriori values.  
 |
 = covxyz[0][0]  covxyz[0][1]  covxyz[0][2]
 = covxyz[1][0]  covxyz[1][1]  covxyz[1][2]
@@ -117,7 +124,7 @@
 |          to: $$$$$$$$$$$$$$$$$$ (UTC)
 |         DOF: #######  (Degrees of freedom)
 |        SEUW: ##.####  (Standard error of unit weight)
-= UTC( results.session_start) UTC( results.session_end) final.dof final.seu
+= UTC( results.session_start) UTC( results.session_end) final.dof final.seuw
 |
 |Reference stations:
 |
