@@ -14,9 +14,9 @@ package LINZ::PNZPP;
 
 our $VERSION='1.2.0';
 
-use LINZ::PNZPP::PnzServer;
-use LINZ::PNZPP::PnzJob;
-use LINZ::PNZPP::BernJob;
+#use LINZ::PNZPP::PnzServer;
+#use LINZ::PNZPP::PnzJob;
+#use LINZ::PNZPP::BernJob;
 use LINZ::PNZPP::Config;
 use LINZ::GNSS;
 use LINZ::BERN::BernUtil;
@@ -48,6 +48,9 @@ sub LoadConfig
 {
     my($filename,$nologging)=@_;
     my $conf=LINZ::PNZPP::Config->new($filename);
+    require LINZ::PNZPP::PnzServer;
+    require LINZ::PNZPP::PnzJob;
+    require LINZ::PNZPP::BernJob;
 
     if( ! $nologging )
     {
@@ -78,8 +81,15 @@ sub LoadConfig
 
 =head2 LINZ::PNZPP::RunHook($hookname,$parameter)
 
-Runs the PositioNZ-PP hook script.  Hookname must be one of prerun, postupdate, and 
-postrefdata. 
+Runs the PositioNZ-PP hook script(s).  
+
+Hook script(s) are defined by the HookScript parameter.  Multiple scripts may
+be specified (separated by spaces), each of which can include glob wildcards.
+
+$hookname must be one of prerun, postupdate, and postrefdata. 
+
+$parameter depends on the script being run, and is <input_dir> for pre-run
+<update_file> for post_update, and <refdata_file> for postrefdata.
 
 =cut
 
@@ -87,16 +97,21 @@ sub RunHook
 {
     my($hookname,$parameter)=@_;
     return if ! $HookScript;
-    if( ! -x $HookScript )
-    {
-        carp("Script $HookScript is not an executable file\n");
-        return;
-    }
+
     if( $hookname !~ /^(prerun|postupdate|postrefdata)$/ )
     {
         croak("Invalid positionzpp hook \"$hookname\" called\n");
     }
-    system($HookScript,$hookname,$parameter);
+
+    foreach my $script (map glob, split(' ',$HookScript))
+    {
+        if( ! -x $script )
+        {
+            carp("Script $script is not an executable file\n");
+            next;
+        }
+        system($script,$hookname,$parameter);
+    }
 }
 
 =head2 LINZ::PNZPP::Run($serverid)
@@ -109,6 +124,7 @@ processes existing jobs, and purges expired jobs (jobs that have been archived).
 sub Run
 {
     my($serverid)=@_;
+    require LINZ::PNZPP::PnzServer;
     LINZ::GNSS::LoadConfig();
     LoadConfig();
     my $server=LINZ::PNZPP::PnzServer->new($serverid);
@@ -279,7 +295,7 @@ sub UpdateGnssUsage
                 $aliases->{$std}->{lastused}=$now;
             }
             my $newalias=_preferredAlias($aliases);
-            $usagechanged if $newalias ne $curalias;
+            $usagechanged=1 if $newalias ne $curalias;
         }
     }
 
@@ -366,6 +382,7 @@ Removes expired information from the PositioNZ job archive.
 
 sub PurgeArchive
 {
+    require LINZ::PNZPP::PnzJob;
     LoadConfig();
     LINZ::PNZPP::PnzJob::PurgeArchive();
 }
