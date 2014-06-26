@@ -159,7 +159,7 @@ processed separately.
 sub _subjob
 {
     my ($nsubjob) = @_;
-    my $chars='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    my $chars='0123456789ABCDEFGHIJKLMNPQRSTUVWXYZ';
     my $s0=int(($nsubjob)/length($chars));
     my $s1=$nsubjob-length($chars)*$s0;
     my $id=substr($chars,$s1,1);
