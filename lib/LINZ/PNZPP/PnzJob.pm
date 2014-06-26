@@ -119,9 +119,11 @@ sub LoadConfig
         foreach my $rpt (@{$reports})
         {
             my $template=$conf->expand($rpt->{template});
-            if( $template )
+            my $source=$conf->expand($rpt->{source});
+            if( $template || $source )
             {
                 $rpt->{template}=$template;
+                $rpt->{source}=$source;
                 push(@$SummaryReports,$rpt);
             }
         }
@@ -703,11 +705,21 @@ sub sendResults
         print "Building summary file $filename\n";
         eval
         {
-            my $template=LINZ::PNZPP::Template->new($rpt->{template},readfile=>1);
             my $rptfile=$self->{jobdir}.'/'.$filename;
-            open( my $rptf, ">$rptfile" ) || die "Cannot open $rptfile\n";
-            $template->write($rptf,%$self,TemplateFunctions);
-            close($rptf);
+
+            if( $rpt->{template} )
+            {
+                my $template=LINZ::PNZPP::Template->new($rpt->{template},readfile=>1);
+                open( my $rptf, ">$rptfile" ) || die "Cannot open $rptfile\n";
+                $template->write($rptf,%$self,TemplateFunctions);
+                close($rptf);
+            }
+            elsif( $rpt->{source} )
+            {
+                my $src=$rpt->{source};
+                die "Report source file $src is missing\n" if ! -r $src;
+                copy($src,$rptfile) || die "Cannot copy report file $rpt\n";
+            }
             $rzip->addFile($rptfile,$filename);
             push(@$resultfiles,{
                 filename=>$filename,
