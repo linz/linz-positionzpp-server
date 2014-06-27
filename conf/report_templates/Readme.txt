@@ -122,10 +122,10 @@ submitted.  It contains the following columns:
 mark           The user supplied name for the mark 
 datafile       The name of the RINEX file
 date           The UTC date and time of the start of the observation session
-itrf2008_X     The ITRF2008 X,Y,Z epoch coordinate
+itrf2008_X     The ITRF2008 X,Y,Z epoch coordinate (metres)
 itrf2008_Y
 itrf2008_Z
-itrf96_X       The ITRF96 X,Y,Z epoch coordinate
+itrf96_X       The ITRF96 X,Y,Z epoch coordinate (metres)
 itrf96_Y
 itrf96_Z
 err_e          The apriori error in the east, north, and up direction (metres)
@@ -150,8 +150,8 @@ date           The date of the observation (not the date of the coordinate)
 coordsys       A code identifying the coordinate system
 east           The east/longitude coordinate
 north          The north/latitude coordinate
-height         The height coordinate (ellipsoidal height except for the
-               NZVD09 height)
+ell_height     The ellipsoidal height 
+nzvd09_height  The NZVD09 height (height above NZGeoid2009)
 
 ================================================================================
 xxxxx.kml - KML file for plotting the marks and baselines used
@@ -172,7 +172,7 @@ tropospheric delay parameters.
 
 
 ================================================================================
-min_xxxx.snx - SINEX file of the minimally constrainted solution
+min_xxxx.snx - SINEX file of the minimally constrained solution
 
 There is one minimally constrained solution SINEX file for each input file that 
 is successfully processed. This defines the calculated coordinates and their
