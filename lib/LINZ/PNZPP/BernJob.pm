@@ -586,8 +586,9 @@ sub createTeqcReport
         {
             my $sess_start=seconds_datetime($self->{campaign}->{session_start});
             my $sess_end=seconds_datetime($self->{campaign}->{session_end});
-            print $rpt "\n","="x50,"\nReference data files\n";
-            print $rpt "Note: Only using data within the observation window $sess_start to $sess_end.\n\n";
+            print $rpt "\n","="x50,"\nReference station data files\n";
+            print $rpt "Note: Only data within the observation window\n".
+                       "($sess_start to $sess_end) is used for processing.\n\n";
 
             $list=\@reffiles;
             $params = $TeqcRefParams;
