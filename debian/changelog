@@ -1,3 +1,9 @@
+linz-positionzpp-server (1.11.4-1) precise; urgency=low
+
+  * Spelling mistakes\!
+
+ -- Chris Crook <ccrook@linz.govt.nz>  Mon, 30 Jun 2014 11:28:11 +1200
+
 linz-positionzpp-server (1.11.3-1) precise; urgency=low
 
   * Consistency of apriori/aposteriori
