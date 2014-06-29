@@ -36,7 +36,7 @@ Note that some modifications may be made to the submitted RINEX file.  These
 are:
   1) The station mark name may be changed to ensure that it is a four character
      code that differs from all PositioNZ CORS station codes.
-  2) The receiver type may be changed to one recognized by the software.  
+  2) The receiver type may be changed to one recognised by the software.  
      The software will select a receiver type that appears similar to that
      specified in the RINEX file.
 Neither of these changes will significantly affect the coordinates calculated.
@@ -110,7 +110,7 @@ Reference stations
     residual errors at each station provide the most realistic measure of
     the accuracy of the solution (excluding plumbing and antenna height 
     errors).  For each reference table the table lists the code for the 
-    mark, the distance in kilometers from the observation station to the
+    mark, the distance in kilometres from the observation station to the
     reference station, and the residual horizontal and vertical errors.
 
 ================================================================================
