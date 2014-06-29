@@ -101,7 +101,7 @@ Processing summary (for minimum constraints solution)
     In particular the standard error of unit weight (SEUW) represents how well
     the observations fitted in the final adjustment.  Large values for the 
     SEUW may be indicative of problems in the data.  The SEUW may be used
-    to scale the coordinate standard errors to obtain a posteriori values.
+    to scale the coordinate standard errors to obtain aposteriori values.
 
 Reference stations
 
