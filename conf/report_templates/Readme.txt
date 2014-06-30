@@ -20,8 +20,8 @@ For each file the GPS processing includes the following steps:
   * Approximate point position solution to determine the station location
   * Selection of three PositioNZ reference stations to process with the 
     user station
-  * Calculation of the reference stations ITRF2008 epoch coordinates
-  * Detecting of cycle slips and gross errors
+  * Calculation of the reference station ITRF2008 epoch coordinates
+  * Detecting cycle slips and gross errors
   * Resolving ambiguities
   * Calculation of a minimum constraints solution
   * Constraining the solution to fit the reference station coordinates
@@ -57,7 +57,7 @@ Orbit type:
 
     This is the quality of satellite orbit information used to process the
     results, one of ultra rapid, rapid, or final.  PositioNZ-PP will use the
-    best orbit information available when the processing is done.
+    best orbit information available when the job is processed.
 
 Final coordinates
 
@@ -85,7 +85,7 @@ XYZ covariance matrix and ENU errors
 
     These represent the formal error calculated for the final coordinates. As
     noted above these are likely to be optimistic.  The XYZ covariances 
-    represent the covariances of the geocentrix XYZ coordinates.  The ENU 
+    represent the covariances of the geocentric XYZ coordinates.  The ENU 
     errors are the standard errors of the east, north, and up component 
     determined from the covariance.
 
@@ -150,7 +150,7 @@ date           The date of the observation (not the date of the coordinate)
 coordsys       A code identifying the coordinate system
 east           The east/longitude coordinate
 north          The north/latitude coordinate
-ell_height     The ellipsoidal height 
+ell_height     The NZGD2000 ellipsoidal height 
 nzvd09_height  The NZVD09 height (height above NZGeoid2009)
 
 ================================================================================
@@ -176,7 +176,7 @@ min_xxxx.snx - SINEX file of the minimally constrained solution
 
 There is one minimally constrained solution SINEX file for each input file that 
 is successfully processed. This defines the calculated coordinates and their
-covariances for the user mark and the reference PositioNZ reference stations .
+covariances for the user mark and the reference PositioNZ reference stations.
 
 ================================================================================
 rinex_files_x.txt - RINEX file metadata for the observations used
