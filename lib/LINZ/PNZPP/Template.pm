@@ -38,6 +38,7 @@ to the block in which they are defined.
  #          comment
  =          list of values to insert
  -          end of block
+ @          replace line with contents of file.  
 
 Placeholders are one of 
 
@@ -130,7 +131,22 @@ sub write
     $self->_evaluate($fh, $data, $start );
 }
 
-=head $template->expand(name1=>value1, ... )
+=head2 $template->writeToFile($filename,name=>value1,...)
+
+Expand the template and write to a file.
+
+=cut
+
+sub writeToFile
+{
+    my ($self,$filename,%data) = @_;
+    open(my $fh,">$filename") || croak("Cannot open $filename in LINZ::PNZPP::Template::writeToFile\n");
+    $self->write($fh,%data);
+    close($fh);
+}
+
+
+=head2 $template->expand(name1=>value1, ... )
 
 Expand the template and return a string 
 
@@ -369,6 +385,17 @@ sub _evaluate
         {
             $line =~ s/\%/\%\%/g;
             $text .= $line;
+        }
+        elsif( $ctlchar eq '@' )
+        {
+            my $file=_evalexpr($line,$data);
+            if( open(my $fh,"<$file"))
+            {
+                my $value=join('',<$fh>);
+                close($fh);
+                $text .= "%s";
+                push(@values,$value);
+            }
         }
         elsif( $ctlchar eq '|' || $ctlchar eq ' ')
         {
