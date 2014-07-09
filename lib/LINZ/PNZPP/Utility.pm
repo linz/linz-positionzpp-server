@@ -4,6 +4,7 @@ package LINZ::PNZPP::Utility;
 
 use Carp;
 use IO::String;
+use Sys::Hostname;
 use LINZ::Geodetic::CoordSysList qw/GetCoordSys/;
 use POSIX qw/strftime/;
 
@@ -219,6 +220,7 @@ sub TemplateFunctions
         LocalTime => \&LocalTime,
         CsvQuote => \&CsvQuote,
         GetId => \&GetId,
+        hostname => hostname(),
         );
 }
 
