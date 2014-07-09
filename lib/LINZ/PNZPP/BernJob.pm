@@ -21,6 +21,7 @@ use LINZ::GNSS::Time qw/datetime_seconds seconds_datetime/;
 use LINZ::GNSS::SinexFile();
 use LINZ::PNZPP::Template;
 use LINZ::PNZPP::Utility qw/TemplateFunctions/;
+use Sys::Hostname;
 use JSON;
 use Net::SMTP;
 
@@ -51,7 +52,7 @@ our $ReportFiles=[];
 our $SmtpServer;
 our $NotificationEmailFrom='bern_server@linz.govt.nz';
 our $NotificationEmailTo='positionz@linz.govt.nz';
-our $NotificationEmailTitle='PositioNZ-PP job failure: [bernid]';
+our $NotificationEmailTitle='PositioNZ-PP job failure: [hostname] [bernid]';
 our $NotificationEmailTemplate='';
 
 our $TeqcBin='/usr/bin/teqc';
@@ -829,6 +830,7 @@ sub sendFailNotification
 
     my $title=$NotificationEmailTitle;
     $title=~ s/\[bernid\]/$self->{campaignid}/eg;
+    $title=~ s/\[hostname\]/hostname()/eg;
     
     my $message="PositioNZ-PP processing job ".$self->{campaignid}." failed\n";
     eval
