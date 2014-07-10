@@ -8,6 +8,18 @@ This module provides provides the function LINZ::PNZPP::Run that runs the Positi
 It first loads the configuration, then uses the functions from the LINZ::PNZPP::PnzJob module to load new jobs,
 process existing jobs, and remove expired jobs.  It also provides the 
 
+See also
+
+=over
+
+=item LINZ::PNZPP::PnzServer  Manages a server process
+
+=item LINZ::PNZPP::PnzJob     Manages a user job
+
+=item LINZ::PNZPP::BernJob    Manages a Bernese campaign for a user job
+
+=back
+
 =cut
 
 package LINZ::PNZPP;
@@ -131,7 +143,7 @@ sub Run
     $server->run();
 }
 
-=head2 LINZ::PNZPP::UpdateReferenceData()
+=head2 LINZ::PNZPP::UpdateReferenceData
 
 Update the reference data files used by the PositioNZ-PP application - for example the 
 antenna and receiver lists.  These are read from the Bernese directories and reformatted 
