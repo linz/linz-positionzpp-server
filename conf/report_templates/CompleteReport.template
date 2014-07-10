@@ -80,7 +80,7 @@
 |
 |    NZGD2000 lon/lat/hgt (DMS): $$$$$$$$$$$$$$$$$$  $$$$$$$$$$$$$$$$$ #####.####
 |    NZGD2000 lon/lat/hgt      : ###.#########      ###.#########      #####.####
-|    NZTM2000 east/north/hgt   : ########.####      ########.##### 
+|    NZTM2000 east/north       : ########.####      ########.##### 
 = DefModelVersion( 'NZGD2000' )
 = nz2k.londms nz2k.latdms nzgd2kllh[2]
 = nzgd2kllh[0]  nzgd2kllh[1]  nzgd2kllh[2]
@@ -90,7 +90,7 @@
 * circuit=MeridionalCircuits( nzgd2kllh[0], nzgd2kllh[1] )
 + mccrd=ConvertCoords( 'NZGD2000', nzgd2kllh[0], nzgd2kllh[1], nzgd2kllh[2], circuit )
 |    $$$$$$$$$$$$$$$$$$$$$$$$$ : ########.####      ########.##### 
-= ( circuit . ' east/north/hgt') mccrd.east mccrd.north
+= ( circuit . ' east/north') mccrd.east mccrd.north
 -
 -
 |    NZVD09 height             :                                       #####.####
