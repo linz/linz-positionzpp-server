@@ -1,3 +1,13 @@
+linz-positionzpp-server (1.12.0-1) precise; urgency=low
+
+  * Wording change
+  * Adding option to include text file when evaluating template
+  * Adding hostname to template utilities
+  * Adding hostname to notification email
+  * Adding function to list data sources
+
+ -- Chris Crook <ccrook@linz.govt.nz>  Thu, 10 Jul 2014 20:15:16 +1200
+
 linz-positionzpp-server (1.11.5-1) precise; urgency=low
 
   * More spelling mistakes ...
