@@ -17,6 +17,7 @@ my $commands={
     start=>\&start,
     stop=>\&stop,
     status=>\&status,
+    data_sources=>\&listDataSources,
 };
 
 my $commandline=join(" ",$0,@ARGV);
@@ -153,6 +154,12 @@ sub checkUser
     $ENV{USER}=$pnzuser;
 }
 
+sub listDataSources
+{
+    LINZ::GNSS::LoadConfig();
+    print LINZ::GNSS::DataCenter::SourceDescriptions();
+}
+
 __END__
 
 =head1 Name
@@ -166,6 +173,7 @@ server processes.
    positionzpp update_refdata
    positionzpp run_maintenance
    positionzpp status
+   positionzpp data_sources
    positionzpp pause <pause-time> <wait-time>
    positionzpp start
    positionzpp stop <wait-time>
@@ -228,6 +236,10 @@ for which the retention date has passed.
 
 Prints out the current state of the processor
 
+=item data_sources
+
+Prints out a list of the configured data sources 
+
 =item pause <pause-time> <wait-time>
 
 Stops the processor for running for a number of seconds.  The pause time is the number of seconds to pause
@@ -260,7 +272,11 @@ The crontab that is installed by this script.
 
 =item /etc/positionzpp/positionzpp.conf
 
-The main positionz configuration script
+The main positionz configuration file
+
+=item /etc/bernese52/getdata.conf
+
+The configuration file for the GNSS reference data sources (eg orbit data, reference station data etc)
 
 =back
 
