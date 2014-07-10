@@ -280,5 +280,17 @@ The configuration file for the GNSS reference data sources (eg orbit data, refer
 
 =back
 
+=head1 See also:
+
+=over
+
+=item LINZ::PNZPP POD documentation for code implementing positionzpp server
+
+=item LINZ::GNSS POD documentation for GNSS code (accessing reference data)
+
+=item LINZ::Geodetic Implementation of coordinate conversions and station prediction models
+
+=back
+
 =cut
 
