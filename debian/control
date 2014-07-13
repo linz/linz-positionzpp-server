@@ -11,6 +11,7 @@ Architecture: all
 Depends: ${misc:Depends} ,
     linz-bernese52,
     linz-positionzpp-pcf,
+    libjson-perl,
     liblinz-bern-perl,
     liblinz-gnss-perl,
     libfile-copy-recursive-perl,
