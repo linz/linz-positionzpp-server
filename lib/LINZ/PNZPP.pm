@@ -2,21 +2,35 @@ use strict;
 
 =head1 LINZ::PNZPP
 
-Package for managing PositionzPP jobs.
+Package for managing PositioNZ-PP server.
 
-This module provides provides the function LINZ::PNZPP::Run that runs the PositioNZ-PP post processing service.
-It first loads the configuration, then uses the functions from the LINZ::PNZPP::PnzJob module to load new jobs,
-process existing jobs, and remove expired jobs.  It also provides the 
+This module provides high level functions for running the PositioNZ-PP services.
+These are mainly exposed and accessed through the positionzpp command.  
 
-See also
+The high level components of the system are: 
 
 =over
 
-=item LINZ::PNZPP::PnzServer  Manages a server process
+=item LINZ::PNZPP::PnzServer  
 
-=item LINZ::PNZPP::PnzJob     Manages a user job
+Manages a server process.  This creates the environment for running jobs,
+checking the status of jobs to be run, and starting those that need further 
+processing.
 
-=item LINZ::PNZPP::BernJob    Manages a Bernese campaign for a user job
+=item LINZ::PNZPP::PnzJob     
+
+Manages a users job, which may include multiple RINEX files for processing. 
+This is responsible for setting up the job, and possibly persisting it for 
+several PnzServer runs, if for example it needs to wait for data.
+
+=item LINZ::PNZPP::BernJob    
+
+Manages a Bernese campaign (ie processing job) for an individual RINEX file.  Each
+PnzJob may run multiple BernJobs.
+
+=item positionzpp             
+
+Command script to execute the high level functions of the LINZ::PNZPP module.
 
 =back
 
@@ -103,6 +117,10 @@ $hookname must be one of prerun, postupdate, and postrefdata.
 $parameter depends on the script being run, and is <input_dir> for pre-run
 <update_file> for post_update, and <refdata_file> for postrefdata.
 
+Hook scripts are used for uploading new jobs from the front end and pushing
+results to it, for maintaining reference data, and so on.  They are specified
+in the configuration file.
+
 =cut
 
 sub RunHook
@@ -145,7 +163,7 @@ sub Run
 
 =head2 LINZ::PNZPP::UpdateReferenceData
 
-Update the reference data files used by the PositioNZ-PP application - for example the 
+Update the reference data files used by the PositioNZ-PP web application - for example the 
 antenna and receiver lists.  These are read from the Bernese directories and reformatted 
 for loading into the front end application (as JSON formatted files)
 

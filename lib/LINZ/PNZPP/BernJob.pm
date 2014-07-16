@@ -4,7 +4,15 @@ package LINZ::PNZPP::BernJob;
 
 =head1 LINZ::PNZPP::BernJob
 
-Package to manage individual bernese jobs within a PositionzPP job.  
+Package to manage individual bernese jobs within a PositioNZ-PP job.  
+
+See also: 
+
+=over
+
+=item LINZ::PNZPP::PnzJob
+
+=back
 
 =cut
 

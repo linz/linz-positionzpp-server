@@ -3,25 +3,25 @@ use strict;
 =head1 LINZ::PNZPP::PnzJob
 
 This module manages PositioNZ-PP jobs.  Each job may consist of a number of RINEX files,
-which are processed in individual Bernese processing jobs.
+which are processed in individual Bernese processing jobs (using LINZ::PNZPP::BernJob).
 
-The module uses the following interface:
+This module manages compiling the data supplied by a user into a structure for procssing, persisting the job between runs of the PositioNZ-PP server (for example while
+waiting for reference data), compiling the results to send back to the user, and 
+archiving the job.
 
-   use LINZ::PNZPP;
-   use LINZ::PNZPP::PnzJob;
-   use Config::General qw/ParseConfig/;
+See also:
 
+=over
 
-   # Loads the configuration file and run the PNZPP job
+=item LINZ::PNZPP::PnzServer
 
-   LINZ::PNZPP::Run();
-   
-   # Functions provided by this module
-   
-   LINZ::PNZPP::PnzJob::LoadConfig(\%config);
-   LINZ::PNZPP::PnzJob::LoadNewJobs();
-   LINZ::PNZPP::PnzJob::RunJobs();
-   LINZ::PNZPP::PnzJob::PurgeArchive();
+Manages the server processes that create and run PnzJob instances
+
+=item LINZ::PNZPP::BernJob
+
+Runs individual Bernese processing jobs within a PnzJob (ie one for each RINEX file)
+
+=back
 
 =cut
 
@@ -595,7 +595,7 @@ sub _formatTime
 
 Compiles the status information from each BernJob into the current results,
 creates the results interface file used to update the web front end with the status,
-and copies it to the inteface directory.
+and copies it to the interface directory.
 
 Returns 1 if the job is complete (ie all Bernese jobs have completed or failed),
 or 0 otherwise.
