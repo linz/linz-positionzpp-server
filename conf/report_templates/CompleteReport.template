@@ -62,9 +62,9 @@
 |  Epoch coordinates - defined at the observation epoch (decimal year ####.##)
 |
 |    ITRF2008 XYZ (m)            :  ########.#### #########.#### ########.####
-|    ITRF96/NZGD2000   XYZ (m)   :  ########.#### #########.#### ########.####
+|    ITRF96 XYZ (m)              :  ########.#### #########.#### ########.####
 |    ITRF2008 lon/lat/hgt        :  ###.######### ###.#########  #####.####
-|    ITRF96/NZGD2000 lon/lat/hgt :  ###.######### ###.#########  #####.####
+|    ITRF96 lon/lat/hgt          :  ###.######### ###.#########  #####.####
 = year
 = xyz[0]  xyz[1]  xyz[2]
 = itrf96.X itrf96.Y itrf96.Z
