@@ -1,3 +1,9 @@
+linz-positionzpp-server (1.12.5-1) trusty; urgency=medium
+
+  * Modifying to ensure job which can't create a campaign terminates
+
+ -- Chris Crook <ccrook@linz.govt.nz>  Wed, 17 Sep 2014 08:09:04 +1200
+
 linz-positionzpp-server (1.12.4-1) precise; urgency=low
 
   * Updating documentation
