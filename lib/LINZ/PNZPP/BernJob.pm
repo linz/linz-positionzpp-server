@@ -425,7 +425,14 @@ sub update
         $self->createCampaign();
         $created=1;
     }
-    return 0 if ! $self->{campaign};
+    if( ! $self->{campaign} )
+    {
+        my $campid=$self->{campaignid};
+        my $message="Cannot create Bernese campaign $campid";
+        $self->{status}='fail';
+        $self->{status_description}=$message;
+        croak("$message\n");
+    }
     return $created if ! $self->checkBerneseLocks();
     $self->runBerneseProcessor($bernenv);
     $self->compileReport();

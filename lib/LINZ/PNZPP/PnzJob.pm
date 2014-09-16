@@ -482,6 +482,7 @@ sub update
                 my $errmsg=$@;
                 $server->writeStatus("Error: ".$errmsg);
                 $self->error($errmsg);
+                $updated=1;
             }
             $server->writeStatus("Bernese job finished");
         }
