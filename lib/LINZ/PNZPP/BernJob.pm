@@ -609,7 +609,6 @@ sub createTeqcReport
             $list=\@reffiles;
             $params = $TeqcRefParams;
         }
-        my $cmd=$TeqcBin.' '.$params;
 
         my $nfile=0;
         foreach my $f (sort @$list)
@@ -638,6 +637,7 @@ sub createTeqcReport
                 }
             }
 
+            my $cmd=$TeqcBin.' '.$params;
             $cmd .= ' "'.$rnxdir.'/'.$f.'"';
             my $output=`$cmd`;
             my $qrnx=quotemeta($rnxdir.'/');
