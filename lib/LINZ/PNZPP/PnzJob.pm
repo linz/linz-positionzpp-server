@@ -300,7 +300,9 @@ sub reload
     };
     if( $@ )
     {
-        croak("Cannot load job status $savefile\n$@");
+        # Dispose of invalid status file to avoid trying to reload again..
+        unlink($savefile);
+        croak("Cannot load job status $savefile - deleting file\n$@");
     }
     $self->{jobdir}=$jobdir;
     foreach my $job (@{$self->{bernjobs}})
