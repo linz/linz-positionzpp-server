@@ -290,8 +290,10 @@ sub runBerneseProcessor
     my $status=LINZ::BERN::BernUtil::RunPcf(
         $self->{campaign},
         $pcffile,
-        CLIENT_ENV=>$bernenv->{CLIENT_ENV},
-        CPU_FILE=>$bernenv->{CPU_FILE},
+        {
+            CLIENT_ENV=>$bernenv->{CLIENT_ENV},
+            CPU_FILE=>$bernenv->{CPU_FILE},
+        }
     );
     $self->{end_time}=time();
     $self->{bernese_status}=$status;
