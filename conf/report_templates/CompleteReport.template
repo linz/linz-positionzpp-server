@@ -93,12 +93,12 @@
 = ( circuit . ' east/north') mccrd.east mccrd.north
 -
 -
-|    NZVD09 height             :                                       #####.####
+|    NZVD2009 height           :                                       #####.####
 = CalcOrthHeight( 'NZGD2000', nzgd2kllh[0], nzgd2kllh[1], nzgd2kllh[2], 'NZVD09' )
 |
 |  Longitudes and latitudes in degrees minutes and seconds (DMS), or decimal degrees, 
 |  eastings, northings, and heights are in metres.  Heights are ellipsoidal except
-|  for the NZVD09 height.
+|  for the NZVD2009 height.
 |
 |  XYZ covariance matrix (m^2):
 |        ##.######### ##.######### ##.#########

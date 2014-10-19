@@ -77,7 +77,7 @@ Final coordinates
     The NZGD2000 coordinates are also presented as New Zealand Transverse
     Mercator (NZTM2000) coordinates and in one or more meridional circuit 
     projections (based on the location of the mark).  This block also 
-    includes the NZVD09 height - the height above the NZ Quasigeoid 2009 - 
+    includes the NZVD2009 height - the height above the NZ Quasigeoid 2009 - 
     which approximates an orthometric height.  All other heights are 
     ellipsoidal heights.
 
@@ -144,14 +144,14 @@ submitted expressed as NZGD2000 coordinates at nominal epoch 2000.0.  Each
 file is represented by several rows, each in a different coordinate system.
 The columns in the file are:
 
-mark           The user supplied mark name
-datafile       The name of the RINEX file
-date           The date of the observation (not the date of the coordinate)
-coordsys       A code identifying the coordinate system
-east           The east/longitude coordinate
-north          The north/latitude coordinate
-ell_height     The NZGD2000 ellipsoidal height 
-nzvd09_height  The NZVD09 height (height above NZGeoid2009)
+mark            The user supplied mark name
+datafile        The name of the RINEX file
+date            The date of the observation (not the date of the coordinate)
+coordsys        A code identifying the coordinate system
+east            The east/longitude coordinate
+north           The north/latitude coordinate
+ell_height      The NZGD2000 ellipsoidal height 
+nzvd2009_height The NZVD2009 height (height above NZGeoid2009)
 
 ================================================================================
 xxxxx.kml - KML file for plotting the marks and baselines used
