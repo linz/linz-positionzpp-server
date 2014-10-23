@@ -1,3 +1,9 @@
+linz-positionzpp-server (1.13.2-1) trusty; urgency=medium
+
+  * Renaming NZVD09 to NZVD2009
+
+ -- Chris Crook <ccrook@linz.govt.nz>  Fri, 24 Oct 2014 08:06:33 +1300
+
 linz-positionzpp-server (1.13.1-1) trusty; urgency=medium
 
   * Changing RunPcf parameters
