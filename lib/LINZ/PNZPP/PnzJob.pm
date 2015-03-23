@@ -47,6 +47,7 @@ our $OutputDir;
 our $WorkDir;
 our $JobDir;
 our $ArchiveInputDir;
+our $ArchiveBerneseDir;
 our $ArchiveJobJsonDir;
 our $ArchiveJobJsonFile='[job_id]_status.json';
 our $InputJobFile;
@@ -104,6 +105,7 @@ sub LoadConfig
     # Optional information
 
     $ArchiveInputDir=$conf->filename("ArchiveInputDir");
+    $ArchiveBerneseDir=$conf->filename("ArchiveBerneseDir");
     $ArchiveJobJsonDir=$conf->filename("ArchiveJobJsonDir");
     $ArchiveInputRetentionDays=$conf->get("ArchiveInputRetentionDays",$ArchiveInputRetentionDays)+0;
     $ArchiveBerneseRetentionDays=$conf->get("ArchiveBerneseRetentionDays",$ArchiveBerneseRetentionDays)+0;
@@ -772,6 +774,37 @@ sub sendResults
     LINZ::PNZPP::RunHook('postupdate',$rzipfile);
 
     return $complete;
+}
+
+sub PurgeArchive
+{
+    my $archives=[
+        [$ArchiveInputDir, $ArchiveInputRetentionDays],
+        [$ArchiveBerneseDir, $ArchiveBerneseRetentionDays],
+        [$ArchiveJobJsonDir, $ArchiveJobJsonRetentionDays],
+    ];
+
+    foreach my $archive (@$archives)
+    {
+        my ($dir,$retention)=@$archive;
+        next if ! -d $dir;
+        next if $retention <= 0;
+        opendir( my $dh, $dir ) || next;
+        my @purge=grep { -f "$dir/$_" && -M "$dir/$_" > $retention } readdir($dh);
+        closedir($dh);
+        foreach my $f (@purge)
+        {
+            unlink("$dir/$f");
+            if( ! -f "$dir/$f" )
+            {
+                _Logger()->info("Purging archive file $dir/$f");
+            }
+            else
+            {
+                _Logger()->warn("Failed to purge archive file $dir/$f");
+            }
+        }
+    }
 }
 
 1;
