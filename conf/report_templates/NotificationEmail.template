@@ -29,8 +29,8 @@
 = orig_filename
 = UTC( session_start)
 = ( session_end - session_start )
-= anttype
 = rectype
+= anttype
 = orig_anttype
 = orig_rectype
 = antheight
