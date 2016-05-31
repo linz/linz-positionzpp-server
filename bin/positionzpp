@@ -11,6 +11,7 @@ use JSON::PP;
 
 my $commands={
     run=>\&run,
+    run_test=>\&runTest,
     update_refdata=>\&updateRefdata,
     run_maintenance=>\&runMaintenance,
     pause=>\&pause,
@@ -61,6 +62,69 @@ sub run
     LINZ::PNZPP::Run($serverid);
     return 0;
 }
+
+sub runTest
+{
+    my($inputzip,$testdir)=@_;
+    die "Input zip file $inputzip does not exist\n" if ! -f $inputzip;
+    if( ! $testdir )
+    {
+        $testdir=$inputzip;
+        $testdir =~ s/\.[^\.]*$//;
+        $testdir =~ s/\-input//;
+    }
+    die "Output test directory $testdir already exists\n" if -e $testdir;
+
+    use Cwd qw/abs_path/;
+    use File::Path qw/make_path/;
+    use File::Copy;
+
+    my $serverid='test';
+    my $err;
+    make_path(
+        $testdir,
+        { error=>\$err }
+    );
+    die "Cannot create test directory $testdir\n" if @$err;
+    $testdir=abs_path($testdir);
+
+    # Configuration settings to run script locally
+    my %config= (
+        logsettings=>'warn',
+        InputDir=>"$testdir/in",
+        OutputDir=>"$testdir/out",
+        BernDataDir=>"$testdir/data",
+        BernUserDir=>"$testdir/user/[serverid]",
+        HookScript=>"",
+        GnssUsageDataFile=>"",
+        KeepBerneseCampaign=>1,
+        ArchiveInputData=>"none",
+        ArchiveJobJson=>"none",
+        ArchiveBerneseSuccess=>"none",
+        ArchiveBerneseFail=>"none",
+        ArchiveBernesePending=>"none",
+    );
+    my $userdir=$config{BernUserDir};
+    $userdir =~ s/\[serverid\]/$serverid/;
+
+    make_path(
+        $config{InputDir},
+        $config{OutputDir},
+        $config{BernDataDir},
+        $userdir,
+        { error=>\$err }
+    );
+    die "Cannot create test directories $testdir/..\n" if @$err;
+    my $sourceinput=$inputzip;
+    $sourceinput=~s/.*[\\\/]//;
+    $sourceinput=$config{InputDir}.'/'.$sourceinput;
+    copy($inputzip,$sourceinput) || die "Cannot copy $inputzip to $sourceinput\n";
+
+    LINZ::PNZPP::SetConfig(%config);
+    LINZ::PNZPP::Run($serverid);
+    print "Test job results in $config{OutputDir}\n";
+}
+
 
 sub updateRefdata
 {
@@ -177,6 +241,7 @@ server processes.
    positionzpp pause <pause-time> <wait-time>
    positionzpp start
    positionzpp stop <wait-time>
+   positionzpp run_test <input-zip> <test-dir>
 
 Most commands must be run by the positionzpp server user, ie 
 
@@ -255,6 +320,12 @@ be used to reinstall the crontab, for example after modifying it).
 
 Stops the server by removing the crontab.  It will wait the specified time for the server processes to
 halt before returning.  
+
+=item run_test <input-zip> <test-dir>
+
+Runs a test server. input-zip is an input job file created by the frontend server. test-dir
+is the name of the directory where the test job will run.  This is created by the test run and
+cannot already exist.  By default it is the base name of the input zip file.
 
 =back
 

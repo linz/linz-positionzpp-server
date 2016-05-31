@@ -56,14 +56,14 @@ our $GnssRefDataFile;
 our $GnssUsageDataFile;
 our $GpsUsageFile;
 our $HookScript;
+our $LocalConfig={};
 
 =head2 PNZPP::LoadConfig($filename,$nologging)
 
 Loads the PositioNZ-PP configuration from the specified file, or from the default file
-/etc/positionzpp/positionzpp.conf if no filename or an empyt filename is supplied. 
+/etc/positionzpp/positionzpp.conf if no filename or an empty filename is supplied. 
 
 If $nologging evaluates true then the logging system is not initiated.
-
 
 The configuration information is used to configure the LINZ::PNZPP::PnzJob and LINZ::PNZPP::BernJob
 modules, and also to initiallize the logging system (using Log::Log4perl).
@@ -73,27 +73,34 @@ modules, and also to initiallize the logging system (using Log::Log4perl).
 sub LoadConfig
 {
     my($filename,$nologging)=@_;
-    my $conf=LINZ::PNZPP::Config->new($filename);
+    my $conf=LINZ::PNZPP::Config->new($filename,%$LocalConfig);
     require LINZ::PNZPP::PnzServer;
     require LINZ::PNZPP::PnzJob;
     require LINZ::PNZPP::BernJob;
 
     if( ! $nologging )
     {
+        my $defaultlogging=exists $ENV{DEBUG_LINZGNSS} ? $DEBUG : $WARN;
+        my $logcfg;
         if( $conf->has("logsettings"))
         {
-            my $logcfg=$conf->get("logsettings");
+            $defaultlogging="";
+            $logcfg=$conf->get("logsettings");
+            if( $logcfg =~ /^(?:(WARN)|(DEBUG))/i )
+            {
+                $defaultlogging=$1 ? $WARN : $DEBUG;
+                undef($logcfg);
+            }
+        }
+        if( defined($logcfg) )
+        {
             my $logfile=$conf->filename("logdir").'/'.$conf->filename("logfile");
             $logcfg =~ s/\[logfilename\]/$logfile/eg;
             Log::Log4perl->init(\$logcfg);
         }
-        elsif( exists $ENV{DEBUG_LINZGNSS} )
-        {
-            Log::Log4perl->easy_init($DEBUG);
-        }
         else
         {
-            Log::Log4perl->easy_init($WARN);
+            Log::Log4perl->easy_init($defaultlogging);
         }
     }
     $RefDataDir=$conf->filename("RefDataDir") || croak("RefDataDir not defined in configuration\n");
@@ -103,6 +110,21 @@ sub LoadConfig
     LINZ::PNZPP::PnzServer::LoadConfig($conf);
     LINZ::PNZPP::PnzJob::LoadConfig($conf);
     LINZ::PNZPP::BernJob::LoadConfig($conf);
+}
+
+=head2 PNZPP::SetConfig(%config)
+
+Set local configuration settings that will override the settings in the configuration file
+
+=cut
+
+sub SetConfig
+{
+    my(%config)=@_;
+    foreach my $k (keys %config)
+    {
+        $LocalConfig->{lc($k)}=$config{$k};
+    }
 }
 
 =head2 LINZ::PNZPP::RunHook($hookname,$parameter)
@@ -156,7 +178,7 @@ sub Run
     my($serverid)=@_;
     require LINZ::PNZPP::PnzServer;
     LINZ::GNSS::LoadConfig();
-    LoadConfig();
+    LoadConfig('',0);
     my $server=LINZ::PNZPP::PnzServer->new($serverid);
     $server->run();
 }
@@ -269,6 +291,7 @@ sub UpdateGnssUsage
     my ($antennae,$receivers)=@_;
     LoadConfig();
     my $reffile=$GnssUsageDataFile;
+    return if ! $reffile;
     my $logger=Log::Log4perl->get_logger('LINZ.PNZPP');
 
     my $usage=_getUsageData($logger);

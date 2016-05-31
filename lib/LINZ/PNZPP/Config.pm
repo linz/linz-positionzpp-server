@@ -16,16 +16,18 @@ use Carp;
 
 our $DefaultFileName='/etc/positionzpp/positionzpp.conf';
 
-=head2 my $conf=PNZPP::Config->new($filename)
+=head2 my $conf=PNZPP::Config->new($filename, %config_update)
 
 Loads the PositioNZ-PP configuration from the specified file, or from the default file
 ${POSITIONZPP_HOME}/positionzpp.conf if no filename is supplied. 
+
+Configuration settings can be overridden by %config_update.
 
 =cut
 
 sub new
 {
-    my($class, $filename)=@_;
+    my($class, $filename, %config_update)=@_;
 
     $filename ||= $DefaultFileName;
     croak("PositioNZ-PP configuration file $filename not defined\n") if ! -e $filename;
@@ -41,6 +43,11 @@ sub new
             $config{$k} = $local{$k} if exists $config{$k};
         }
 
+    }  
+    foreach my $k (keys %config_update)
+    {
+        my $key=lc($k);
+        $config{$key} = $config_update{$k} if exists $config{$key};
     }
     return bless \%config, $class;
 }
