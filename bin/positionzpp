@@ -65,6 +65,8 @@ sub run
 
 sub runTest
 {
+    my $debug=$_[0] eq '-d';
+    shift(@_) if $debug;
     my($inputzip,$testdir)=@_;
     die "Input zip file $inputzip does not exist\n" if ! -f $inputzip;
     if( ! $testdir )
@@ -90,7 +92,7 @@ sub runTest
 
     # Configuration settings to run script locally
     my %config= (
-        logsettings=>'warn',
+        logsettings=>$debug ? 'debug' : 'warn',
         InputDir=>"$testdir/in",
         OutputDir=>"$testdir/out",
         BernDataDir=>"$testdir/data",
