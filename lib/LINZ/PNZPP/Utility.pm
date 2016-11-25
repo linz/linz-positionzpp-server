@@ -104,7 +104,7 @@ sub CalcOrthHeight
     my( $csysf, $x, $y, $z, $geoid ) = @_;
     my $cslist=LINZ::Geodetic::CoordSysList->newFromCoordSysDef();
     my $csf=$cslist->coordsys($csysf);
-    my $hrf=$cslist->hgtref($geoid);
+    my $hrf=$cslist->vdatum($geoid);
     my $crd=_coordinate($csf,$x,$y,$z);
     return $hrf->get_orthometric_height($crd);
 }

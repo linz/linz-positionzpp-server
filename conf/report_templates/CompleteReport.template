@@ -98,7 +98,7 @@
 |
 |  Longitudes and latitudes in degrees minutes and seconds (DMS), or decimal degrees, 
 |  eastings, northings, and heights are in metres.  Heights are ellipsoidal except
-|  for the NZVD2009 height.
+|  for the NZVD2016 height.
 |
 |  XYZ covariance matrix (m^2):
 |        ##.######### ##.######### ##.#########

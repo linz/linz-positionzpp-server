@@ -77,7 +77,7 @@ Final coordinates
     The NZGD2000 coordinates are also presented as New Zealand Transverse
     Mercator (NZTM2000) coordinates and in one or more meridional circuit 
     projections (based on the location of the mark).  This block also 
-    includes the NZVD2009 height - the height above the NZ Quasigeoid 2009 - 
+    includes the NZVD2016 height - the height above the NZ Quasigeoid 2016 - 
     which approximates an orthometric height.  All other heights are 
     ellipsoidal heights.
 
@@ -151,7 +151,7 @@ coordsys        A code identifying the coordinate system
 east            The east/longitude coordinate
 north           The north/latitude coordinate
 ell_height      The NZGD2000 ellipsoidal height 
-nzvd2009_height The NZVD2009 height (height above NZGeoid2009)
+nzvd2016_height The NZVD2016 height (height above NZGeoid2016)
 
 ================================================================================
 xxxxx.kml - KML file for plotting the marks and baselines used

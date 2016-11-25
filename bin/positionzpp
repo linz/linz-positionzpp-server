@@ -124,7 +124,31 @@ sub runTest
 
     LINZ::PNZPP::SetConfig(%config);
     LINZ::PNZPP::Run($serverid);
-    print "Test job results in $config{OutputDir}\n";
+
+    my $outdir=$config{OutputDir};
+    print "Test job results in $outdir\n";
+
+    use Archive::Zip qw/:ERROR_CODES/;
+
+    foreach my $zipfile (glob($outdir.'/*.zip'))
+    {
+        my $zip=Archive::Zip->new();
+        $zip->read($zipfile)==AZ_OK || croak("Cannot read zip file $zipfile\n");
+        my $jdm=$zip->memberNamed('results.json') || next;
+        eval
+        {
+            my $status=decode_json($jdm->contents());
+            my $summary=$status->{summary};
+            open(my $outf,'>'.$outdir.'/summary.txt') || die;
+            print $outf $summary;
+            close($outf);
+            print "Results summary written to summary.txt\n";
+        };
+        if( $@ )
+        {
+            # print $@;
+        }
+    }
 }
 
 
