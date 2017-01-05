@@ -5,7 +5,7 @@
 ? calc_coords
 + calc_coords{ markname}
 + nzvd2016=CalcOrthHeight( 'NZGD2000', nzgd2kllh[0], nzgd2kllh[1], nzgd2kllh[2], 'NZVD2016' )
-+ nz2k=ConvertCoords( 'NZGD2000', nzgd2kllh[0], nzgd2kllh[1], nzgd2kllh[2], 'NZGD2016' )
++ nz2k=ConvertCoords( 'NZGD2000', nzgd2kllh[0], nzgd2kllh[1], nzgd2kllh[2], 'NZGD2000' )
 |$+,$+,$+,$+,"$+","$+",#.#####,#.####
 = orig_markname orig_filename UTC( session_start)
 = 'NZGD2000(DMS)' nz2k.londms nz2k.latdms nzgd2kllh[2] nzvd2016
