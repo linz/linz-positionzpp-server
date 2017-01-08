@@ -143,6 +143,8 @@ sub runTest
             print $outf $summary;
             close($outf);
             print "Results summary written to summary.txt\n";
+            $zip->addFile( $outdir.'/summary.txt','summary.txt' ); 
+            $zip->overwrite();
         };
         if( $@ )
         {
