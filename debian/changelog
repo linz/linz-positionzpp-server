@@ -1,3 +1,10 @@
+linz-positionzpp-server (1.15.3-2) xenial; urgency=medium
+
+  * Zipping summary.txt into output file in test mode
+  * Adding missing dependencies
+
+ -- Chris Crook <ccrook@linz.govt.nz>  Tue, 31 Jan 2017 11:04:22 +1300
+
 linz-positionzpp-server (1.15.3-1) xenial; urgency=medium
 
   * Adding missing dependency
