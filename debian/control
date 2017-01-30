@@ -16,7 +16,8 @@ Depends: ${misc:Depends} ,
     liblinz-gnss-perl,
     libfile-copy-recursive-perl,
     libwww-perl,
-    linz-rinex-teqc
+    linz-rinex-teqc,
+    libio-string-perl
 Description: LINZ PositioNZ-PP server
  LINZ PositioNZ-PP server scripts
  .
