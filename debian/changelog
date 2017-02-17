@@ -1,3 +1,9 @@
+linz-positionzpp-server (1.15.3-3) xenial; urgency=medium
+
+  * Avoiding failure if positionzpp_server user already exists
+
+ -- Chris Crook <ccrook@linz.govt.nz>  Fri, 17 Feb 2017 17:39:23 +1300
+
 linz-positionzpp-server (1.15.3-2) xenial; urgency=medium
 
   * Zipping summary.txt into output file in test mode
