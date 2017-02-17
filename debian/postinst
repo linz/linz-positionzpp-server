@@ -23,7 +23,10 @@ logdir=/var/log/positionzpp
 case "$1" in
     configure)
         # Create the positionzpp_server user
-        adduser -q --system --ingroup bern_users positionzpp_server
+        if ! id -un positionzpp_server > /dev/null 2>&1; then
+            adduser -q --system positionzpp_server
+        fi
+        adduser positionzpp_server bern_users 
         echo 'positionzpp_server' > /etc/positionzpp/user
         
         mkdir -p $datadir/interface/input
