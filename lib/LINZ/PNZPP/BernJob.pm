@@ -463,7 +463,6 @@ sub compileReport()
     my $template=$WaitReportTemplate;
     $template=$CompleteReportTemplate if $self->complete;
     $template=$FailedReportTemplate if $self->failed;
-    my $ftemplate=LINZ::PNZPP::Template->new($template,readfile=>1);
     $self->{report}= LINZ::PNZPP::Template->new($template,readfile=>1)->expand(
             %$self,
             TemplateFunctions

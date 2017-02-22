@@ -78,7 +78,11 @@ sub LoadConfig
     require LINZ::PNZPP::PnzJob;
     require LINZ::PNZPP::BernJob;
 
-    if( ! $nologging )
+    if( exists $ENV{DEBUG_PNZPP} )
+    {
+        Log::Log4perl->easy_init($DEBUG);
+    }
+    elsif( ! $nologging )
     {
         my $defaultlogging=exists $ENV{DEBUG_LINZGNSS} ? $DEBUG : $WARN;
         my $logcfg;
