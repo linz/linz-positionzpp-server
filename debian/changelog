@@ -1,3 +1,9 @@
+linz-positionzpp-server (1.16.0-1) xenial; urgency=medium
+
+  * Adding option for debug environment variable
+
+ -- Chris Crook <ccrook@linz.govt.nz>  Thu, 23 Feb 2017 11:25:15 +1300
+
 linz-positionzpp-server (1.15.3-3) xenial; urgency=medium
 
   * Avoiding failure if positionzpp_server user already exists
