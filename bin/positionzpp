@@ -175,8 +175,13 @@ sub pause
     die "Invalid wait time \"$wait\" specified\n" if $wait !~ /^\d{0,5}$/;
     checkUser();
     LINZ::PNZPP::LoadConfig();
-    my $stopped = LINZ::PNZPP::PnzServer::Pause($pause,$wait);
-    print "Wait time expired.\n" if ! $stopped;
+    my $stopped = LINZ::PNZPP::PnzServer::Pause($pause,0);
+    if( ! $stopped )
+    {
+        print "Waiting for server processes to finish ...\n";
+        $stopped = LINZ::PNZPP::PnzServer::Pause($pause,$wait);
+        print "Wait time expired.\n" if ! $stopped;
+    }
     return $stopped ? 0 : 1;
 }
 

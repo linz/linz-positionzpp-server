@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# Echo waiting pausing for 240 seconds
+# Waiting for up to 240 seconds if the server is running a job
+
+echo "Pausing positionzpp service..."
+sudo -u positionzpp_server positionzpp pause 240 240
+
+runtime=`date +"%Y%m%d%H%M%S"`
+exportfile=positionzpp_status_${runtime}.tgz
+
+echo "Dumping positionzpp status to tar file..."
+tar -Pczf $exportfile /var/log/positionzpp /var/lib/positionzpp/data /var/lib/positionzpp/archive /var/lib/positionzpp/statistics /var/lib/positionzpp/work
+
+sudo -u positionzpp_server positionzpp pause 0 0
+echo "Status written to $exportfile"
+

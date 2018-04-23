@@ -230,9 +230,9 @@ Parameters:
 
 =over
 
-=item $pausetime The time to pause the processors for.
+=item $pausetime The time in seconds to pause the processors for.
 
-=item $waittime The time to wait for processors to finish.
+=item $waittime The time in seconds to wait for processors to finish.
 
 =back
 
