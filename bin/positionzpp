@@ -180,7 +180,7 @@ sub pause
     {
         print "Waiting for server processes to finish ...\n";
         $stopped = LINZ::PNZPP::PnzServer::Pause($pause,$wait);
-        print "Wait time expired.\n" if ! $stopped;
+        print "Wait time expired.\n" if $pause && ! $stopped;
     }
     return $stopped ? 0 : 1;
 }
@@ -342,7 +342,8 @@ Prints out a list of the configured data sources
 
 Stops the processor for running for a number of seconds.  The pause time is the number of seconds to pause
 for.  The wait time is the maximum time that the program will wait for processes to stop.  Both times
-are in seconds.  The server is still running while it is paused, but it doesn't do anything!
+are in seconds.  The server is still running while it is paused, but it doesn't do anything! Use a pause
+time of 0 to cancel the pause (ie in effect restart the server).
 
 =item start
 
