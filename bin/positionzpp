@@ -21,7 +21,7 @@ my $commands={
     data_sources=>\&listDataSources,
 };
 
-my $commandline=join(" ",$0,@ARGV);
+my @commandline=($0,@ARGV);
 my $command=shift(@ARGV);
 $command = lc($command);
 
@@ -243,8 +243,11 @@ sub checkUser
     my ($curruser)=getpwuid($<);
     if($curruser ne $pnzuser)
     {
-        printf "This command must be run as $pnzuser.  Use:\n\n";
-        printf "sudo -u $pnzuser $commandline\n\n";
+        unshift(@commandline,'sudo','-u',$pnzuser);
+        my $command=join(' ',@commandline);
+        printf "This command must be run as $pnzuser.\n";
+        printf "Running: $command\n";
+        system(@commandline);
         exit;
     }
     # Ensure the user environment is set - may not be if running from crontab
