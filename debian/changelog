@@ -1,3 +1,9 @@
+linz-positionzpp-server (1.17.2-1) xenial; urgency=medium
+
+  * Adding hostname to status export file
+
+ -- Chris Crook <ccrook@linz.govt.nz>  Wed, 02 May 2018 10:14:12 +1200
+
 linz-positionzpp-server (1.17.1-1) xenial; urgency=medium
 
   * Adding missing directory to status export
