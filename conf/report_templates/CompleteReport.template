@@ -133,14 +133,15 @@
 |  baselines from the supplied mark to these reference stations fit their 
 |  ITRF2008 coordinates in the minimum constraints solution.
 |
-|    Station distance (km)     Fit(mm)
-|                            Hor    Vrt
+|    Station distance (km)    Fit(mm)             ITRF20008 XYZ (metres)
+|                           Hor    Vrt         X            Y            Z
 * refstns
 + helmert{name}
-|     $$$$     #####.#     ####.# ####.#
+|    $$$$     #####.#    ####.# ####.#    ########.### #######.### ########.###
 = name offset
 = sqrt( residual_enu[0]**2+residual_enu[1]**2)
 = residual_enu[2]
+= xyz[0] xyz[1] xyz[2]
 -
 -
 -
