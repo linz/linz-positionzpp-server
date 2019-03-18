@@ -355,7 +355,7 @@ be used to reinstall the crontab, for example after modifying it).
 
 =item stop <wait-time>
 
-Stops the server by removing the crontab.  It will wait the specified time for the server processes to
+Stops the server by removing the crontab.  It will wait the specified time in seconds for the server processes to
 halt before returning.  
 
 =item run_test <input-zip> <test-dir>
