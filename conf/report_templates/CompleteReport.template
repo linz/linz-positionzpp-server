@@ -133,7 +133,7 @@
 |  baselines from the supplied mark to these reference stations fit their 
 |  ITRF2008 coordinates in the minimum constraints solution.
 |
-|    Station distance (km)    Fit(mm)             ITRF20008 XYZ (metres)
+|    Station distance (km)    Fit(mm)             ITRF2008 XYZ (metres)
 |                           Hor    Vrt         X            Y            Z
 * refstns
 + helmert{name}
