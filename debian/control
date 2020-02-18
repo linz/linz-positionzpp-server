@@ -2,7 +2,7 @@ Source: linz-positionzpp-server
 Section: science
 Priority: optional
 Maintainer: Chris Crook <ccrook@linz.govt.nz>
-Build-Depends: debhelper (>= 8.0.0)
+Build-Depends: debhelper (>= 8.0.0), libmodule-build-perl
 Standards-Version: 3.9.2
 Homepage: 
 
