@@ -1,8 +1,8 @@
-linz-positionzpp-server (1.17.3-1) xenial; urgency=medium
+linz-positionzpp-server (1.18.0-1) xenial; urgency=medium
 
-  * Adding reference station coordinates to output
+  * Minor changes to support AWS docker implementation (POSITIONZPP_DISABLE_COMPLETION_URL)
 
- -- Chris Crook <ccrook@linz.govt.nz>  Tue, 29 May 2018 20:33:38 +1200
+ -- Chris Crook <ccrook@linz.govt.nz>  Fri, 6 May 2021 12:00:00 +1200
 
 linz-positionzpp-server (1.17.2-1) xenial; urgency=medium
 

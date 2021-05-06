@@ -544,6 +544,8 @@ sub berneseClientEnv
         PCF_FILE=>"RUN_PNZ",
     };
 
+    my @envkeys = keys(%$env);
+
     # Process the settings file
 
     open( my $sf, "<$bernuserdir/settings") || croak("Cannot open $bernuserdir/settings file\n");
@@ -575,6 +577,14 @@ sub berneseClientEnv
         {
             croak("Invalid setting in $TemplateDir/settings: $line\n");
         }
+    }
+
+    # Option to override principal variables
+
+    foreach my $envkey (@envkeys)
+    {
+        my $envvar='PNZPP_'.$envkey;
+        $env->{$envkey}=$ENV{$envvar} if exists $ENV{$envvar};
     }
 
     # Check the CPU file exists

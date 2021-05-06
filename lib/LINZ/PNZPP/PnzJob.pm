@@ -530,6 +530,9 @@ a URL supplied by the front end with the job setup information.
 sub notifyComplete
 {
     my($self)=@_;
+    # To support initial AWS implementation add environment variable to suppress 
+    # the front end notification.
+    return if $ENV{POSITIONZPP_DISABLE_COMPLETION_URL};    
     if( $self->{completion_url})
     {
         eval

@@ -34,6 +34,23 @@ Command script to execute the high level functions of the LINZ::PNZPP module.
 
 =back
 
+The following environment variables can override some variables used in the processing,
+coming from the settings file:
+
+=over
+
+=item PNZPP_CLIENT_ENV
+
+The name of the file that the Bernese runtime environment is loaded from (default PNZPP.setvar)
+
+=item PNZPP_PCF_FILE
+
+
+
+=item PNZPP_CPU_FILE
+
+=back
+
 =cut
 
 package LINZ::PNZPP;
