@@ -676,6 +676,8 @@ sub sendResults
     my $summary=$htemplate->expand(%$self,status_info=>$status_info,TemplateFunctions);
 
     my $resultfiles=[];
+    my $bernesejobs=[];
+
     $results=
     {
         status=>$complete ? 'completed' : 'waiting',
@@ -686,6 +688,7 @@ sub sendResults
         eta_time=>$etastr,
         summary=>$summary,
         results_files=>$resultfiles,
+        bernese_processing=>$bernesejobs,
     };
 
 
@@ -743,6 +746,17 @@ sub sendResults
     # Add results files from each bern job
     foreach my $job ($self->bernjobs())
     {
+        my $jobstatus={
+            run_id=>$job->{campaignid},
+            filename=>$job->{filename},
+            status=>$job->{status},
+            bernese_status=>$job->{status_value},
+            status_description=>$job->{status_description},
+            fail_pid=>$job->{fail_pid},
+            fail_message=>$job->{fail_message}
+        };
+        push(@$bernesejobs,$jobstatus);
+
         my %zfiles=();
         foreach my $rf (@{$job->{report_files}})
         {

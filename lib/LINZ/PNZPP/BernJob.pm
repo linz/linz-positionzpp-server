@@ -102,7 +102,7 @@ sub LoadConfig
     $WaitReportTemplate=$conf->filename("WaitReportTemplate") || croak("Configuration does not define WaitReportTemplate\n");
     $FailedReportTemplate=$conf->filename("FailedReportTemplate") || croak("Configuration does not define FailedReportTemplate\n");
 
-    $SmtpServer=$conf->get("SmtpServer",'');
+    $SmtpServer=exists $ENV{POSITIONZPP_SMTP_SERVER} ? $ENV{POSITIONZPP_SMTP_SERVER} : $conf->get("SmtpServer",'');
     $NotificationEmailFrom=$conf->get("NotificationEmailFrom",$NotificationEmailFrom);
     $NotificationEmailTo=$conf->get("NotificationEmailTo",$NotificationEmailTo);
     $NotificationEmailTitle=$conf->get("NotificationEmailTitle",$NotificationEmailTitle);
@@ -315,7 +315,10 @@ sub runBerneseProcessor
         $self->{status}='fail' if $status eq 'FAIL';
         $self->{status}='wait' if $status eq 'WAIT';
         $self->{status_value} = $stsvalue;
-        $self->{status_description} = join('',<$sf>);
+        my $description = join('',<$sf>);
+        $description =~ s/^\s*//;
+        $description =~ s/\s*$//;
+        $self->{status_description} = $description;
         $self->{eta_time}=0;
         if( $status eq 'WAIT' )
         {
@@ -352,6 +355,8 @@ sub runBerneseProcessor
         my $runsts=$self->{campaign}->{runstatus} || {};
         my $fail_pid= $runsts->{fail_pid} || '000';
         my $fail_message= $runsts->{fail_message} || $self->{status_description};
+        $self->{fail_pid}=$fail_pid;
+        $self->{fail_message}=$fail_message;        
         $logger->error("$serverid: Bernese job $campid failed: PID $fail_pid: $fail_message");
     }
     elsif( $self->{status} eq 'wait' )
