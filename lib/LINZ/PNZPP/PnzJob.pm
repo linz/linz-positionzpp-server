@@ -750,10 +750,9 @@ sub sendResults
             run_id=>$job->{campaignid},
             filename=>$job->{filename},
             status=>$job->{status},
-            bernese_status=>$job->{status_value},
             status_description=>$job->{status_description},
-            fail_pid=>$job->{fail_pid},
-            fail_message=>$job->{fail_message}
+            fail_pid=>$job->{fail_pid} || '',
+            fail_message=>$job->{fail_message} || ''
         };
         push(@$bernesejobs,$jobstatus);
 

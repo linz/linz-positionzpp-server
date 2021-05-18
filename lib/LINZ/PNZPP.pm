@@ -125,8 +125,8 @@ sub LoadConfig
         }
     }
     $RefDataDir=$conf->filename("RefDataDir") || croak("RefDataDir not defined in configuration\n");
-    $GnssRefDataFile=$conf->filename("GnssRefDataFile");
-    $GnssUsageDataFile=$conf->filename("GnssUsageDataFile");
+    $GnssRefDataFile=exists $ENV{POSITIONZPP_GNSS_REFDATA_FILE} ? $ENV{POSITIONZPP_GNSS_REFDATA_FILE} : $conf->filename("GnssRefDataFile");
+    $GnssUsageDataFile=exists $ENV{POSITIONZPP_GNSS_USAGE_FILE} ? $ENV{POSITIONZPP_GNSS_USAGE_FILE} : $conf->filename("GnssUsageDataFile");
     $HookScript=$conf->get("HookScript");
     LINZ::PNZPP::PnzServer::LoadConfig($conf);
     LINZ::PNZPP::PnzJob::LoadConfig($conf);
@@ -169,6 +169,7 @@ in the configuration file.
 sub RunHook
 {
     my($hookname,$parameter)=@_;
+    return if exists $ENV{POSITIONZPP_DISABLE_HOOK_SCRIPTS};
     return if ! $HookScript;
 
     if( $hookname !~ /^(prerun|postupdate|postrefdata)$/ )
