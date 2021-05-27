@@ -31,6 +31,6 @@
 = ( session_end - session_start )
 = rectype
 = anttype
-= orig_anttype
 = orig_rectype
+= orig_anttype
 = antheight
